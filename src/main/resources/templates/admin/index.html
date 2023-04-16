@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>首页</title>
+</head>
+<body>
+	<!-- 头部导航 -->
+	<div th:replace="admin/common/nav.html"></div>
+	
+	<!--左侧菜单-->
+	<div class="admin-iframe-content">
+		<div class="admin-iframe-menu">
+			<ul class="menu">
+				<li class="active"><a href="javascript:page('/admin/centerInfo');">管理中心首页</a></li>
+			</ul>
+		</div>
+
+		<!--载入页面-->
+		<div class="admin-markdown">
+			<iframe id="page" th:src="@{/admin/centerInfo}"></iframe>
+		</div>
+	</div>
+	
+	<!-- 底部js函数 -->
+	<div th:replace="admin/common/footer.html"></div>
+</body>
+</html>

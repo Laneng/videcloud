@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>用户</title>
+</head>
+<body>
+	<!-- 头部导航 -->
+	<div th:replace="admin/common/nav.html"></div>
+	
+	<div class="admin-iframe-content">
+		<div class="admin-iframe-menu">
+			<ul class="menu">
+				<li class="active"><a href="javascript:page('${pageContext.request.contextPath}/group_info/list.action');">用户组</a></li>
+			</ul>
+			
+			<ul class="menus">
+				<li>
+					<a href="javascript:;">用户管理</a>
+					<ul class="menu">
+						<li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_normal.action');">正常用户</a></li>
+						<li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_not_active.action');">未激活用户</a></li>
+						<li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_ban.action');">封禁用户</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+		<!--载入页面-->
+		<div class="admin-markdown">
+			<iframe id="page" src="${pageContext.request.contextPath}/group_info/list.action"></iframe>
+		</div>
+	</div>
+	
+	<!-- 底部js函数 -->
+	<c:import url="../common/footer.jsp"></c:import>
+</body>
+</html>
