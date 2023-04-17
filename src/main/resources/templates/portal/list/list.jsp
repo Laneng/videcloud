@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>${seoInfo.title}</title>
+<title>客户端</title>
 <meta name="keywords" content="${seoInfo.keywords}" />
 <meta name="description" content="${seoInfo.description}" />
 <c:import url="../common/common.html"></c:import>

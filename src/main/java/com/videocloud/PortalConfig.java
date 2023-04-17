@@ -18,5 +18,6 @@ public class PortalConfig implements WebMvcConfigurer {
         registry.addViewController("/user/loginPage").setViewName("portal/user/login_page");
         registry.addViewController("/user/registerPage").setViewName("portal/user/register_page");
         registry.addViewController("/user/findPwd").setViewName("portal/user/find_pwd");
+        registry.addViewController("/user").setViewName("portal/viewtest");
     }
 }

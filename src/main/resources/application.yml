@@ -17,3 +17,13 @@ spring:
     multipart:
       max-request-size: 1000MB
       max-file-size: 1000MB
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.videocloud.entity
+logging:
+  level:
+    com.videocloud.mapper: debug
