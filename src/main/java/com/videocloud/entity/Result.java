@@ -1,8 +1,8 @@
 package com.videocloud.entity;
 
 /**
- * Author：Saika(jiangtao_liu)
- * Date：2023/4/17
+ * Author：Saika(刘江涛)
+ * Date：2023/4/3
  * Description：
  */
 
@@ -10,41 +10,30 @@ public class Result {
 
     private Integer code;
     private String msg;
-    private Object data;
     private Integer count;
+    private Object data;
 
-    public Result(Integer code, String msg, Object data, Integer count) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
+    public Result(ResponseEnum responseEnum, Integer count, Object data) {
+        this.code = responseEnum.getCode();
+        this.msg = responseEnum.getMsg();
         this.count = count;
+        this.data = data;
     }
 
     public Result() {
+    }
+
+    public void setResponse(ResponseEnum responseEnum) {
+        this.code = responseEnum.getCode();
+        this.msg = responseEnum.getMsg();
     }
 
     public Integer getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
     public String getMsg() {
         return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
     }
 
     public Integer getCount() {
@@ -55,13 +44,21 @@ public class Result {
         this.count = count;
     }
 
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "Result{" +
                 "code=" + code +
                 ", msg='" + msg + '\'' +
-                ", data=" + data +
                 ", count=" + count +
+                ", data=" + data +
                 '}';
     }
 }
