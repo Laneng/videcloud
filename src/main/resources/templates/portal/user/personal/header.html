@@ -141,9 +141,9 @@ a:visited {color: #666}
 <div class="yaoqishan-nav">
 	<div class="nav">
 		<ul>
-			<li class="active"><a th:href="@{/user/accountSet}">个人信息</a></li>
-			<li><a href="${entity.link}">我上传的视频</a></li>
-			<li><a th:href="@{/user/addVideo}">视频上传</a></li>
+			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'accountSet'?'active':''}"><a th:href="@{/user/accountSet}">个人信息</a></li>
+			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'myVideo'?'active':''}"><a href="${entity.link}">我上传的视频</a></li>
+			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'addVideo'?'active':''}"><a th:href="@{/user/addVideo}">视频上传</a></li>
 		</ul>
 	</div>
 </div>

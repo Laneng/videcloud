@@ -74,7 +74,6 @@ public class FileUtil {
                     try {
                         if(input!=null){
                             session.setAttribute("exportStatus",(float)(uploadFile.length()-tmpInput.available())/uploadFile.length());
-                            System.out.println(uploadFile.getName()+"的上传进度为"+(float)(uploadFile.length()-tmpInput.available())/uploadFile.length());
                             if(tmpInput.available() == 0){
                                 break;
                             }

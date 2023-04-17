@@ -88,7 +88,8 @@
                     </div>
                 </div>
 
-                <div th:text="${#ctx.#servletContext.contextPath}"></div>
+                <div th:text="${#httpServletRequest.getRequestURL().toString().split('/')[4]}"></div>
+
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button type="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
@@ -97,6 +98,8 @@
             </form>
         </div>
     </div>
+
+
 
 
 <footer th:replace="portal/common/footer.html">
@@ -185,7 +188,7 @@
             //视频进度条
             , progress: function (n, index, e) {
                 setTimeout(function (){
-                    setInterval(function (){
+                    var timer = setInterval(function (){
                         $.ajax({
                             url: "/upload/exportStatus",
                             success: function (res) {
