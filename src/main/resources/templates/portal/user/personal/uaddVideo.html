@@ -137,7 +137,7 @@
 
         var uploadInst = upload.render({
             elem: '#faceUpload'
-            , url: '/video/uploadImage' //改成您自己的上传接口
+            , url: '/upload' //改成您自己的上传接口
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
@@ -176,7 +176,7 @@
         //指定允许上传的文件类型
         upload.render({
             elem: '#videoUpload'
-            ,url: '/video/uploadVideo' //改成您自己的上传接口
+            ,url: '/upload' //改成您自己的上传接口
             ,accept: 'video' //视频
             ,done: function(res){
                 layer.msg('上传成功');
@@ -184,10 +184,30 @@
             }
             //视频进度条
             , progress: function (n, index, e) {
-                element.progress('video', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
+                setTimeout(function (){
+                    setInterval(function (){
+                        $.ajax({
+                            url: "/upload/exportStatus",
+                            success: function (res) {
+                                var res = res.data;
+                                element.progress('video', (res*100).toFixed(2) +'%')
+                                if(res  == 1){
+                                    //进度到100%，注意关闭定时器
+                                    clearInterval(timer);
+                                    layer.msg('上传成功');
+                                }
+                            },
+                            error: function (e) {
+                                //关闭定时器
+                                clearInterval(timer);
+                                //关闭弹出层
+                                layer.close(progressLayer);
+                                layer.msg("保存失败");
+                                layer.closeAll();
+                            }
+                        });
+                    },1000);
+                },2000)
             }
         });
 
