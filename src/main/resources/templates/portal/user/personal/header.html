@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
+<link th:href="@{/css/layui.css}" >
+<script th:src="@{/js/layui.js}"></script>
 <style>
 a:link {color: #666}
 a:visited {color: #666}
@@ -121,7 +123,6 @@ a:visited {color: #666}
 							</li>
 						</c:otherwise>
 					</c:choose>
-					
 				</ul>
 			</div>
 		</div>
@@ -130,15 +131,7 @@ a:visited {color: #666}
 	<!--头部横幅-->
 	<div class="head-banner" style="background-image: url(/images/banner.png);">
 		<div class="head-content yaoqishan-wrapper">
-			<!--搜索框-->
-			<div class="search">
-				<div class="searchform">
-					<input type="text" id="keyWord" class="search-keyword original" value="${keyWord}" onkeydown="if(event.keyCode==13){search(this.value);}" />
-					<button id="search" class="search-submit"></button>
-				</div>
-				<a href="#" target="_blank" class="link-ranking"><span>排行榜</span></a>
-			</div>
-			<a href="#" class="head-logo" style="background-image: url(images/logo.png);"></a>
+			<a href="#" class="head-logo" style="background-image: url(/images/logo.png);"></a>
 		</div>
 		<a target="_blank" class="banner-link"></a>
 	</div>
@@ -148,9 +141,9 @@ a:visited {color: #666}
 <div class="yaoqishan-nav">
 	<div class="nav">
 		<ul>
-			<li class="active"><a href="${pageContext.request.contextPath}/${entity.link}">首页</a></li>
-			<li><a href="${entity.link}" target="_blank">游戏</a></li>
-			<li><a href="${pageContext.request.contextPath}/${entity.link}">科技</a></li>
+			<li class="active"><a th:href="@{/user/accountSet}">个人信息</a></li>
+			<li><a href="${entity.link}">我上传的视频</a></li>
+			<li><a th:href="@{/user/addVideo}">视频上传</a></li>
 		</ul>
 	</div>
 </div>

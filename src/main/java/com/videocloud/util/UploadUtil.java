@@ -6,7 +6,9 @@ import com.aliyun.oss.OSSClientBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 /**
@@ -18,7 +20,6 @@ public class UploadUtil {
 
 //    阿里域名
     public static final String ALI_DOMAIN = "https://jycz-view.oss-cn-beijing.aliyuncs.com/";
-
 
     public static String upload(MultipartFile file)  {
 //        获取源文件名
@@ -37,7 +38,9 @@ public class UploadUtil {
 //    OSS客户端对象
         OSS ossClient = new OSSClientBuilder().build(endpoint,accessKeyId,accessKeySercet);
         try {
-            ossClient.putObject("jycz-view",newName,file.getInputStream());
+            InputStream inputStream = file.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(inputStream);
+            ossClient.putObject("jycz-view",newName,bis);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {

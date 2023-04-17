@@ -16,164 +16,90 @@
     <script th:src="@{/js/jquery-1.9.1.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/layui.css}">
+    <template th:replace="portal/common/common.html"></template>
     <style>
-        /*i{position: absolute;width: 17px;height: 14px;left: 14px;top: 12px;display: inline-block;}*/
+        .set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
+        .user-avatar{display: inline-block; cursor: pointer;}
+        .user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
+        .edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
+        .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
+        .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
     </style>
 </head>
 
 <body>
 
-<!-- header -->
-<header id="site-header" class="w3l-header fixed-top">
-    <!--/nav-->
-    <nav class="navbar navbar-expand-lg navbar-light fill px-lg-0 py-0 px-3">
-        <div class="container">
-            <li class="menu-item home"><img th:src="@{/images/logo_s.png}" class="head-logo"></li>
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <!-- <span class="navbar-toggler-icon"></span> -->
-                <span class="fa icon-expand fa-bars"></span>
-                <span class="fa icon-close fa-times"></span>
-            </button>
+    <div th:replace="portal/user/personal/header.html"></div>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" th:href="@{/}">主页</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">关于我们</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">联系我们</a>
-                    </li>
-                </ul>
-            </div>
-            <div th:if="${session.user}">
-                <button class="layui-btn layui-btn-primary" id="demo4">
-                    <span th:text="${session.user.userName}"></span>
-                    <i class="layui-icon layui-icon-more-vertical layui-font-12">
-                    </i>
-                </button>
-            </div>
-        </div>
-    </nav>
-    <!--//nav-->
-</header>
-<!-- //header -->
-<section class="w3l-grids">
-    <div class="grids-main py-5">
-        <div class="container py-lg-3">
-            <center>
-                <div class="headerhny-title" style="width:500px;margin-top: 40px">
-
-
-                    <form class="layui-form">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 100px;">视频标题</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="title" required lay-verify="required"
-                                       autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid layui-word-aux"></div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 100px">视频描述</label>
-                            <div class="layui-input-inline">
-                                <textarea name="videoInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 100px;">视频类型</label>
-                            <div class="layui-input-inline">
-                                <select name="typeName" >
-                                    <option th:each="p : ${videoTypeList}" th:text="${p.typeName}">
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 100px">视频封面</label>
-                            <div class="layui-input-inline">
-                                <div class="layui-upload-list" style="width: 200px;height: 120px;">
-                                    <img style="height: 100%; width: 100%;" class="layui-upload-img" id="demo1">
-                                    <p id="demoText"></p>
-                                </div>
-                                <div style="width:200px;">
-                                    <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                                        <div class="layui-progress-bar" lay-percent=""></div>
-                                    </div>
-                                </div>
-                                <button type="button" class="layui-btn" id="faceUpload" style="margin-top: 10px;">上传视频封面</button>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 100px">视频源</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="title" required lay-verify="required"
-                                       autocomplete="off" class="layui-input" readonly>
-                                <div style="width:200px;">
-                                    <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                                        <div class="layui-progress-bar" lay-percent=""></div>
-                                    </div>
-                                </div>
-                                <button type="button" class="layui-btn" id="videoUpload" style="margin-top: 10px;">上传视频</button>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-input-block">
-                                <button type="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                            </div>
-                        </div>
-                    </form>
+    <div style="width: 1340px; margin: 20px auto;">
+        <div class="block no-shadow">
+            <form class="layui-form" style="margin: 20px auto">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px;">视频标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" required lay-verify="required"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux"></div>
                 </div>
-
-            </center>
-        </div>
-    </div>
-</section>
-
-
-<footer class="w3l-footer">
-    <section class="footer-inner-main">
-        </div>
-        <div class="below-section">
-            <div class="container">
-                <div class="copyright-footer">
-                    <div class="columns text-lg-left">
-                        <p>&copy; 2021 软件17-4胡建. All rights reserved | Designed by</p>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">视频描述</label>
+                    <div class="layui-input-inline">
+                        <textarea name="videoInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>
-            </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px;">视频类型</label>
+                    <div class="layui-input-inline">
+                        <select name="typeName" >
+                            <option th:each="p : ${videoTypeList}" th:text="${p.typeName}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">视频封面</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="face" id="face" required lay-verify="required"
+                            autocomplete="off" class="layui-input" readonly>
+                        <div class="layui-upload-list" style="width: 200px;height: 120px;">
+                            <img style="height: 100%; width: 100%;" class="layui-upload-img" id="demo1">
+                            <p id="demoText"></p>
+                        </div>
+                        <div style="width:200px;">
+                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="face">
+                                <div class="layui-progress-bar" lay-percent=""></div>
+                            </div>
+                        </div>
+                        <button type="button" class="layui-btn" id="faceUpload" style="margin-top: 10px;">上传视频封面</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">视频源</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="source" id="source" required lay-verify="required"
+                            autocomplete="off" class="layui-input" readonly>
+                        <div style="width:200px;">
+                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="video">
+                                <div class="layui-progress-bar" lay-percent=""></div>
+                            </div>
+                        </div>
+                        <button type="button" class="layui-btn" id="videoUpload" style="margin-top: 10px;">上传视频</button>
+                    </div>
+                </div>
+
+                <div th:text="${#ctx.#servletContext.contextPath}"></div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <!-- copyright -->
-        <!-- move top -->
-        <button onclick="topFunction()" id="movetop" title="Go to top">
-            <span class="fa fa-arrow-up" aria-hidden="true"></span>
-        </button>
-        <script>
-            window.onscroll = function () {
-                scrollFunction()
-            };
+    </div>
 
-            function scrollFunction() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    document.getElementById("movetop").style.display = "block";
-                } else {
-                    document.getElementById("movetop").style.display = "none";
-                }
-            }
 
-            // When the user clicks on the button, scroll to the top of the document
-            function topFunction() {
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
-            }
-        </script>
-        <!-- /move top -->
-
-    </section>
+<footer th:replace="portal/common/footer.html">
 </footer>
 <!--//footer-66 -->
 </body>
@@ -227,7 +153,7 @@
                     return layer.msg('上传失败');
                 }
                 //上传成功的一些操作
-                //……
+                $("#face").val(res.data);
                 $('#demoText').html(''); //置空上传失败的状态
             }
             , error: function () {
@@ -238,9 +164,9 @@
                     uploadInst.upload();
                 });
             }
-            //进度条
+            //头像进度条
             , progress: function (n, index, e) {
-                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                element.progress('face', n + '%'); //可配合 layui 进度条元素使用
                 if (n == 100) {
                     layer.msg('上传完毕', {icon: 1});
                 }
@@ -249,14 +175,23 @@
 
         //指定允许上传的文件类型
         upload.render({
-            elem: '#test5'
+            elem: '#videoUpload'
             ,url: '/video/uploadVideo' //改成您自己的上传接口
             ,accept: 'video' //视频
             ,done: function(res){
                 layer.msg('上传成功');
-                window.location.href="/user/toIndex"
+                $("#source").val(res.data);
+            }
+            //视频进度条
+            , progress: function (n, index, e) {
+                element.progress('video', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
             }
         });
+
+
 
         dropdown.render({
             elem: '#demo4'
@@ -287,7 +222,7 @@
         });
     })
 </script>
-<script th:src="@{/static/js/easyResponsiveTabs.js}"></script>
+<script th:src="@{/js/easyResponsiveTabs.js}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         //Horizontal Tab

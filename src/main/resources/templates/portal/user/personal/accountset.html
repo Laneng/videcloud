@@ -1,12 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
 <meta charset="utf-8">
 <title>个人设置-${webInfo.name}</title>
-<c:import url="../../common/common.html"></c:import>
+<template th:replace="portal/common/common.html"></template>
 <style>
 	.set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
 	.user-avatar{display: inline-block; cursor: pointer;}
@@ -19,7 +16,7 @@
 <body>
 	<!-- 头部 -->
 	<div class="yaoqishan-header">
-		<c:import url="../../common/header.html"></c:import>
+		<div th:replace="portal/user/personal/header.html"></div>
 	</div>
 			
 	<!--主体-->
@@ -89,7 +86,7 @@
 	
 	<!--底部-->
 	<div class="page-wrap footer-wrap" >
-		<c:import url="../../common/footer.html"></c:import>
+		<div th:replace="portal/common/footer.html"></div>
 	</div>
 </body>
 <script>
@@ -224,3 +221,4 @@
 	}
 </script>
 </html>
+

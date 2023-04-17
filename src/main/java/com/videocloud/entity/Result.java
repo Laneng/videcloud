@@ -13,6 +13,16 @@ public class Result {
     private Object data;
     private Integer count;
 
+    public Result(Integer code, String msg, Object data, Integer count) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+        this.count = count;
+    }
+
+    public Result() {
+    }
+
     public Integer getCode() {
         return code;
     }
