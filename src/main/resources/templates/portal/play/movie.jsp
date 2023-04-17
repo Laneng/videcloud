@@ -9,6 +9,7 @@
 <meta name="keywords" content="${mediaInfo.biaoti}-${seoInfo.keywords}" />
 <meta name="description" content="${mediaInfo.jianjie}" />
 <c:import url="../common/common.html"></c:import>
+	<template th:replace
 </head>
 <style>
 .player{position: relative;background: url(${pageContext.request.contextPath}/static/images/loading.gif) no-repeat center center;}
