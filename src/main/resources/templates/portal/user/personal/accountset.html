@@ -11,6 +11,7 @@
 	.edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
 	.edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
 	.page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+	input[type="text"]{border: none;width: 50%}
 </style>
 </head>
 <body>
@@ -27,39 +28,19 @@
 				<table class="table no-line">
 					<tbody>
 						<tr>
-							<td style="width:10%;">
-								头像
-							</td>
-							<td style="width:80%;">
-								<a class="user-avatar">
-									<c:choose>
-										<c:when test="${empty userInfo.avatar}">
-											<img src="http://doc.javaex.cn/javaex/javaex/pc/images/user.jpg" />
-										</c:when>
-										<c:otherwise>
-											<img src="${userInfo.avatar}" />
-										</c:otherwise>
-									</c:choose>
-								</a>
-							</td>
-							<td>
-								<a href="javascript:;" onclick="changeAvatar()" style="line-height: 56px;color: #055f95;">修改</a>
-							</td>
-						</tr>
-						<tr>
-							<td style="height: 30px;">昵称</td>
-							<td>${userInfo.loginName}</td>
-							<td></td>
-						</tr>
-						<tr>
 							<td style="height: 30px;">UID</td>
 							<td>${userInfo.id}</td>
 							<td></td>
 						</tr>
 						<tr>
+							<td style="height: 30px;">昵称</td>
+							<td><input type="text" value="${userInfo.nickName}"/></td>
+							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">修改</a></td>
+						</tr>
+						<tr>
 							<td style="height: 30px;">邮箱</td>
 							<td style="position: relative;">
-								<span id="user_email" class="set-con">${userInfo.email}</span>
+								<input type="text" value="${userInfo.email}"/>
 								<div id="change_email" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
 									<input type="text" id="email" class="edit-input original" style="width: 60%;" />
 									<a class="edit-btn" onclick="changeEmail()">保存</a>
@@ -77,6 +58,16 @@
 								</div>
 							</td>
 							<td><a href="javascript:;" onclick="showChangePassword()" style="color: #055f95;">修改</a></td>
+						</tr>
+						<tr>
+							<td style="height: 30px;">手机号</td>
+							<td><input type="text" value="${userInfo.phone}"/></td>
+							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">换绑</a></td>
+						</tr>
+						<tr>
+							<td style="height: 30px;">生日</td>
+							<td><input type="text" value="${userInfo.birth}"/></td>
+							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">修改</a></td>
 						</tr>
 					</tbody>
 				</table>

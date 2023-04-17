@@ -24,6 +24,8 @@
         .edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
         .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
         .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+        .layui-form-item .layui-input-inline {text-align: center}
+        .layui-form-label{margin-left: 110px}
     </style>
 </head>
 
@@ -33,69 +35,70 @@
 
     <div style="width: 1340px; margin: 20px auto;">
         <div class="block no-shadow">
-            <form class="layui-form" style="margin: 20px auto">
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 100px;">视频标题</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="title" required lay-verify="required"
-                            autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid layui-word-aux"></div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 100px">视频描述</label>
-                    <div class="layui-input-inline">
-                        <textarea name="videoInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 100px;">视频类型</label>
-                    <div class="layui-input-inline">
-                        <select name="typeName" >
-                            <option th:each="p : ${videoTypeList}" th:text="${p.typeName}">
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 100px">视频封面</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="face" id="face" required lay-verify="required"
-                            autocomplete="off" class="layui-input" readonly>
-                        <div class="layui-upload-list" style="width: 200px;height: 120px;">
-                            <img style="height: 100%; width: 100%;" class="layui-upload-img" id="demo1">
-                            <p id="demoText"></p>
+            <div>
+                <form class="layui-form" style="width: 500px;margin: 20px auto;text-align: center">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100px;">视频标题</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="title" required lay-verify="required"
+                                   autocomplete="off" class="layui-input">
                         </div>
-                        <div style="width:200px;">
-                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="face">
-                                <div class="layui-progress-bar" lay-percent=""></div>
+                        <div class="layui-form-mid layui-word-aux"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100px">视频描述</label>
+                        <div class="layui-input-inline">
+                            <textarea name="videoInfo" placeholder="请输入内容" class="layui-textarea" style="width: 300px"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100px;">视频类型</label>
+                        <div class="layui-input-inline">
+                            <select name="typeName" >
+                                <option th:each="p : ${videoTypeList}" th:text="${p.typeName}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100px">视频封面</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="face" id="face" required lay-verify="required"
+                                   autocomplete="off" class="layui-input" readonly style="display: none">
+                            <div class="layui-upload-list" style="width: 200px;height: 120px;">
+                                <img style="height: 100%; width: 100%;" class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
                             </div>
-                        </div>
-                        <button type="button" class="layui-btn" id="faceUpload" style="margin-top: 10px;">上传视频封面</button>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 100px">视频源</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="source" id="source" required lay-verify="required"
-                            autocomplete="off" class="layui-input" readonly>
-                        <div style="width:200px;">
-                            <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="video">
-                                <div class="layui-progress-bar" lay-percent=""></div>
+                            <div style="width:200px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="face">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
                             </div>
+                            <button type="button" class="layui-btn" id="faceUpload" style="margin-top: 10px;">上传视频封面</button>
                         </div>
-                        <button type="button" class="layui-btn" id="videoUpload" style="margin-top: 10px;">上传视频</button>
                     </div>
-                </div>
-
-                <div th:text="${#httpServletRequest.getRequestURL().toString().split('/')[4]}"></div>
-
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button type="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 100px">视频源</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="source" id="source" required lay-verify="required"
+                                   autocomplete="off" class="layui-input" readonly style="display: none">
+                            <div style="width:200px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="video" style="margin-top: 10px">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                            <button type="button" class="layui-btn" id="videoUpload" style="margin-top: 10px;">上传视频</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
