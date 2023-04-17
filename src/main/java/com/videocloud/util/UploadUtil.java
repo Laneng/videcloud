@@ -20,7 +20,7 @@ public class UploadUtil {
     public static final String ALI_DOMAIN = "https://jycz-view.oss-cn-beijing.aliyuncs.com/";
 
 
-    public static String uploadImage(MultipartFile file)  {
+    public static String upload(MultipartFile file)  {
 //        获取源文件名
         String filename = file.getOriginalFilename();
 //        获取文件后缀

@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sq_173cms?UseUnicode=true&characterEncoding=utf8&serverTimezone=%2B8
-    username: root
+    url: jdbc:mysql://10.70.60.67:3306/sq_173cms?UseUnicode=true&characterEncoding=utf8&serverTimezone=%2B8
+    username: java2205
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
     # 启动热加载
