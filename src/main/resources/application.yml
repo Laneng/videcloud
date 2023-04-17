@@ -9,3 +9,11 @@ spring:
     username: root
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
+    # 启动热加载
+  devtools:
+    restart:
+      enabled: true
+  servlet:
+    multipart:
+      max-request-size: 1000MB
+      max-file-size: 1000MB
