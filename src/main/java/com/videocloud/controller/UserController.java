@@ -1,7 +1,6 @@
 package com.videocloud.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.generator.IFill;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyuncs.exceptions.ClientException;
@@ -12,7 +11,6 @@ import com.videocloud.service.IUserService;
 import com.videocloud.util.FileUtil;
 import com.videocloud.util.OSSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <p>
@@ -36,6 +32,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
     @Autowired
     IUserService userService;
 
