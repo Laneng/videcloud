@@ -1,5 +1,8 @@
 package com.videocloud.service.impl;
 
+import com.alibaba.druid.util.StringUtils;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -41,6 +44,12 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result selectVedioInfo(Integer page,Integer limit) {
 
+        if (page == null){
+            page = 1;
+        }
+        if(limit == null){
+            limit = 20;
+        }
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(null);
         IPage<VedioInfo> page1 = new Page<>(page, limit);
         IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page1, null);
@@ -67,13 +76,14 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
     @Override
     public Result updateVedioInfo(VedioInfo vedioInfo) {
-        UpdateWrapper<VedioInfo> wraper = VedioInfoServiceImpl.updateWrapper(vedioInfo);
-        int update = vedioInfoMapper.update(vedioInfo, wraper);
+        Wrapper<VedioInfo> wrapper = VedioInfoServiceImpl.updateWrapper(vedioInfo);
+        int update = vedioInfoMapper.update(vedioInfo, wrapper);
         if(update != 0){
             return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
         }else{
             return new Result(ResponseEnum.UPDATE_FAIL,0,update);
         }
+
 
     }
 
@@ -96,19 +106,20 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
 
-    private static UpdateWrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
-        UpdateWrapper<VedioInfo> uw = new UpdateWrapper<>();
-        UpdateWrapper<VedioInfo> wrapper = uw.isNotNull("url").set("url", vedioInfo.getUrl())
-                .isNotNull("title").set("title", vedioInfo.getTitle())
-                .isNotNull("intro").set("intro", vedioInfo.getIntro())
-                .isNotNull("author").set("author", vedioInfo.getAuthor())
-                .isNotNull("type").set("type", vedioInfo.getType())
-                .isNotNull("img").set("img", vedioInfo.getImg())
-                .isNotNull("state").set("state", vedioInfo.getState())
-                .isNotNull("reason").set("reason", vedioInfo.getReason())
-                .isNotNull("oper").set("oper", vedioInfo.getOper())
-                .isNotNull("user_id").set("user_id", vedioInfo.getUserId())
-                .isNotNull("video_type_id").set("video_type_id", vedioInfo.getVideoTypeId());
+    private static Wrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
+        UpdateWrapper<VedioInfo> updateWrapper = new UpdateWrapper<>();
+        LambdaUpdateWrapper<VedioInfo> wrapper = updateWrapper.lambda().eq(StringUtils.isEmpty(vedioInfo.getUrl()), VedioInfo::getUrl, vedioInfo.getUrl())
+                .set(StringUtils.isEmpty(vedioInfo.getTitle()), VedioInfo::getTitle, vedioInfo.getType())
+                .set(StringUtils.isEmpty(vedioInfo.getIntro()), VedioInfo::getIntro, vedioInfo.getIntro())
+                .set(StringUtils.isEmpty(vedioInfo.getAuthor()), VedioInfo::getAuthor, vedioInfo.getAuthor())
+                .set(StringUtils.isEmpty(vedioInfo.getType()), VedioInfo::getType, vedioInfo.getType())
+                .set(StringUtils.isEmpty(vedioInfo.getImg()), VedioInfo::getImg, vedioInfo.getImg())
+                .set(StringUtils.isEmpty(vedioInfo.getReason()), VedioInfo::getReason, vedioInfo.getReason())
+                .set(StringUtils.isEmpty(vedioInfo.getOper()), VedioInfo::getOper, vedioInfo.getOper())
+                .set(vedioInfo.getState() == null, VedioInfo::getState, vedioInfo.getState())
+                .set(vedioInfo.getState() == null, VedioInfo::getUserId, vedioInfo.getUserId())
+                .set(vedioInfo.getVideoTypeId() == null, VedioInfo::getVideoTypeId, vedioInfo.getVideoTypeId())
+                .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 
     }

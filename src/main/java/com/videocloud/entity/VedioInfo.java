@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @author lxd
  * @since 2023-04-17
  */
-@TableName("vedio_info")
+@TableName("video_info")
 @ApiModel(value = "VedioInfo对象", description = "视频信息表")
 public class VedioInfo implements Serializable {
 

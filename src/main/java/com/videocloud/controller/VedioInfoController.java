@@ -36,7 +36,7 @@ public class VedioInfoController {
         Map<String,Object> map = new HashMap<>();
         Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
         map.put("vedioInfos",vedioInfos);
-        return "index";
+        return "portal/index";
     }
 
 
@@ -47,7 +47,7 @@ public class VedioInfoController {
         Map<String, Object> map = new HashMap<>();
         Result saveVedioInfo = iVedioInfoService.saveVedioInfo(vedioInfo);
         map.put("saveVedioInfo",saveVedioInfo);
-        return "redirect:/vedioInfo/save";
+        return "redirect:/vedioInfo/getAll";
     }
 
     @RequestMapping("/getOne")
@@ -55,7 +55,7 @@ public class VedioInfoController {
         Map<String, Object> map = new HashMap<>();
         Result vedioInfo = iVedioInfoService.selectVedioInfoById(id);
         map.put("vedioInfo",vedioInfo);
-        return "index";
+        return "portal/index";
     }
 
 
