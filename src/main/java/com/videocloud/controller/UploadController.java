@@ -28,7 +28,8 @@ import java.io.IOException;
 public class UploadController {
 
     @ResponseBody
-    public Result uploadVideo(MultipartFile file, HttpSession session) throws IOException, ClientException {
+    @RequestMapping
+    public Result upload(MultipartFile file, HttpSession session) throws IOException, ClientException {
 
         File file1 = FileUtil.transferToFile(file);
         OSS ossClient = OSSUtil.getOSS(file);
@@ -36,7 +37,7 @@ public class UploadController {
 
         FileUtil.uploadSmallFile((OSSClient) ossClient,"jycz-view",newName, file1,session);
 
-        return new Result(ResponseEnum.UPLOAD_SUCCESS,0,newName);
+        return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
     }
 
     @RequestMapping("/exportStatus")
