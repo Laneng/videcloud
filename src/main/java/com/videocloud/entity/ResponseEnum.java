@@ -20,7 +20,15 @@ public enum ResponseEnum {
     DELETE_SUCCESS(6,"删除成功!"),
     DELETE_FAIL(7,"删除失败!"),
     UPLOAD_SUCCESS(8,"上传成功!"),
-    UPLOAD_FAIL(9,"上传失败");
+    UPLOAD_FAIL(9,"上传失败"),
+    LOGOUT_SUCCESS(10,"退出成功!"),
+    LOGOUT_FAIL(11,"已经退出!"),
+    REGISTER_SUCCESS(12,"注册成功!"),
+    REGISTER_FAIL(13,"注册失败!"),
+
+    REGISTER_TPHONE(14,"该账号已存在。"),
+    REGISTER_FPHONE(15,"可以注册");
+
 
 
 

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
+<!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+
 <style>
 a:link {color: #666}
 a:visited {color: #666}
@@ -178,14 +180,19 @@ a:visited {color: #666}
 	// 退出登录
 	function logout() {
 		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/logout.json",
+			url : "/user/logout",
 			type : "POST",
-			dataType : "json",
 			success : function(rtn) {
-				if (rtn.code=="000000") {
-					delCookie("UID");
-					delCookie("userToken");
-					window.location.reload();
+				if (rtn.code==11) {
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
+				}else if(rtn.code==10){
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
 				}
 			}
 		});

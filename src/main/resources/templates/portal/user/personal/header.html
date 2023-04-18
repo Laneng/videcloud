@@ -160,21 +160,32 @@ a:visited {color: #666}
 		}
 	}
 
-	
 	// 退出登录
 	function logout() {
 		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/logout.json",
+			url : "/user/logout",
 			type : "POST",
-			dataType : "json",
 			success : function(rtn) {
-				if (rtn.code=="000000") {
-					delCookie("UID");
-					delCookie("userToken");
-					window.location.reload();
+				if (rtn.code==10) {
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
+
+					window.location.href = "/";
+
+				}else if(rtn.code==11){
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
+
+					window.location.href = "/";
 				}
 			}
 		});
 	}
+
+
 </script>
 </html>

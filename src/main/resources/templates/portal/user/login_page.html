@@ -36,7 +36,7 @@
 							<div class="info-container">
 								<p class="errorInfo vh"><span>账号错误</span></p>
 								<div class="tip-container tip-account-container">
-									<p class="tip-info">请输入账号</p>
+									<p class="tip-info">请输入手机号或邮箱</p>
 									<input type="text" class="txt-info txt-account" name="loginName" />
 								</div>
 							</div>
@@ -80,19 +80,15 @@
 			data : $("#form").serialize(),
 			success : function(rtn) {
 				if (rtn.code==0) {
-					// var info = rtn.data.info;
-					// var info = rtn.data.info;
-					//
-					// delCookie("UID");
-					// delCookie("userToken");
-					// setCookie("UID", info.UID);
-					// setCookie("userToken", info.userToken);
-
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
 					// 跳转到首页
-					window.location.href = "/";
+					setTimeout(function (){window.location.href = "/";},3000)
 				} else {
 					javaex.optTip({
-						content : rtn.message,
+						content : rtn.msg,
 						type : "error"
 					});
 				}
