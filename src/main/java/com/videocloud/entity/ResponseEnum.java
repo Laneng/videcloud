@@ -11,6 +11,8 @@ public enum ResponseEnum {
 
     SELECT_SUCCESS(0,"查询成功!"),
     SELECT_FAIL(1,"查询失败!"),
+    LOGIN_SUCCESS(0,"登录成功!"),
+    LOGIN_FAIL(1,"登录失败!"),
     UPDATE_SUCCESS(2,"更新成功!"),
     UPDATE_FAIL(3,"更新失败!"),
     INSERT_SUCCESS(4,"新增成功!"),
