@@ -20,7 +20,8 @@ public enum ResponseEnum {
     DELETE_SUCCESS(6,"删除成功!"),
     DELETE_FAIL(7,"删除失败!"),
     UPLOAD_SUCCESS(8,"上传成功!"),
-    UPLOAD_FAIL(9,"上传失败");
+    UPLOAD_FAIL(9,"上传失败"),
+    WRONG_PASSWORD(10,"密码错误!");
 
 
 

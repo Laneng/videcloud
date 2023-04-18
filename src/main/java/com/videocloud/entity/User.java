@@ -33,7 +33,7 @@ public class User implements Serializable {
     private Integer age;
 
     private String gender;
-    @DateTimeFormat(pattern = "yyyy-DD-mm HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date birth;
 

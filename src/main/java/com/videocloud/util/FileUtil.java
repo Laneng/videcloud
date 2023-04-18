@@ -8,6 +8,7 @@ import com.aliyuncs.exceptions.ClientException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -20,8 +21,31 @@ import java.util.UUID;
  */
 
 public class FileUtil {
+
+
+
+    public static MultipartFile base64Convert(String base64) {
+        String[] baseStrs = base64.split(","); //base64编码后的图片有头信息所以要分离出来   [0]data:image/png;base64, 图片内容为索引[1]
+        BASE64Decoder decoder = new BASE64Decoder();
+        byte[] b = new byte[0];
+        try {
+            b = decoder.decodeBuffer(baseStrs[1]); //取索引为1的元素进行处理
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < b.length; ++i) {
+            if (b[i] < 0) {
+                b[i] += 256;
+            }
+        }
+        return new Base64DecodeMultipartFile(b, baseStrs[0]);//处理过后的数据通过Base64DecodeMultipartFile转换为MultipartFile对象
+    }
+
+
+
+    //将MultipartFile转换为File
     public static File transferToFile(MultipartFile multipartFile) {
-//        选择用缓冲区来实现这个转换即使用java 创建的临时文件 使用 MultipartFile.transferto()方法 。
+        //选择用缓冲区来实现这个转换即使用java 创建的临时文件 使用 MultipartFile.transferto()方法 。
         File file = null;
         try {
             String originalFilename = multipartFile.getOriginalFilename();
@@ -35,9 +59,11 @@ public class FileUtil {
         return file;
     }
 
+    //文件名随机
     public static String UUID(MultipartFile file){
+
         String filename = file.getOriginalFilename();
-//        获取文件后缀
+        //获取文件后缀
         String ext = FilenameUtils.getExtension(filename);
 
         String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -46,13 +72,16 @@ public class FileUtil {
     }
 
 
-    public static void uploadSmallFile(final OSSClient client, final String bucketName,
+    //OSS上传并每秒向Session中告知当前上传进度
+    public static boolean uploadSmallFile(final OSSClient client, final String bucketName,
                                        final String key, final File uploadFile, HttpSession session)
             throws OSSException, ClientException, FileNotFoundException {
+
+        session.setAttribute("exportStatus",0);
         ObjectMetadata objectMeta = new ObjectMetadata();
         objectMeta.setContentLength(uploadFile.length());
         // 可以在metadata中标记文件类型
-        objectMeta.setContentType("application/pdf");
+        //objectMeta.setContentType("application/pdf");
         //对object进行服务器端加密。眼下服务器端仅仅支持x-oss-server-side-encryption加密
         objectMeta.setHeader("x-oss-server-side-encryption", "AES256");
         final InputStream input = new FileInputStream(uploadFile);
@@ -107,7 +136,7 @@ public class FileUtil {
             e.printStackTrace();
         }
         System.out.println("上传的object返回的E_tag："+result.getETag());
-        System.out.println("上传是否成功："+ md5.equalsIgnoreCase(result.getETag()));
+        return md5.equalsIgnoreCase(result.getETag());
     }
 
 }

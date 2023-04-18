@@ -2,16 +2,18 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
 <meta charset="utf-8">
-<title>个人设置-${webInfo.name}</title>
+<title th:text="${session.user.name+'的个人空间'}"></title>
 <template th:replace="portal/common/common.html"></template>
 <style>
+    .edit-btn {height: 33px;padding: 0 15px;border-radius: 33px;margin-left: 110px;margin-top: 10px;line-height: 33px;font-size: 14px;display: inline-block;background: #5dc49a;color: #fff;vertical-align: top;cursor: pointer;}
 	.set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
 	.user-avatar{display: inline-block; cursor: pointer;}
 	.user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
-	.edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
-	.edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
+    .edit-input {display: block;height: 33px;padding: 5px 10px;background: #eee1e0;border: 1px solid #515151;border-radius: 33px;box-sizing: border-box;font-size: 14px;line-height: 19px;color: #1d1616;}
 	.page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
-	input[type="text"]{border: none;width: 50%}
+	input[type="text"],input[type="password"]{border: none;width: 50%}
+	input[type="date"]{border: none;width: 20%}
+    #change_password{display: none; height: 150px;background: white;width: 40%;position: absolute;top: 5px;left: 5px;border: aliceblue 1px solid;border-radius: 10px;}
 </style>
 </head>
 <body>
@@ -28,22 +30,28 @@
 				<table class="table no-line">
 					<tbody>
 						<tr>
-							<td style="height: 30px;">UID</td>
-							<td>${userInfo.id}</td>
+							<td style="height: 30px;">ID</td>
+							<td th:text="${session.user.id}"></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td style="height: 30px;">昵称</td>
-							<td><input type="text" value="${userInfo.nickName}"/></td>
-							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">修改</a></td>
+							<td style="position: relative;">
+								<span th:text="${session.user.name}"></span>
+								<div id="change_name" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
+									<input type="text" id="name" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<a class="edit-btn" onclick="changeName()" style="display: inline-block;margin:0">保存</a>
+								</div>
+							</td>
+							<td><a href="javascript:;" onclick="showChangeName()" style="color: #055f95;">修改</a></td>
 						</tr>
 						<tr>
 							<td style="height: 30px;">邮箱</td>
 							<td style="position: relative;">
-								<input type="text" value="${userInfo.email}"/>
+								<span th:text="${session.user.email}"></span>
 								<div id="change_email" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
-									<input type="text" id="email" class="edit-input original" style="width: 60%;" />
-									<a class="edit-btn" onclick="changeEmail()">保存</a>
+									<input type="text" id="email" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<a class="edit-btn" onclick="changeEmail()" style="display: inline-block;margin:0">保存</a>
 								</div>
 							</td>
 							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">换绑</a></td>
@@ -52,8 +60,9 @@
 							<td style="height: 30px;">密码</td>
 							<td style="position: relative;">
 								<span class="set-con">***********</span>
-								<div id="change_password" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
-									<input type="text" id="password" class="edit-input original" style="width: 60%;" />
+								<div id="change_password" class="name-edit">
+									原密码:<input type="password" id="password" class="edit-input original" style="width: 100%;" />
+									新密码:<input type="password" id="newPassword" class="edit-input original" style="width: 100%;" />
 									<a class="edit-btn" onclick="changePassword()">保存</a>
 								</div>
 							</td>
@@ -61,13 +70,19 @@
 						</tr>
 						<tr>
 							<td style="height: 30px;">手机号</td>
-							<td><input type="text" value="${userInfo.phone}"/></td>
-							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">换绑</a></td>
+							<td style="position: relative;">
+								<span th:text="${session.user.phone}"></span>
+								<div id="change_phone" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
+									<input type="text" id="phone" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<a class="edit-btn" onclick="changePhone()" style="display: inline-block;margin:0">保存</a>
+								</div>
+							</td>
+							<td><a href="javascript:;" onclick="showChangePhone()" style="color: #055f95;">换绑</a></td>
 						</tr>
 						<tr>
 							<td style="height: 30px;">生日</td>
-							<td><input type="text" value="${userInfo.birth}"/></td>
-							<td><a href="javascript:;" onclick="showChangeEmail()" style="color: #055f95;">修改</a></td>
+							<td><input id="birth" class="layui-input" type="date" th:value="${#dates.format(session.user.birth,'yyyy-MM-dd')}"/></td>
+							<td><a href="javascript:;" onclick="changeBirth()" style="color: #055f95;">修改</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -80,23 +95,66 @@
 		<div th:replace="portal/common/footer.html"></div>
 	</div>
 </body>
-<script>
+<script th:inline="javascript">
+
 	var userToken = getCookie("userToken");
-	
-	// 修改头像
-	function changeAvatar() {
-		javaex.dialog({
-			type : "login",	// 弹出层类型
-			width : "900",
-			height : "603",
-			url : "${pageContext.request.contextPath}/portal/user_profile_info/change_avatar.action"
-		});
-	}
+
+    // 修改昵称
+    function showChangeName() {
+        $("#change_name").show();
+    }
+    function changeName() {
+        if ($("#name").val()=="") {
+            javaex.optTip({
+                content : "请填写新的昵称",
+                type : "error"
+            });
+        } else {
+            sendName();
+        }
+    }
+    // 获取验证码
+    function sendName() {
+        javaex.optTip({
+            content: "系统处理中，请稍候...",
+            type: "submit"
+        });
+
+        $.ajax({
+            url: "/user/saveOrUpdate",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: [[${session.user.id}]],
+                name: $("#name").val()
+            },
+            success: function (rtn) {
+                if (rtn.code == "2") {
+                    javaex.optTip({
+                        content: "修改成功",
+                        type: "success"
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    javaex.optTip({
+                        content: "修改失败",
+                        type: "error"
+                    });
+                }
+            }
+        });
+    }
+
+
+
 	
 	// 换绑邮箱
 	function showChangeEmail() {
 		$("#change_email").show();
 	}
+
 	function changeEmail() {
 		if ($("#email").val()=="") {
 			javaex.optTip({
@@ -115,28 +173,32 @@
 		});
 		
 		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/send_email.json",
+			url : "/user/saveOrUpdate",
 			type : "POST",
 			dataType : "json",
 			data : {
-				"userToken" : userToken
+				id:[[${session.user.id}]],
+				email:$("#email").val()
 			},
 			success : function(rtn) {
-				if (rtn.code=="000000") {
+				if (rtn.code=="2") {
 					javaex.optTip({
-						content : "邮件发送成功",
+						content : "修改成功",
 						type : "success"
 					});
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
 					
-					javaex.alert({
-						title : "填写验证码",
-						width : "300",
-						content : '验证码已发至旧邮箱，<br />请填写收到的验证码<br /><input type="text" class="text" id="identifying_code" style="width: 100%;" value="" />',
-						callback : "saveEmail()"
-					});
+					// javaex.alert({
+					// 	title : "填写验证码",
+					// 	width : "300",
+					// 	content : '验证码已发至旧邮箱，<br />请填写收到的验证码<br /><input type="text" class="text" id="identifying_code" style="width: 100%;" value="" />',
+					// 	callback : "saveEmail()"
+					// });
 				} else {
 					javaex.optTip({
-						content : "邮件发送失败，请重试",
+						content : "修改失败",
 						type : "error"
 					});
 				}
@@ -144,42 +206,42 @@
 		});
 	}
 	// 修改邮箱
-	function saveEmail() {
-		var newEmail = $("#email").val();
-		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/change_email.json",
-			type : "POST",
-			dataType : "json",
-			data : {
-				"email" : newEmail,
-				"identifyingCode" : $("#identifying_code").val(),
-				"userToken" : userToken
-			},
-			success : function(rtn) {
-				if (rtn.code=="000000") {
-					javaex.optTip({
-						content : "修改成功",
-						type : "success"
-					});
-					// 建议延迟加载
-					setTimeout(function() {
-						// 关闭弹出层
-						javaex.close();
-					}, 2000);
-					$("#user_email").text(newEmail);
-					$("#change_email").hide();
-					return true;
-				} else {
-					javaex.optTip({
-						content : rtn.message,
-						type : "error"
-					});
-				}
-			}
-		});
-		
-		return false;
-	}
+	// function saveEmail() {
+	// 	var newEmail = $("#email").val();
+	// 	$.ajax({
+	// 		url : "${pageContext.request.contextPath}/portal/user_info/change_email.json",
+	// 		type : "POST",
+	// 		dataType : "json",
+	// 		data : {
+	// 			"email" : newEmail,
+	// 			"identifyingCode" : $("#identifying_code").val(),
+	// 			"userToken" : userToken
+	// 		},
+	// 		success : function(rtn) {
+	// 			if (rtn.code=="000000") {
+	// 				javaex.optTip({
+	// 					content : "修改成功",
+	// 					type : "success"
+	// 				});
+	// 				// 建议延迟加载
+	// 				setTimeout(function() {
+	// 					// 关闭弹出层
+	// 					javaex.close();
+	// 				}, 2000);
+	// 				$("#user_email").text(newEmail);
+	// 				$("#change_email").hide();
+	// 				return true;
+	// 			} else {
+	// 				javaex.optTip({
+	// 					content : rtn.message,
+	// 					type : "error"
+	// 				});
+	// 			}
+	// 		}
+	// 	});
+	//
+	// 	return false;
+	// }
 	
 	// 修改密码
 	function showChangePassword() {
@@ -187,29 +249,113 @@
 	}
 	function changePassword() {
 		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/change_pass_word.json",
+			url : "/user/changePassword",
 			type : "POST",
 			dataType : "json",
 			data : {
-				"passWord" : $("#password").val(),
-				"userToken" : userToken
+                "id":[[${session.user.id}]],
+				"password" : $("#password").val(),
+				"newPassword" : $("#newPassword").val(),
 			},
 			success : function(rtn) {
-				if (rtn.code=="000000") {
+				if (rtn.code=="2") {
 					javaex.optTip({
 						content : "修改成功",
 						type : "success"
 					});
-					$("#change_password").hide();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
 				} else {
 					javaex.optTip({
-						content : rtn.message,
+						content : rtn.msg,
 						type : "error"
 					});
 				}
 			}
 		});
 	}
+
+    // 修改手机号
+    function showChangePhone() {
+        $("#change_phone").show();
+    }
+    function changePhone() {
+        if ($("#phone").val()=="") {
+            javaex.optTip({
+                content : "请填写新的手机号",
+                type : "error"
+            });
+        } else {
+            sendPhone();
+        }
+    }
+    // 获取验证码
+    function sendPhone() {
+        javaex.optTip({
+            content: "系统处理中，请稍候...",
+            type: "submit"
+        });
+
+        $.ajax({
+            url: "/user/saveOrUpdate",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: [[${session.user.id}]],
+                phone: $("#phone").val()
+            },
+            success: function (rtn) {
+                if (rtn.code == "2") {
+                    javaex.optTip({
+                        content: "修改成功",
+                        type: "success"
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    javaex.optTip({
+                        content: "修改失败",
+                        type: "error"
+                    });
+                }
+            }
+        });
+    }
+
+    function changeBirth(){
+        javaex.optTip({
+            content: "系统处理中，请稍候...",
+            type: "submit"
+        });
+
+        $.ajax({
+            url: "/user/saveOrUpdate",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: [[${session.user.id}]],
+                birth: $("#birth").val()
+            },
+            success: function (rtn) {
+                if (rtn.code == "2") {
+                    javaex.optTip({
+                        content: "修改成功",
+                        type: "success"
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    javaex.optTip({
+                        content: "修改失败",
+                        type: "error"
+                    });
+                }
+            }
+        });
+    }
 </script>
 </html>
 

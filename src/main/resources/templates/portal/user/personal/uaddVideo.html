@@ -184,20 +184,22 @@
             elem: '#videoUpload'
             ,url: '/upload' //改成您自己的上传接口
             ,accept: 'video' //视频
+            , before: function (obj) {
+                element.progress('video', '0%'); //进度条复位
+            }
             ,done: function(res){
                 layer.msg('上传成功');
                 $("#source").val(res.data);
             }
             //视频进度条
             , progress: function (n, index, e) {
-                setTimeout(function (){
                     var timer = setInterval(function (){
                         $.ajax({
                             url: "/upload/exportStatus",
                             success: function (res) {
                                 var res = res.data;
                                 element.progress('video', (res*100).toFixed(2) +'%')
-                                if(res  == 1){
+                                if(res == 1){
                                     //进度到100%，注意关闭定时器
                                     clearInterval(timer);
                                     layer.msg('上传成功');
@@ -206,14 +208,10 @@
                             error: function (e) {
                                 //关闭定时器
                                 clearInterval(timer);
-                                //关闭弹出层
-                                layer.close(progressLayer);
                                 layer.msg("保存失败");
-                                layer.closeAll();
                             }
                         });
-                    },1000);
-                },2000)
+                    },1500);
             }
         });
 

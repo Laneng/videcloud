@@ -42,8 +42,17 @@ public class UploadController {
 
     @RequestMapping("/exportStatus")
     @ResponseBody
-    public Result Status(HttpServletRequest request){
-        float exportStatus = (float) request.getSession().getAttribute("exportStatus");
-        return new Result(ResponseEnum.SELECT_SUCCESS,1,exportStatus);
+    public Result Status(HttpSession session){
+        Object exportStatus = session.getAttribute("exportStatus");
+        if (exportStatus == null) {
+            return new Result(ResponseEnum.SELECT_SUCCESS,1,0);
+        }else{
+            if ( exportStatus.toString().equals("1")){
+                session.setAttribute("exportStatus",0);
+                return new Result(ResponseEnum.SELECT_SUCCESS,1,1);
+            }
+            return new Result(ResponseEnum.SELECT_SUCCESS,1,exportStatus);
+        }
+
     }
 }

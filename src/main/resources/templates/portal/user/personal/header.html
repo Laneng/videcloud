@@ -72,7 +72,7 @@ a:visited {color: #666}
 .userInfo{height: 100px;position: relative;top: 70px;overflow: hidden}
 .avatarDiv{height: 100px;width: 100px; float: left;line-height: 100px}
 .userAvatar{height: 60px;width: 60px;border-radius: 50%;margin: 20px auto;display:block;border: 2px}
-.userName{float: left;height: 40px;width: 200px;line-height: 40px;font-size: 22px;font-weight: bold;color: #1E9FFF;}
+.userName{float: left;height: 40px;width: 200px;line-height: 60px;font-size: 22px;font-weight: bold;color: #1E9FFF;}
 .userComment{float: left;height: 60px;width:1100px;line-height: 60px;font-size: 18px;font-weight: bold}
 </style>
 
@@ -96,7 +96,7 @@ a:visited {color: #666}
 			<div class="menu-con fr">
 				<ul>
 					<li id="im-list-box" class="menu-item">
-						<a href="javascript:;" class="title"><img th:src="@{/images/soso.jpeg}" style="width: 36px;height: 36px;border-radius: 50%" class="i-face face"></a>
+						<a href="javascript:;" class="title"><img th:src="${session.user.avatar}" style="width: 36px;height: 36px;border-radius: 50%" class="i-face face"></a>
 						<div class="im-list-box">
 							<a class="im-list" th:href="@{/user/accountSet}" target="_self">个人设置</a>
 							<a class="im-list" th:href="@{/user/addVideo}" target="_self">视频上传</a>
@@ -113,19 +113,17 @@ a:visited {color: #666}
 		<div class="head-content yaoqishan-wrapper">
 			<div class="userInfo">
 				<div class="avatarDiv">
-					<a href="#" ><img class="userAvatar" th:src="@{/images/soso.jpeg}"></a>
+					<a href="javascript:;" onclick="changeAvatar()"><img class="userAvatar" th:src="${session.user.avatar}"></a>
 				</div>
 				<div class="userName">
-					<span>${userInfo.username}</span>
+					<span th:text="${session.user.name}"></span>
 				</div>
 				<div class="userComment">
-					<span>这个人很懒，什么也没有留下</span>
+<!--					<span th:text="${session.user.msg}"></span>-->
+					<input id="msg" type="text" th:value="${session.user.msg}" style="background: none;border: none;font-size: 18px;font-weight: bold" onchange="changeMsg()"/>
 				</div>
-
 			</div>
-
 		</div>
-		<a target="_blank" class="banner-link"></a>
 	</div>
 </div>
 
@@ -141,8 +139,18 @@ a:visited {color: #666}
 	</div>
 </div>
 
-<script>
+<script th:inline="javascript">
 	var path = "${webInfo.domain}";
+
+    // 修改头像
+    function changeAvatar() {
+        javaex.dialog({
+            type : "login",	// 弹出层类型
+            width : "900",
+            height : "603",
+            url : "/user/avatar"
+        });
+    }
 
 	$("#search").click(function() {
 		// 关键词检索
@@ -176,5 +184,30 @@ a:visited {color: #666}
 			}
 		});
 	}
+
+    function changeMsg(){
+        $.ajax({
+            url: "/user/saveOrUpdate",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: [[${session.user.id}]],
+                msg: $("#msg").val()
+            },
+            success: function (rtn) {
+                if (rtn.code == "2") {
+                    javaex.optTip({
+                        content: "修改成功",
+                        type: "success"
+                    })
+                }else {
+                    javaex.optTip({
+                        content: "修改失败",
+                        type: "error"
+                    });
+                }
+            }
+        });
+    }
 </script>
 </html>
