@@ -32,8 +32,8 @@ public class VedioInfoController {
 
 
     @RequestMapping("/getAll")
-    public String selectVedioInfo(Integer page,Integer limit){
-        Map<String,Object> map = new HashMap<>();
+    public String selectVedioInfo(Integer page,Integer limit,Map<String,Object> map){
+//        Map<String,Object> map = new HashMap<>();
         Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
         map.put("vedioInfos",vedioInfos);
         return "portal/index";
@@ -51,11 +51,10 @@ public class VedioInfoController {
     }
 
     @RequestMapping("/getOne")
-    public String selectVedioInfoById(Integer id){
-        Map<String, Object> map = new HashMap<>();
-        Result vedioInfo = iVedioInfoService.selectVedioInfoById(id);
-        map.put("vedioInfo",vedioInfo);
-        return "portal/index";
+    public String selectVedioInfoById(Integer id,Map<String,Object> map){
+        Result vedioInfoResult = iVedioInfoService.selectVedioInfoById(id);
+        map.put("vedioPlay",vedioInfoResult);
+        return "portal/play/videoPlay";
     }
 
 

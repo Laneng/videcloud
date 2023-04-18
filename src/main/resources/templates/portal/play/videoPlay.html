@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>视频播放页面</title>
+    <template th:replace="portal/common/common.html"></template>
 </head>
 <body>
+<!-- 头部 -->
+<div class="yaoqishan-header">
+    <div th:replace="portal/common/header.html"></div>
+</div>
 
+<!--播放内容-->
+<div style="width: 1340px; margin: 20px auto;">
+
+        <!--正文内容-->
+        <h1 th:text="${vedioPlay.data.title}" style="color: red"></h1>
+    <div class="block no-shadow" style="background-color:#1a1a1a;">
+
+        <div>
+                    <video height="650px" width="1340px" controls>
+                        <source th:src="${vedioPlay.data.url}" type="video/mp4" align="center">
+                    </video>
+            </div>
+
+    </div>
+
+</div>
+
+<!--底部-->
+<div class="footer-wrap" >
+    <div th:replace="portal/common/footer.html"></div>
+</div>
 </body>
 </html>

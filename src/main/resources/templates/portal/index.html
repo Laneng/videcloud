@@ -48,68 +48,68 @@
 					</div>
 
 					<div>
-						<ul class="equal-2" id="juhe4" style="width: 440px;margin-right: -20px;">
+						<ul class="equal-2" id="juhe4" style="width: 440px;margin-right: -20px;" th:each="vedioInfo:${vedioInfos.data}">
 							<li>
 								<div class="poly-ul-img">
-									<video width="200" height="112" controls>
-										<source src="https://jycz-view.oss-cn-beijing.aliyuncs.com/01_mybatis%E4%BB%8B%E7%BB%8D.mp4" type="video/mp4">
-									</video>
-								</div>
-								<div class="poly-title">我是来测试的</div>
-							</li>
-							<li>
-								<div class="poly-ul-img">
-									<a href="#" target="_blank">
-										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
+									<a th:href="@{/vedioInfo/getOne(id=${vedioInfo.id})}" th:alt="加载失败" target="_blank">
+										<img th:src="${vedioInfo.img}" width="100%" height="100%" />
 									</a>
 								</div>
-								<div class="poly-title">我是来测试的</div>
+								<div class="poly-title" th:text="${vedioInfo.title}"></div>
 							</li>
-							<li>
-								<div class="poly-ul-img">
-									<a href="#" target="_blank">
-										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-									</a>
-								</div>
-								<div class="poly-title">我是来测试的</div>
-							</li>
-							<li>
-								<div class="poly-ul-img">
-									<a href="#" target="_blank">
-										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-									</a>
-								</div>
-								<div class="poly-title">我是来测试的</div>
-							</li>
-							<li>
-								<div class="poly-ul-img">
-									<a href="#" target="_blank">
-										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-									</a>
-								</div>
-								<div class="poly-title">我是来测试的</div>
-							</li>
-							<li>
-								<div class="poly-ul-img">
-									<a href="#" target="_blank">
-										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-									</a>
-								</div>
-								<div class="poly-title">我是来测试的</div>
-							</li>
+<!--							<li>-->
+<!--								<div class="poly-ul-img">-->
+<!--									<a href="#" target="_blank">-->
+<!--										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--									</a>-->
+<!--								</div>-->
+<!--								<div class="poly-title">我是来测试的</div>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<div class="poly-ul-img">-->
+<!--									<a href="#" target="_blank">-->
+<!--										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--									</a>-->
+<!--								</div>-->
+<!--								<div class="poly-title">我是来测试的</div>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<div class="poly-ul-img">-->
+<!--									<a href="#" target="_blank">-->
+<!--										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--									</a>-->
+<!--								</div>-->
+<!--								<div class="poly-title">我是来测试的</div>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<div class="poly-ul-img">-->
+<!--									<a href="#" target="_blank">-->
+<!--										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--									</a>-->
+<!--								</div>-->
+<!--								<div class="poly-title">我是来测试的</div>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<div class="poly-ul-img">-->
+<!--									<a href="#" target="_blank">-->
+<!--										<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--									</a>-->
+<!--								</div>-->
+<!--								<div class="poly-title">我是来测试的</div>-->
+<!--							</li>-->
 						</ul>
 					</div>
-					<div>
-						<div style="width: 420px;height: 112px;margin-bottom: 20px;">
-							<a href="http://www.javaex.cn/" target="_blank"><img src="http://173.javaex.cn/FuHDdQCBVHpQjncxdm76yzO2q6fj" width="100%" height="100%"></a>
-						</div>
-						<div style="width: 420px;height: 244px;position: relative">
-							<a href="#" target="_blank"><img src="http://173.javaex.cn/FgM-UfvaZEVK4mnlPIisI0wPASW6" width="100%" height="100%"></a>
-							<div class="t">
-								<p class="t1"><span><a href="#" target="_blank">爱如意 电影《阿修罗》主题曲 -- 邓紫棋</a></span></p>
-							</div>
-						</div>
-					</div>
+<!--					<div>-->
+<!--						<div style="width: 420px;height: 112px;margin-bottom: 20px;">-->
+<!--							<a href="http://www.javaex.cn/" target="_blank"><img src="http://173.javaex.cn/FuHDdQCBVHpQjncxdm76yzO2q6fj" width="100%" height="100%"></a>-->
+<!--						</div>-->
+<!--						<div style="width: 420px;height: 244px;position: relative">-->
+<!--							<a href="#" target="_blank"><img src="http://173.javaex.cn/FgM-UfvaZEVK4mnlPIisI0wPASW6" width="100%" height="100%"></a>-->
+<!--							<div class="t">-->
+<!--								<p class="t1"><span><a href="#" target="_blank">爱如意 电影《阿修罗》主题曲 &#45;&#45; 邓紫棋</a></span></p>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
 				</div>
 			</div>
 		</div>
@@ -180,63 +180,63 @@
 		</div>
 
 		<!--搞笑-->
-		<div class="block no-shadow" style="height:259px;">
-			<div class="main">
-				<div class="tab">
-					<div class="tab-title">
-						<img class="mod-icon" src="images/ico8.png" />
-						<em>搞笑</em>
-					</div>
-					<div class="tab-content">
-						<ul id="gaoxiao" class="equal-6 cover">
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<li>
-								<a href="#" target="_blank" class="screenshot">
-									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />
-								</a>
-								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>
-								<p>100次播放</p>
-							</li>
-							<span class="clearfix"></span>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+<!--		<div class="block no-shadow" style="height:259px;">-->
+<!--			<div class="main">-->
+<!--				<div class="tab">-->
+<!--					<div class="tab-title">-->
+<!--						<img class="mod-icon" src="images/ico8.png" />-->
+<!--						<em>搞笑</em>-->
+<!--					</div>-->
+<!--					<div class="tab-content">-->
+<!--						<ul id="gaoxiao" class="equal-6 cover">-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<li>-->
+<!--								<a href="#" target="_blank" class="screenshot">-->
+<!--									<img src="http://173.javaex.cn/FmimHy5MLxEtcAg5Tm72vbT0eu_f" width="100%" height="100%" />-->
+<!--								</a>-->
+<!--								<p class="screenshot-title"><a href="#" target="_blank">我是来测试的</a></p>-->
+<!--								<p>100次播放</p>-->
+<!--							</li>-->
+<!--							<span class="clearfix"></span>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
 	</div>
 
 	<!--底部-->

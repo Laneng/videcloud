@@ -3,10 +3,15 @@ package com.videocloud.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -19,6 +24,8 @@ import java.io.Serializable;
  */
 @TableName("video_info")
 @ApiModel(value = "VedioInfo对象", description = "视频信息表")
+@Data
+@ToString
 public class VedioInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,117 +68,10 @@ public class VedioInfo implements Serializable {
     private Integer videoTypeId;
 
 
-    public Integer getId() {
-        return id;
-    }
+    @ApiModelProperty("上传时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date uploadTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getIntro() {
-        return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getOper() {
-        return oper;
-    }
-
-    public void setOper(String oper) {
-        this.oper = oper;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Integer getVideoTypeId() {
-        return videoTypeId;
-    }
-
-    public void setVideoTypeId(Integer videoTypeId) {
-        this.videoTypeId = videoTypeId;
-    }
-
-    @Override
-    public String toString() {
-        return "VedioInfo{" +
-        "id=" + id +
-        ", url=" + url +
-        ", title=" + title +
-        ", intro=" + intro +
-        ", author=" + author +
-        ", type=" + type +
-        ", img=" + img +
-        ", state=" + state +
-        ", reason=" + reason +
-        ", oper=" + oper +
-        ", userId=" + userId +
-        ", videoTypeId=" + videoTypeId +
-        "}";
-    }
 }
