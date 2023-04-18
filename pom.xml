@@ -29,8 +29,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!--分页工具-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.2.1</version>  <!-- 根据需要选择合适的版本号 -->
+        </dependency>
 
-<!--         Swagger 接口文档-->
+        <!--         Swagger 接口文档-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
