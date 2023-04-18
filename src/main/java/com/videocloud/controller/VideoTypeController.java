@@ -88,4 +88,10 @@ public class VideoTypeController {
             return new Result(ResponseEnum.DELETE_SUCCESS, 1, null);
         }
     }
+
+    @GetMapping
+    public Result selectAll(){
+        List<VideoTypeEntity> list = videoTypeService.list();
+        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
+    }
 }

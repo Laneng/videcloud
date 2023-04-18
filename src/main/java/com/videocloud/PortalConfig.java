@@ -14,7 +14,6 @@ public class PortalConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("portal/index");
         registry.addViewController("/user/loginPage").setViewName("portal/user/login_page");
         registry.addViewController("/user/registerPage").setViewName("portal/user/register_page");
         registry.addViewController("/user/findPwd").setViewName("portal/user/find_pwd");

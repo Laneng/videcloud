@@ -4,11 +4,8 @@ import com.videocloud.entity.Result;
 import com.videocloud.entity.VedioInfo;
 import com.videocloud.service.IVedioInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,14 +21,12 @@ import java.util.Map;
  * @since 2023-04-17
  */
 @Controller
-@RequestMapping("/vedioInfo")
+@RequestMapping
 public class VedioInfoController {
 
     @Autowired
     private IVedioInfoService iVedioInfoService;
-
-
-    @RequestMapping("/getAll")
+    @RequestMapping({"/","/index","/index.html"})
     public String selectVedioInfo(Integer page,Integer limit,Map<String,Object> map){
 //        Map<String,Object> map = new HashMap<>();
         Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
@@ -39,18 +34,13 @@ public class VedioInfoController {
         return "portal/index";
     }
 
-
-
-
-    @RequestMapping("/save")
-    public String saveView(VedioInfo vedioInfo){
-        Map<String, Object> map = new HashMap<>();
-        Result saveVedioInfo = iVedioInfoService.saveVedioInfo(vedioInfo);
-        map.put("saveVedioInfo",saveVedioInfo);
-        return "redirect:/vedioInfo/getAll";
+    @RequestMapping("/vedioInfo/save")
+    @ResponseBody
+    public Result saveView(VedioInfo vedioInfo){
+        return iVedioInfoService.saveVedioInfo(vedioInfo);
     }
 
-    @RequestMapping("/getOne")
+    @RequestMapping("/vedioInfo/getOne")
     public String selectVedioInfoById(Integer id,Map<String,Object> map){
         Result vedioInfoResult = iVedioInfoService.selectVedioInfoById(id);
         map.put("vedioPlay",vedioInfoResult);
@@ -58,7 +48,7 @@ public class VedioInfoController {
     }
 
 
-    @RequestMapping("/update")
+    @RequestMapping("/vedioInfo/update")
     public String updateVedioInfo(VedioInfo vedioInfo){
         Map<String,Object> map = new HashMap<>();
         Result updateVedioInfo = iVedioInfoService.updateVedioInfo(vedioInfo);
@@ -66,7 +56,7 @@ public class VedioInfoController {
         return "redirect:/vedioInfo/getAll";
     }
 
-    @RequestMapping("/deleteById")
+    @RequestMapping("/vedioInfo/deleteById")
     public String deleteVedioInfoById(Integer id){
         Map<String, Object> map = new HashMap<>();
         Result deleteVedioInfoById = iVedioInfoService.deleteVedioInfoById(id);
@@ -74,7 +64,7 @@ public class VedioInfoController {
         return "redirect:/vedioInfo/getAll";
     }
 
-    @RequestMapping("/deleteByIds")
+    @RequestMapping("/vedioInfo/deleteByIds")
     public String deleteVedioInfoByIds(String ids){
         List<Integer> list = new ArrayList<>();
         Map<String,Object> map = new HashMap<>();
