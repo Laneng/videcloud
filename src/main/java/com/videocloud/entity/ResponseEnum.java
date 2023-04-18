@@ -25,9 +25,14 @@ public enum ResponseEnum {
     LOGOUT_FAIL(11,"已经退出!"),
     REGISTER_SUCCESS(12,"注册成功!"),
     REGISTER_FAIL(13,"注册失败!"),
+
     REGISTER_TPHONE(14,"该账号已存在。"),
     REGISTER_FPHONE(15,"可以注册"),
-    WRONG_PASSWORD(16,"密码错误!");
+    WRONG_PASSWORD(16,"密码错误!"),
+    CODE_SUCCESS(0,"校验成功"),
+    CODE_FAIL(1,"校验失败"),
+    EMAIL_SUCCESS(0,"发送邮箱成功");
+
 
 
 

@@ -49,6 +49,12 @@
         </dependency>
 
 
+        <!--邮箱验依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!--        mysql-->
         <dependency>
             <groupId>mysql</groupId>

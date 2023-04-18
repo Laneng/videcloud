@@ -19,4 +19,6 @@ public interface IUserService extends IService<User> {
     public User register(String loginName, String passWord);
     public User selectOne(QueryWrapper<User> wrapper);
 
+    public boolean updatePwd(User user);
+
 }

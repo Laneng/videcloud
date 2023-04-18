@@ -69,4 +69,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectOne(wrapper);
         return user;
     }
+
+
+    @Override
+    public boolean updatePwd(User user) {
+
+
+        int i = userMapper.updateById(user);
+
+        return i==1?true:false;
+    }
 }

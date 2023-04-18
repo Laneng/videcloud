@@ -113,14 +113,14 @@
 			});
 			
 			$.ajax({
-				url : "${pageContext.request.contextPath}/portal/user_info/find_pwd_email.json",
+				url : "/email/sendEmail",
 				type : "POST",
 				dataType : "json",
 				data : {
 					"email" : $("#email").val()
 				},
 				success : function(rtn) {
-					if (rtn.code=="000000") {
+					if (rtn.code==0) {
 						javaex.optTip({
 							content : "邮件已发出，请查看",
 							type : "success"
@@ -158,7 +158,7 @@
 			});
 		} else {
 			$.ajax({
-				url : "${pageContext.request.contextPath}/portal/user_info/find_pwd_code.json",
+				url : "/email/code",
 				type : "POST",
 				dataType : "json",
 				data : {
@@ -166,7 +166,7 @@
 					"identifyingCode" : $("#identifying_code").val()
 				},
 				success : function(rtn) {
-					if (rtn.code=="000000") {
+					if (rtn.code==0) {
 						// 邮件发送成功
 						// 切换到第三个标签
 						$(".stepNavInnerLt").addClass("lt2").removeClass("lt1");
@@ -182,7 +182,7 @@
 						$("#third_btn").css("display", "block");
 					} else {
 						javaex.optTip({
-							content : rtn.message,
+							content : rtn.msg,
 							type : "error"
 						});
 					}
@@ -200,27 +200,27 @@
 			});
 		} else {
 			$.ajax({
-				url : "${pageContext.request.contextPath}/portal/user_info/set_new_pass_word.json",
+				url : "/email/pwd",
 				type : "POST",
 				dataType : "json",
 				data : {
 					"email" : $("#email").val(),
-					"identifyingCode" : $("#identifying_code").val(),
+					// "identifyingCode" : $("#identifying_code").val(),
 					"passWord" : $("#pass_word").val()
 				},
 				success : function(rtn) {
-					if (rtn.code=="000000") {
+					if (rtn.code==2) {
 						javaex.optTip({
 							content : "密码修改成功，即将为您跳转到登录页",
 							type : "success"
 						});
 						
 						setTimeout(function() {
-							window.location.href = "${pageContext.request.contextPath}/portal/login_page.action";
+							window.location.href = "/user/loginPage";
 						}, 2000);
 					} else {
 						javaex.optTip({
-							content : rtn.message,
+							content : rtn.msg,
 							type : "error"
 						});
 					}
