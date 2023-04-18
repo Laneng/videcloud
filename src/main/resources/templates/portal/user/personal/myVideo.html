@@ -13,45 +13,138 @@
         .edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
         .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
         .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+        #pageDiv1,#pageDiv2{height: 40px;text-align: center}
+        td{width: 230px;padding: 0}
+        tr{height: 250px}
 	</style>
 </head>
 <body>
 <header th:replace="portal/user/personal/header.html"></header>
 <div style="width: 1340px; margin: 20px auto;">
 	<div class="block no-shadow">
-		<table class="table no-line" style="height: 500px">
-			<tbody>
-			<tr>
-				<td><a href="#"><img th:src="@{/images/wallpaper1.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper2.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper3.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper4.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper5.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-			</tr>
-			<tr>
-				<td><a href="#"><img th:src="@{/images/wallpaper6.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper7.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper8.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper9.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-				<td><a href="#"><img th:src="@{/images/wallpaper10.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
-			</tr>
-			</tbody>
-		</table>
-		<div id="pageDiv" style="text-align: center"></div>
+
+		<div class="layui-tab" lay-filter="demo">
+			<ul class="layui-tab-title">
+				<li class="layui-this">未审核</li>
+				<li>已通过</li>
+			</ul>
+			<div class="layui-tab-content">
+				<div class="layui-tab-item layui-show">
+					<table class="table no-line" style="height: 500px;width: 1200px;margin: auto">
+						<tbody>
+						<tr id="tr1_1">
+						</tr>
+						<tr id="tr1_2">
+						</tr>
+						</tbody>
+					</table>
+					<div id="pageDiv1"></div>
+				</div>
+				<div class="layui-tab-item">
+					<table class="table no-line" style="height: 500px;width: 1200px;margin: auto">
+						<tbody>
+						<tr id="tr2_1">
+						</tr>
+						<tr id="tr2_2">
+						</tr>
+						</tbody>
+					</table>
+					<div id="pageDiv2"></div>
+				</div>
+			</div>
+		</div>
+
+
+
 	</div>
 </div>
 </body>
-<script>
-    layui.use('laypage', function(){
+<script th:inline="javascript">
+    layui.use(['element','laypage'], function(){
         var laypage = layui.laypage;
+        var element = layui.element;
 
-        //执行一个laypage实例
-        //自定义样式
-        laypage.render({
-            elem: 'pageDiv'
-            ,count: 34
-            ,theme: '#1E9FFF'
-        });
+        element.on('tab(demo',function (data){
+            console.log(data);
+        })
+
+	    $.ajax({
+		    url:"/vedioInfo/notPass",
+		    data:{page:1,limit:10},
+		    dataType:"json",
+		    success:function (res){
+                laypage.render({
+                    elem:'pageDiv1',
+                    count:res.count,
+                    theme: '#1E9FFF',
+                    jump:function (obj,first){
+                        $.ajax({
+	                        url:"/vedioInfo/notPass",
+                            data:{page:obj.curr,limit:10},
+                            dataType:"json",
+                            success:function (res) {
+                                var list = res.data;
+                                var html1 = "";
+                                for (var i = 0; i < (list.length>=5?5:list.length); i++) {
+                                    html1 += "<td>" +
+                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
+                                        "</td>"
+                                }
+                                $("#tr1_1").html(html1);
+
+                                var html2 = "";
+                                for (var i = 5; i < (list.length>=10?10:list.length); i++) {
+                                    html2 += "<td>" +
+                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
+                                        "</td>"
+                                }
+                                $("#tr1_2").html(html2);
+                            }
+                        })
+                    }
+                })
+		    }
+	    })
+
+        $.ajax({
+            url:"/vedioInfo/pass",
+            data:{page:1,limit:10},
+            dataType:"json",
+            success:function (res){
+                laypage.render({
+                    elem:'pageDiv2',
+                    count:res.count,
+                    theme: '#1E9FFF',
+                    jump:function (obj,first){
+                        $.ajax({
+                            url:"/vedioInfo/notPass",
+                            data:{page:obj.curr,limit:10},
+                            dataType:"json",
+                            success:function (res) {
+                                var list = res.data;
+                                var html1 = "";
+                                for (var i = 0; i < (list.length>=5?5:list.length); i++) {
+                                    html1 += "<td>" +
+                                        "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
+	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
+                                        "</td>"
+                                }
+                                $("#tr2_1").html(html1);
+
+                                var html2 = "";
+                                for (var i = 5; i < (list.length>=10?10:list.length); i++) {
+                                    html2 += "<td>" +
+                                        "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
+	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
+                                        "</td>"
+                                }
+                                $("#tr2_2").html(html2);
+                            }
+                        })
+                    }
+                })
+            }
+        })
     });
 </script>
 </html>

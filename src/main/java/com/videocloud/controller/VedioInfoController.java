@@ -1,12 +1,18 @@
 package com.videocloud.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
+import com.videocloud.entity.User;
 import com.videocloud.entity.VedioInfo;
 import com.videocloud.service.IVedioInfoService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +83,39 @@ public class VedioInfoController {
         map.put("deleteVedioInfoByIds",deleteVedioInfoByIds);
         return "redirect:/vedioInfo/getAll";
 
+    }
+
+    @RequestMapping("/vedioInfo/pass")
+    @ResponseBody
+    public Result pass(Integer page, Integer limit, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Integer id = user.getId();
+        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("reason","已通过");
+
+        Page<VedioInfo> pageH = new Page<>(page,limit);
+
+        Page<VedioInfo> p = iVedioInfoService.page(pageH,q);
+
+        List<VedioInfo> list = p.getRecords();
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,(int)p.getTotal(),list);
+    }
+
+    @RequestMapping("/vedioInfo/notPass")
+    @ResponseBody
+    public Result notPass(Integer page,Integer limit,HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+        Integer id = user.getId();
+        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("reason","未审核");
+
+        Page<VedioInfo> pageH = new Page<>(page,limit);
+
+        Page<VedioInfo> p = iVedioInfoService.page(pageH,q);
+
+        List<VedioInfo> list = p.getRecords();
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,(int)p.getTotal(),list);
     }
 
 
