@@ -1,5 +1,6 @@
 package com.videocloud;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @SpringBootApplication
 @ServletComponentScan
+@MapperScan("com.videocloud.mapper")
 public class VideoCloudApplication implements ServletContainerInitializer {
 
     public static void main(String[] args) {
