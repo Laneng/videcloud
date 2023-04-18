@@ -40,6 +40,7 @@ public class UploadController {
         return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
     }
 
+    //上传进度百分比监控
     @RequestMapping("/exportStatus")
     @ResponseBody
     public Result Status(HttpSession session){
@@ -48,7 +49,9 @@ public class UploadController {
             return new Result(ResponseEnum.SELECT_SUCCESS,1,0);
         }else{
             if ( exportStatus.toString().equals("1")){
+                //上传完成,进度重置
                 session.setAttribute("exportStatus",0);
+                //返回前端"1",意为已完成
                 return new Result(ResponseEnum.SELECT_SUCCESS,1,1);
             }
             return new Result(ResponseEnum.SELECT_SUCCESS,1,exportStatus);
