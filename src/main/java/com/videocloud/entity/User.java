@@ -54,7 +54,7 @@ public class User implements Serializable {
     private String avatar;
 
     @ApiModelProperty("注册时间")
-    @DateTimeFormat(pattern = "yyyy-DD-mm HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date rtime;
 

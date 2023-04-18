@@ -47,12 +47,12 @@
 					<form id="form">
 						<div class="login-frame-ti">
 							<h2 class="login-title">用户注册</h2>
-							<p class="sub-title">注册过程需要验证邮箱，请注意</p>
+							<p class="sub-title"></p>
 							<div class="info-container">
 								<p class="errorInfo vh"><span>账号错误</span></p>
 								<div class="tip-container tip-account-container">
 									<p class="tip-info">请输入账号</p>
-									<input type="text" class="txt-info txt-account" name="loginName" />
+									<input type="text" id="phone" class="txt-info txt-account"  onBlur="txtblur()" name="loginName" />
 								</div>
 							</div>
 							<div class="info-container">
@@ -64,13 +64,6 @@
 									<input type="password" class="txt-info txt-password" name="passWord" />
 								</div>
 								<a href="javascript:;" class="eye-close"></a>
-							</div>
-							<div class="info-container">
-								<p class="errorInfo vh"><span>邮箱错误</span></p>
-								<div class="tip-container tip-account-container">
-									<p class="tip-info">请输入邮箱</p>
-									<input type="text" class="txt-info txt-account" name="email" />
-								</div>
 							</div>
 							<a href="javascript:;" onclick="register()" class="btn-green btn-login">注册</a>
 						</div>
@@ -98,6 +91,14 @@
 		</div>
 	</div>
 </body>
+
+
+
+
+
+
+
+
 <script>
 	$('input[type="text"], input[type="password"]').focus(function() {
 		$(this).parent().parent().addClass("accountIn");
@@ -107,34 +108,83 @@
 			$(this).parent().parent().removeClass("accountIn");
 		}
 	});
-	
-	// 点击注册
-	function register() {
+
+
+	var flag = false;
+	//手机号码输入后失去焦点事件
+	function txtblur(event){ //当前元素失去焦点
+
+		var loginName = $("#phone").serialize()
+		console.log(loginName)
+
+		console.log(123);
 		$.ajax({
-			url : "${pageContext.request.contextPath}/portal/user_info/register.json",
+			url : "/user/getPhone",
 			type : "POST",
 			dataType : "json",
-			data : $("#form").serialize(),
+			data : loginName,
 			success : function(rtn) {
-				if (rtn.code=="000000") {
-					var info = rtn.data.info;
-					
-					delCookie("UID");
-					delCookie("userToken");
-					setCookie("UID", info.UID);
-					setCookie("userToken", info.userToken);
-					
-					$("#register").hide();
-					$("#validate").show();
-					sendEmail();
-				} else {
+				if (rtn.code==14) {
+
 					javaex.optTip({
-						content : rtn.message,
+						content : rtn.msg,
 						type : "error"
 					});
+
+				} else {
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
+
+					flag =true;
 				}
 			}
 		});
+
+	}
+	
+	// 点击注册
+	function register() {
+
+		console.log(flag)
+
+		if (flag== true){
+
+			$.ajax({
+				url : "/user/register",
+				type : "POST",
+				dataType : "json",
+				data : $("#form").serialize(),
+				success : function(rtn) {
+
+					if (rtn.code==12) {
+
+						javaex.optTip({
+							content : rtn.msg,
+							type : "success"
+						});
+
+						setTimeout(function (){window.location.href = "/";},3000)
+						// 跳转到首页,注册即登录
+
+					} else {
+						javaex.optTip({
+							content : rtn.msg,
+							type : "error"
+						});
+					}
+				}
+			});
+
+		}else {
+			javaex.optTip({
+				content : "请重新输入手机号码",
+				type : "error"
+			});
+		}
+
+
 	}
 	
 	// 发送邮件

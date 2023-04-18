@@ -1,12 +1,15 @@
 package com.videocloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.videocloud.entity.Result;
 import com.videocloud.entity.User;
 import com.videocloud.mapper.UserMapper;
 import com.videocloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * <p>
@@ -25,11 +28,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
 
 
+        String str = "@";
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
-        wrapper.eq("name", loginName).eq("passWord", passWord);
+
+        if (loginName.contains(str) ){
+
+            wrapper.eq("email", loginName).eq("passWord", passWord);
+            User user = userMapper.selectOne(wrapper);
+
+            return  user;
+        }else {
+
+            wrapper.eq("phone", loginName).eq("passWord", passWord);
+            User user = userMapper.selectOne(wrapper);
+
+            return  user;
+
+        }
+    }
+
+
+    @Override
+    public User register(String loginName, String passWord) {
+
+            User user = new User();
+            user.setPhone(loginName);
+            user.setPassword(passWord);
+            int i = userMapper.insert(user);
+
+
+            return  i==1?user:null;
+
+
+    }
+
+
+    @Override
+    public User selectOne(QueryWrapper<User> wrapper) {
+
         User user = userMapper.selectOne(wrapper);
-
-        return  user;
-
+        return user;
     }
 }

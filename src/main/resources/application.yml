@@ -1,6 +1,19 @@
 server:
   port: 8080
 
+path:
+  include:
+    - /admin
+    - /portal
+    - /user/history
+    - /user/addVideo
+    - /user/accountSet
+    - /user/myVideo
+  exclude:
+    - /user/loginPage
+    - /user/registerPage
+    - /
+
 #DataSource配置
 spring:
   datasource:

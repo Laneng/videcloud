@@ -21,7 +21,13 @@ public enum ResponseEnum {
     DELETE_FAIL(7,"删除失败!"),
     UPLOAD_SUCCESS(8,"上传成功!"),
     UPLOAD_FAIL(9,"上传失败"),
-    WRONG_PASSWORD(10,"密码错误!");
+    LOGOUT_SUCCESS(10,"退出成功!"),
+    LOGOUT_FAIL(11,"已经退出!"),
+    REGISTER_SUCCESS(12,"注册成功!"),
+    REGISTER_FAIL(13,"注册失败!"),
+    REGISTER_TPHONE(14,"该账号已存在。"),
+    REGISTER_FPHONE(15,"可以注册"),
+    WRONG_PASSWORD(16,"密码错误!");
 
 
 

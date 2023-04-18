@@ -1,7 +1,10 @@
 package com.videocloud.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.videocloud.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * <p>
@@ -13,5 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
     public User login(String loginName, String passWord);
+    public User register(String loginName, String passWord);
+    public User selectOne(QueryWrapper<User> wrapper);
 
 }
