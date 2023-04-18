@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<link rel="stylesheet" th:href="@{/css/layui.css}" media="all">
+	<script th:src="@{/js/layui.js}"></script>
+	<template th:replace="portal/common/common.html"></template>
+	<style>
+        .set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
+        .user-avatar{display: inline-block; cursor: pointer;}
+        .user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
+        .edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
+        .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
+        .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+        .historyDiv{height: 130px;width: 800px}
+        .videoFace{float: left;display: block}
+        .videoTitle{float: left;height: 40px;width: 530px;line-height: 40px;font-size: 22px;font-weight: bold;margin-left: 30px}
+        .videoInfo{float:right;height: 30px;width:160px;line-height: 30px;font-size: 16px;margin-top: 60px}
+	</style>
+
+</head>
+<body>
+
+<header th:replace="portal/user/personal/header.html"></header>
+<div style="width: 1340px; margin: 20px auto;">
+	<div class="block no-shadow">
+		<div style="width: 880px; margin:10px auto;">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+				<legend>历史记录</legend>
+			</fieldset>
+			<ul class="layui-timeline">
+				<li class="layui-timeline-item">
+					<i class="layui-icon layui-timeline-axis"></i>
+					<div class="layui-timeline-content layui-text">
+						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
+						<div class="historyDiv">
+							<img class="videoFace" th:src="@{/images/wallpaper1.jpg}" style="height: 125px;width: 220px">
+							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
+							<div class="videoInfo">author|type</div>
+						</div>
+
+					</div>
+				</li>
+				<li class="layui-timeline-item">
+					<i class="layui-icon layui-timeline-axis"></i>
+					<div class="layui-timeline-content layui-text">
+						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
+						<div class="historyDiv">
+							<img class="videoFace" th:src="@{/images/wallpaper4.jpg}" style="height: 125px;width: 220px">
+							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
+							<div class="videoInfo">author|type</div>
+						</div>
+
+					</div>
+				</li>
+				<li class="layui-timeline-item">
+					<i class="layui-icon layui-timeline-axis"></i>
+					<div class="layui-timeline-content layui-text">
+						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
+						<div class="historyDiv">
+							<img class="videoFace" th:src="@{/images/wallpaper10.png}" style="height: 125px;width: 220px">
+							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
+							<div class="videoInfo">author|type</div>
+						</div>
+
+					</div>
+				</li>
+				<li class="layui-timeline-item">
+					<i class="layui-icon layui-timeline-axis"></i>
+					<div class="layui-timeline-content layui-text">
+						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
+						<div class="historyDiv">
+							<img class="videoFace" th:src="@{/images/wallpaper7.png}" style="height: 125px;width: 220px">
+							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
+							<div class="videoInfo">author|type</div>
+						</div>
+
+					</div>
+				</li>
+				<li class="layui-timeline-item">
+					<i class="layui-icon layui-timeline-axis"></i>
+					<div class="layui-timeline-content layui-text">
+						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
+						<div class="historyDiv">
+							<img class="videoFace" th:src="@{/images/wallpaper9.png}" style="height: 125px;width: 220px">
+							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
+							<div class="videoInfo">author|type</div>
+						</div>
+
+					</div>
+				</li>
+			</ul>
+			<div id="pageDiv" style="text-align: center"></div>
+		</div>
+
+	</div>
+</div>
+</body>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        //自定义样式
+        laypage.render({
+            elem: 'pageDiv'
+            ,count: 34
+            ,theme: '#1E9FFF'
+        });
+    });
+</script>
+</html>

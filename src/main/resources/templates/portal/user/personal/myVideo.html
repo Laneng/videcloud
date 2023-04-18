@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<template th:replace="portal/common/common.html"></template>
+	<link rel="stylesheet" th:href="@{/css/layui.css}" media="all">
+	<script th:src="@{/js/layui.js}"></script>
+	<style>
+        .set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
+        .user-avatar{display: inline-block; cursor: pointer;}
+        .user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
+        .edit-input{width: 60%; height: 33px; padding: 5px 10px; background: #333; border: 1px solid #515151; border-radius: 33px; box-sizing: border-box; font-size: 14px; line-height: 19px; color: #ccc;}
+        .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
+        .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+	</style>
+</head>
+<body>
+<header th:replace="portal/user/personal/header.html"></header>
+<div style="width: 1340px; margin: 20px auto;">
+	<div class="block no-shadow">
+		<table class="table no-line" style="height: 500px">
+			<tbody>
+			<tr>
+				<td><a href="#"><img th:src="@{/images/wallpaper1.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper2.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper3.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper4.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper5.jpg}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+			</tr>
+			<tr>
+				<td><a href="#"><img th:src="@{/images/wallpaper6.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper7.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper8.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper9.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+				<td><a href="#"><img th:src="@{/images/wallpaper10.png}" style="height: 125px;width: 220px"></a><p><a href="#">视频标题</a></p><p>2022-07-02 12:11:22</p></td>
+			</tr>
+			</tbody>
+		</table>
+		<div id="pageDiv" style="text-align: center"></div>
+	</div>
+</div>
+</body>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        //自定义样式
+        laypage.render({
+            elem: 'pageDiv'
+            ,count: 34
+            ,theme: '#1E9FFF'
+        });
+    });
+</script>
+</html>
