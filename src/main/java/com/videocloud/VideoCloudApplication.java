@@ -12,7 +12,7 @@ import java.util.Set;
 
 @SpringBootApplication
 @ServletComponentScan
-@MapperScan("com.videocloud.mappers")
+@MapperScan("com.videocloud.mapper")
 public class VideoCloudApplication implements ServletContainerInitializer {
 
     public static void main(String[] args) {
