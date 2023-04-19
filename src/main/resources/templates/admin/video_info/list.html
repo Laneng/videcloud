@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title>视频管理</title>
 	<link th:replace="admin/common/common.html" rel="import">
+<!--	<div th:replace="admin/common/common.html"></div>-->
 </head>
 
 <body>
@@ -23,11 +24,9 @@
 		<!--块元素-->
 		<div class="block">
 			<!--页面有多个表格时，可以用于标识表格-->
-			<h2 th:text="${biaoti}"></h2>
-			<a th:href="@{${pageContext.request.contextPath}/media_info/list_normal.action}">
-				<button class="button wathet" style="position: absolute;right: 20px;top: 16px;">
-					<span class="icon-arrow_back"></span> 返回
-				</button>
+			<h2>审核列表</h2>
+			<a href="javascript:history.back();">
+				<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
 			</a>
 
 			<!--正文内容-->
@@ -35,11 +34,9 @@
 				<!--表格上方的操作元素，添加、删除等-->
 				<div class="operation-wrap">
 					<div class="buttons-wrap">
-						<a th:href="@{edit.action(mediaId=${mediaId})}">
-							<button id="add" class="button blue">
-								<span class="icon-plus"></span> 添加
-							</button>
-						</a>
+						<button id="add" class="button blue">
+							<span class="icon-plus"></span> 添加
+						</button>
 						<button class="button red" onclick="updateStatus('0');">
 							<span class="icon-block"></span> 批量禁止
 						</button>
@@ -117,9 +114,9 @@
 				</table>
 
 				<!-- 分页 -->
-				<div class="page">
-					<ul id="page" class="pagination"></ul>
-				</div>
+<!--				<div class="page">-->
+<!--					<ul id="page" class="pagination"></ul>-->
+<!--				</div>-->
 			</div>
 		</div>
 	</div>

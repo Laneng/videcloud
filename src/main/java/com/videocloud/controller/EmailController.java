@@ -1,21 +1,29 @@
 package com.videocloud.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.videocloud.entity.Email;
-import com.videocloud.entity.ResponseEnum;
-import com.videocloud.entity.Result;
-import com.videocloud.entity.User;
+import com.videocloud.entity.*;
 import com.videocloud.service.IUserService;
 import com.videocloud.util.CodeUtil;
+import com.videocloud.util.DBUtil;
+import com.videocloud.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 import java.util.Random;
 
 /**
@@ -33,12 +41,6 @@ public class EmailController {
     @Autowired
     IUserService userService;
 
-    @Resource
-    private JavaMailSender mailSender;
-
-    //	获得.yml文件发件人信息
-    @Value("${spring.mail.username}")
-    private String from;
 
 
     /*
@@ -46,22 +48,45 @@ public class EmailController {
      */
     @ResponseBody
     @RequestMapping("sendEmail")
-    public Result commonEmail(String email) {
+    public Result commonEmail(String email) throws Exception {
+
 
         code = CodeUtil.code();
+        Pwd pwd = DBUtil.findAllById(1);
 
-        //创建邮件消息
-        SimpleMailMessage message = new SimpleMailMessage();
-        // 设置发件人
-        message.setFrom(from);
-        // 设置收件人
-//        message.setTo(Email.getTo());
-        message.setTo(email);
-        // 设置验证码
-       message.setText(code);
+        String decode = PasswordUtil.decode(pwd.getPassword(), pwd.getKeyCode());
 
-        // 发送邮件
-        mailSender.send(message);
+        String smtpHost = "smtp.163.com"; // SMTP服务器地址
+        String email1 = pwd.getEmail(); // 发送方的邮箱地址
+        String password = decode; // 发送方邮箱的授权码
+        String toEmail = email; // 接收方的邮箱地址
+
+        Properties properties = System.getProperties();
+        properties.put("mail.smtp.host", smtpHost);
+        properties.put("mail.smtp.auth", "true");
+
+        Session session = Session.getDefaultInstance(properties);
+
+        try {
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(email1));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+            message.setSubject("验证码");
+            message.setText(code);
+
+            Transport transport = session.getTransport("smtp");
+            transport.connect(smtpHost, email1, password);
+
+            transport.sendMessage(message, message.getAllRecipients());
+
+            System.out.println("Email sent successfully.");
+
+        } catch (AddressException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
         return new Result(ResponseEnum.EMAIL_SUCCESS,0,null);
     }
@@ -81,9 +106,6 @@ public class EmailController {
             return new Result(ResponseEnum.CODE_FAIL,0,null);
         }
 
-
-
-
     }
 
 
@@ -102,8 +124,6 @@ public class EmailController {
         boolean b = userService.updatePwd(user);
 
         return b?new Result(ResponseEnum.UPDATE_SUCCESS,0,null):new Result(ResponseEnum.UPDATE_FAIL,0,null);
-
-
 
     }
 

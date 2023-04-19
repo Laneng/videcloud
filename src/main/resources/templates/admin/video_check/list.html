@@ -5,76 +5,116 @@
 	<title>审核管理</title>
 	<!-- 导入公共HTML片段 -->
 	<div th:replace="admin/common/common.html"></div>
+	<!-- 导入Bootstrap样式 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
 </head>
 <body>
-<!-- 面包屑导航和主体内容 -->
-<div class="content">
-	<!--面包屑导航-->
-	<div class="content-header">
-		<div class="breadcrumb">
-			<span>视频</span>
-			<span class="divider">/</span>
-			<span class="active">审核管理</span>
-		</div>
+
+<div th:replace="admin/common/nav.html"></div>
+
+<div class="admin-iframe-content">
+	<div class="admin-iframe-menu">
+		<ul class="menu">
+			<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
+			<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
+			<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
+			<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+		</ul>
 	</div>
+	<!-- 面包屑导航和主体内容 -->
+	<div class="content">
+		<!--面包屑导航-->
+		<div class="content-header">
+			<div class="breadcrumb">
+				<span>视频</span>
+				<span class="divider">/</span>
+				<span class="active">审核管理</span>
+			</div>
+		</div>
 
-	<!--全部主体内容-->
-	<div class="list-content">
-		<!--块元素-->
-		<div class="block">
-			<!--页面有多个表格时，可以用于标识表格-->
-			<h2>违规列表</h2>
-			<a href="javascript:history.back();">
-				<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
-			</a>
+		<!--全部主体内容-->
+		<div class="list-content">
+			<!--块元素-->
+			<div class="block">
+				<!--页面有多个表格时，可以用于标识表格-->
+				<h2>违规列表</h2>
+				<a href="javascript:history.back();">
+					<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+				</a>
 
-			<!--正文内容-->
-			<div class="main">
-<!--				<div style="display: flow-root;margin-bottom:20px;">-->
-<!--					<ul class="equal-6">-->
-<!--						<li th:each="field : ${fieldList}">-->
-<!--							<input type="checkbox" class="fill" name="field" th:value="${field.id}" th:checked="${field.isSelected=='1'}" /> <span th:text="${field.name}"></span>-->
-<!--						</li>-->
-<!--					</ul>-->
-<!--				</div>-->
+				<!--正文内容-->
+				<div class="main">
+	<!--				<div style="display: flow-root;margin-bottom:20px;">-->
+	<!--					<ul class="equal-6">-->
+	<!--						<li th:each="field : ${fieldList}">-->
+	<!--							<input type="checkbox" class="fill" name="field" th:value="${field.id}" th:checked="${field.isSelected=='1'}" /> <span th:text="${field.name}"></span>-->
+	<!--						</li>-->
+	<!--					</ul>-->
+	<!--				</div>-->
 
-				<!--表格上方的操作元素，添加、删除等-->
-				<div class="operation-wrap">
-					<div class="buttons-wrap">
-						<button id="add" class="button blue"><span class="icon-plus"></span> 添加</button>
-						<button id="delete" class="button red"><span class="icon-minus"></span> 删除</button>
-						<button id="save" class="button green"><span class="icon-check2"></span> 保存</button>
-						<button id="search" class="button yellow"><span class="icon-search2"></span> 搜索</button>
-						<input id="text" class="button text" type="text">
+					<!--表格上方的操作元素，添加、删除等-->
+					<div class="operation-wrap">
+						<div class="buttons-wrap">
+							<button id="add" class="button blue" data-toggle="modal" data-target="#myModal"><span class="icon-plus"></span> 添加</button>
+							<button id="delete" class="button red"><span class="icon-minus"></span> 删除</button>
+							<button id="save" class="button green"><span class="icon-check2"></span> 保存</button>
+							<button id="search" class="button yellow"><span class="icon-search2"></span> 搜索</button>
+							<input id="text" class="button text" type="text">
+						</div>
 					</div>
-				</div>
-				<!--class加上color可以实现隔行变色-->
-				<!--color1表示奇数行着色、color2表示偶数行着色-->
-				<table id="table" class="table">
-					<thead>
-					<tr>
-						<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
-<!--						<th style="width:20%;">显示顺序</th>-->
-						<th>索引</th>
-						<th>违规原因</th>
-						<th>操作</th>
-					</tr>
-					</thead>
+					<!-- 弹出框的内容 -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="myModalLabel">添加违规原因</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<!-- 弹出框的内容 -->
+									<input type="text" class="form-control" id="inputName" placeholder="请输入违规名称">
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-primary">保存</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--class加上color可以实现隔行变色-->
+					<!--color1表示奇数行着色、color2表示偶数行着色-->
+					<table id="table" class="table">
+						<thead>
+						<tr>
+							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
+	<!--						<th style="width:20%;">显示顺序</th>-->
+							<th>索引</th>
+							<th>违规原因</th>
+							<th>操作</th>
+						</tr>
+						</thead>
 
-					<tbody>
-					<tr th:each="entity, status : ${list}">
-						<td class="checkbox"><input type="checkbox" class="fill listen-1-2" name="fieldId" th:value="${entity.fieldId}" /> </td>
-						<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>
-						<td th:text="${entity.fieldName}"></td>
-						<td><input type="checkbox" class="fill" name="isScreen" value="1" th:checked="${entity.isScreen eq '1'}" /> </td>
-						<td><input type="checkbox" class="fill" name="isRequired" value="1" th:checked="${entity.isRequired eq '1'}" /> </td>
-					</tr>
-					</tbody>
-				</table>
+						<tbody>
+						<tr th:each="entity, status : ${list}">
+							<td class="checkbox"><input type="checkbox" class="fill listen-1-2" name="fieldId" th:value="${entity.fieldId}" /> </td>
+							<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>
+							<td th:text="${entity.fieldName}"></td>
+							<td><input type="checkbox" class="fill" name="isScreen" value="1" th:checked="${entity.isScreen eq '1'}" /> </td>
+							<td><input type="checkbox" class="fill" name="isRequired" value="1" th:checked="${entity.isRequired eq '1'}" /> </td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<!-- 导入jQuery和Bootstrap的JavaScript文件 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 <script th:inline="javascript">
 	javaex.loading();
@@ -84,6 +124,7 @@
 	var isScreenArr = new Array();
 	var isRequiredArr = new Array();
 
+	$("#add").click(function() {})
 	// 点击字段复选框事件
 	$(':checkbox[name="field"]').click(function() {
 		var fieldId = $(this).val();
