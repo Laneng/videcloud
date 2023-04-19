@@ -32,6 +32,14 @@ public class VedioInfoController {
 
     @Autowired
     private IVedioInfoService iVedioInfoService;
+
+    /**
+     * 返回信息到页面
+     * @param page 当前页
+     * @param limit 每页显示多少条数据
+     * @param map
+     * @return
+     */
     @RequestMapping({"/","/index","/index.html"})
     public String selectVedioInfo(Integer page,Integer limit,Map<String,Object> map){
 //        Map<String,Object> map = new HashMap<>();
@@ -40,12 +48,42 @@ public class VedioInfoController {
         return "portal/index";
     }
 
+
+    /**
+     * 这里不用管，还没有完善
+     * @param page
+     * @param limit
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/vedioInfo/getAll")
+    public Result selectAll(Integer page,Integer limit,Map<String,Object> map){
+
+        Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
+        map.put("vedio",vedioInfos);
+        return vedioInfos;
+    }
+
+
+    /**
+     * 上传视频信息
+     * @param vedioInfo
+     * @return
+     */
     @RequestMapping("/vedioInfo/save")
     @ResponseBody
     public Result saveView(VedioInfo vedioInfo){
         return iVedioInfoService.saveVedioInfo(vedioInfo);
     }
 
+
+    /**
+     * 根据id获取视频信息
+     * @param id
+     * @param map
+     * @return
+     */
     @RequestMapping("/vedioInfo/getOne")
     public String selectVedioInfoById(Integer id,Map<String,Object> map){
         Result vedioInfoResult = iVedioInfoService.selectVedioInfoById(id);
@@ -54,6 +92,11 @@ public class VedioInfoController {
     }
 
 
+    /**
+     * 修改视频信息
+     * @param vedioInfo
+     * @return
+     */
     @RequestMapping("/vedioInfo/update")
     public String updateVedioInfo(VedioInfo vedioInfo){
         Map<String,Object> map = new HashMap<>();
@@ -62,6 +105,12 @@ public class VedioInfoController {
         return "redirect:/vedioInfo/getAll";
     }
 
+
+    /**
+     * 通过id删除
+     * @param id
+     * @return
+     */
     @RequestMapping("/vedioInfo/deleteById")
     public String deleteVedioInfoById(Integer id){
         Map<String, Object> map = new HashMap<>();
@@ -70,6 +119,8 @@ public class VedioInfoController {
         return "redirect:/vedioInfo/getAll";
     }
 
+
+//    批量删除
     @RequestMapping("/vedioInfo/deleteByIds")
     public String deleteVedioInfoByIds(String ids){
         List<Integer> list = new ArrayList<>();
@@ -85,6 +136,14 @@ public class VedioInfoController {
 
     }
 
+
+    /**
+     * 查询已经审核的视频
+     * @param page
+     * @param limit
+     * @param session
+     * @return
+     */
     @RequestMapping("/vedioInfo/pass")
     @ResponseBody
     public Result pass(Integer page, Integer limit, HttpSession session) {
@@ -101,6 +160,13 @@ public class VedioInfoController {
         return new Result(ResponseEnum.SELECT_SUCCESS,(int)p.getTotal(),list);
     }
 
+    /**
+     * 查询未审核视频
+     * @param page
+     * @param limit
+     * @param session
+     * @return
+     */
     @RequestMapping("/vedioInfo/notPass")
     @ResponseBody
     public Result notPass(Integer page,Integer limit,HttpSession session) {
