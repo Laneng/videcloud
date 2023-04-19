@@ -14,8 +14,7 @@
         .edit-btn{height: 33px; padding: 0 15px; border-radius: 33px; margin-left: 20px; line-height: 33px; font-size: 14px; display: inline-block; background: #049b00; color: #fff; vertical-align: top; cursor: pointer;}
         .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
         #pageDiv1,#pageDiv2{height: 40px;text-align: center}
-        td{width: 230px;padding: 0}
-        tr{height: 250px}
+        #tr1_1,#tr1_2,#tr2_1,#tr2_2{height: 250px}
 	</style>
 </head>
 <body>
@@ -85,18 +84,26 @@
                             success:function (res) {
                                 var list = res.data;
                                 var html1 = "";
-                                for (var i = 0; i < (list.length>=5?5:list.length); i++) {
-                                    html1 += "<td>" +
+                                var end1 = (list.length>=5?5:list.length)
+                                for (var i = 0; i < end1; i++) {
+                                    html1 += "<td style='padding: 0;width: 230px'>" +
                                         "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
+                                }
+                                for(var i = end1;i<5;i++){
+                                    html1 += "<td style='padding: 0;width: 230px'></td>";
                                 }
                                 $("#tr1_1").html(html1);
 
                                 var html2 = "";
-                                for (var i = 5; i < (list.length>=10?10:list.length); i++) {
-                                    html2 += "<td>" +
+                                var end2 = (list.length>=10?10:list.length);
+                                for (var i = 5; i < end2; i++) {
+                                    html2 += "<td style='padding: 0;width: 230px'>" +
                                         "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
+                                }
+                                for(var i = end2>=5?end2:5;i < 10; i++) {
+                                    html2 += "<td style='padding: 0;width: 230px'></td>";
                                 }
                                 $("#tr1_2").html(html2);
                             }
@@ -117,26 +124,34 @@
                     theme: '#1E9FFF',
                     jump:function (obj,first){
                         $.ajax({
-                            url:"/vedioInfo/notPass",
+                            url:"/vedioInfo/pass",
                             data:{page:obj.curr,limit:10},
                             dataType:"json",
                             success:function (res) {
                                 var list = res.data;
                                 var html1 = "";
-                                for (var i = 0; i < (list.length>=5?5:list.length); i++) {
-                                    html1 += "<td>" +
+                                var end1 = (list.length>=5?5:list.length);
+                                for (var i = 0; i < end1; i++) {
+                                    html1 += "<td style='padding: 0;width: 230px'>" +
                                         "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
 	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
                                 }
+                                for(var i = end1;i<5;i++){
+                                    html1 += "<td style='padding: 0;width: 230px'></td>";
+                                }
                                 $("#tr2_1").html(html1);
 
                                 var html2 = "";
-                                for (var i = 5; i < (list.length>=10?10:list.length); i++) {
-                                    html2 += "<td>" +
+                                var end2 = (list.length>=10?10:list.length);
+                                for (var i = 5; i < end2; i++) {
+                                    html2 += "<td style='padding: 0;width: 230px'>" +
                                         "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
 	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
+                                }
+                                for(var i = end2>=5?end2:5;i<10;i++){
+                                    html1 += "<td style='padding: 0;width: 230px'></td>";
                                 }
                                 $("#tr2_2").html(html2);
                             }
