@@ -47,19 +47,14 @@ public class VedioInfoController {
 
 
     /**
-     * 这里不用管，还没有完善
-     * @param page
-     * @param limit
-     * @param map
+     * 查询当前播放量排在第一位的视频
      * @return
      */
+    @RequestMapping("/vedioInfo/byCount")
     @ResponseBody
-    @GetMapping("/vedioInfo/getAll")
-    public Result selectAll(Integer page,Integer limit,Map<String,Object> map){
-
-        Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
-        map.put("vedio",vedioInfos);
-        return vedioInfos;
+    public Result selectByCount(){
+        Result result = iVedioInfoService.selectByCount();
+        return result;
     }
 
 
@@ -180,6 +175,13 @@ public class VedioInfoController {
     }
 
 
+    @GetMapping("/vedioInfo/bydate")
+    @ResponseBody
+    public Result selectByDate(Integer page,Integer limit){
+        Result result = iVedioInfoService.selectByDate(page, limit);
+        return result;
+    }
+
     /**
      * 查询已经审核的视频
      * @param page
@@ -235,6 +237,13 @@ public class VedioInfoController {
         Result vedioInfos = iVedioInfoService.selectVedioInfoByType(page, limit, type);
         map.put("vedio", vedioInfos);
         return vedioInfos;
+    }
+
+    @PutMapping("/videoInfo/star")
+    @ResponseBody
+    public Result viewStar(String viewStar,String vedioId){
+        Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId);
+        return resultStar;
     }
 
 }

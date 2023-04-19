@@ -105,9 +105,10 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/register")
     public Result register(String loginName, String passWord,HttpSession httpSession){
-
         User user = userService.register(loginName, passWord);
+
         if(user!=null){
+            user.setAvatar("https://jycz-view.oss-cn-beijing.aliyuncs.com/b1800e92caa4425aad66738eea2fc09a.jpg");
             httpSession.setAttribute("user",user);
         }
 
@@ -118,6 +119,7 @@ public class UserController {
     @RequestMapping("/saveOrUpdate")
     @ResponseBody
     public Result userSaveOrUpdate(User user,HttpSession session){
+
         boolean b = userService.saveOrUpdate(user);
         if (b){
             User user1 = userService.getById(user.getId());
