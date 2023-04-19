@@ -82,19 +82,13 @@
 						<thead>
 						<tr>
 							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
-													<th style="width:20%;">显示顺序</th>
+							<!--						<th style="width:20%;">显示顺序</th>-->
 							<th>索引</th>
 							<th>分类名称</th>
 							<th>操作</th>
 						</tr>
 						</thead>
 						<tbody id="type_result">
-						<tr>
-<!--							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>-->
-							<td> </td>
-							<td> </td>
-							<td> </td>
-						</tr>
 <!--						<tr th:each="entity, status : ${list}">-->
 <!--							<td class="checkbox"><input type="checkbox" class="fill listen-1-2" value="${entity.id}" name="id" /></td>-->
 <!--							<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>-->
@@ -321,21 +315,23 @@
 				console.log('请求成功', result);
 				// 可以在这里根据返回的数据更新页面内容
 				// 返回的数据是一个数组，包含多个对象
-				var dataArray = result.data; // 数据在返回对象的 data 字段中
-				var table = $("#table"); // 获取表格元素
+				var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+				var html = "";
 
 				// 清空表格内容
-				table.empty();
-
+				// table.empty();
 				// 遍历数据数组，将每个对象添加为一行到表格中
 				for (var i = 0; i < dataArray.length; i++) {
-					var row = $("<tr>"); // 创建一行
-					row.append($("<td>").text(dataArray[i].id)); // 假设每个对象中有字段 field1，将其作为表格的一列
-					row.append($("<td>").text(dataArray[i].name)); // 假设每个对象中有字段 field2，将其作为表格的一列
-					row.append($("<td>").text(dataArray[i].opar)); // 假设每个对象中有字段 field2，将其作为表格的一列
-					// 继续根据需要添加其他字段到表格的列中
-					table.append(row); // 将行添加到表格中
+					html += "<tr>" +
+							"<td><input class='fill listen-1' type='checkbox'></td>" +
+							"<td>"+dataArray[i].id+"</td>" +
+							"<td>"+dataArray[i].name+"</td>" +
+							"<td><button>修改</button></td>" +
+							"</tr>"
+
 				}
+
+				$("#type_result").html(html);
 			},
 			error: function(xhr, textStatus, errorThrown) {
 				// 请求失败的处理逻辑

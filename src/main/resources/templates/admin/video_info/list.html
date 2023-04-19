@@ -3,19 +3,34 @@
 <head>
 	<meta charset="utf-8">
 	<title>视频管理</title>
-	<link th:replace="admin/common/common.html" rel="import">
-<!--	<div th:replace="admin/common/common.html"></div>-->
+	<div th:replace="admin/common/common.html"></div>
+	<!-- 导入Bootstrap样式 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
 </head>
 
 <body>
-<!-- 面包屑导航和主体内容 -->
-<div class="content">
+
+<div th:replace="admin/common/nav.html"></div>
+
+<div class="admin-iframe-content">
+	<div class="admin-iframe-menu">
+		<ul class="menu">
+			<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
+			<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
+			<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
+			<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+		</ul>
+	</div>
+
+	<!-- 面包屑导航和主体内容 -->
+	<div class="content">
 	<!--面包屑导航-->
 	<div class="content-header">
 		<div class="breadcrumb">
-			<span>视频管理</span>
+			<span>视频</span>
 			<span class="divider">/</span>
-			<span class="active">播放列表</span>
+			<span class="active">视频信息</span>
 		</div>
 	</div>
 
@@ -34,29 +49,16 @@
 				<!--表格上方的操作元素，添加、删除等-->
 				<div class="operation-wrap">
 					<div class="buttons-wrap">
-						<button id="add" class="button blue">
-							<span class="icon-plus"></span> 添加
-						</button>
-						<button class="button red" onclick="updateStatus('0');">
-							<span class="icon-block"></span> 批量禁止
+						<button class="button red" onclick="updateStatus('2');">
+							<span class="icon-block"></span> 批量封禁
 						</button>
 						<button class="button green" onclick="updateStatus('1');">
 							<span class="icon-check2"></span> 批量恢复
 						</button>
-						<button id="delete" class="button red">
-							<span class="icon-minus"></span> 批量删除
-						</button>
-						<span class="group-button" style="float: right;">
-                                <button id="update_sort" class="button green">
-                                    <span class="icon-refresh" style="font-weight:bold;"></span> 更新本页排序
-                                </button>
-                                <button id="update_power" class="button red">
-                                    <span class="icon-refresh" style="font-weight:bold;"></span> 更新统一权限
-                                </button>
-                                <button id="update_image" class="button indigo">
-                                    <span class="icon-refresh" style="font-weight:bold;"></span> 更新统一封面
-                                </button>
-                            </span>
+						<button id="search" class="button yellow" onclick="sendSearchRequest()"><span class="icon-search2"></span> 类型搜索</button>
+						<input id="text" class="button text" type="text">
+
+
 					</div>
 				</div>
 				<table id="table" class="table">
@@ -76,7 +78,13 @@
 							<th>操作</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="type_result">
+					<tr>
+						<!--							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>-->
+						<td> </td>
+						<td> </td>
+						<td> </td>
+					</tr>
 <!--					<th:block th:if="${#lists.isEmpty(pageInfo.list)}">-->
 <!--						<tr>-->
 <!--							<td colspan="8" style="text-align:center;">暂无记录</td>-->
@@ -110,7 +118,7 @@
 <!--							</td>-->
 <!--						</tr>-->
 <!--					</th:block>-->
-<!--					</tbody>-->
+					</tbody>
 				</table>
 
 				<!-- 分页 -->
@@ -121,320 +129,151 @@
 		</div>
 	</div>
 </div>
+</div>
+
+
+<!-- 导入jQuery和Bootstrap的JavaScript文件 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
 </body>
-<script th:inline="javascript">
-	javaex.loading();
 
-	var mediaId = "[[${mediaId}]]";
-	var videoIdArr = new Array();
-	var sortArr = new Array();
+<script>
 
-	var currentPage = "[[${pageInfo.pageNum}]]";
-	var pageCount = "[[${pageInfo.pages}]]";
+	$(function (){
 
-	javaex.page({
-		id : "page",
-		pageCount : pageCount,
-		currentPage : currentPage,
-		callback:function(rtn) {
-			search(rtn.pageNum);
-		}
-	});
+	})
 
-	// 批量删除
-	$("#delete").click(function() {
-		videoIdArr = [];
-		$(':checkbox[name="videoId"]:checked').each(function() {
-			videoIdArr.push($(this).val());
-		});
+	function sendSearchRequest() {
+		// 获取请求参数
+		var type = $("#text").val(); // 从页面中获取输入的名称
+		var pageNum = 1; // 设置页码
+		var pageSize = 10; // 设置每页显示的数量
 
-		// 判断至少选择一条记录
-		if (videoIdArr.length==0) {
-			javaex.optTip({
-				content : "至少选择一条记录",
-				type : "error"
-			});
-			return;
-		}
-
-		javaex.confirm({
-			content : "确定要删除么？删除后不可恢复",
-			callback : "batchDelete('"+videoIdArr+"')"
-		});
-	});
-
-	// 批量更新状态
-	function updateStatus(status) {
-		videoIdArr = [];
-		$(':checkbox[name="videoId"]:checked').each(function() {
-			videoIdArr.push($(this).val());
-		});
-
-		function batchDelete(videoIdArr) {
-			if (videoIdArr.length === 0) {
-				javaex.optTip({
-					content : "至少选择一条记录",
-					type : "error"
-				});
-				return;
-			}
-
-			javaex.confirm({
-				content : "确定要删除么？删除后不可恢复",
-				callback : "batchDelete('" + videoIdArr + "')"
-			});
-		}
-
-		function ajaxSuccess(rtn) {
-			if (rtn.code === "000000") {
-				javaex.optTip({
-					content : rtn.message,
-					type : "success"
-				});
-
-				// 建议延迟加载
-				setTimeout(function() {
-					// 刷新页面
-					window.location.reload();
-				}, 2000);
-			} else {
-				javaex.optTip({
-					content : rtn.message,
-					type : "error"
-				});
-			}
-		}
-
-		function updateStatus(status) {
-			var videoIdArr = [];
-			$(':checkbox[name="videoId"]:checked').each(function() {
-				videoIdArr.push($(this).val());
-			});
-
-			// 判断至少选择一条记录
-			if (videoIdArr.length === 0) {
-				javaex.optTip({
-					content : "至少选择一条记录",
-					type : "error"
-				});
-				return;
-			}
-
-			javaex.optTip({
-				content : "数据提交中，请稍候...",
-				type : "submit"
-			});
-
-			$.ajax({
-				url : "batch_update_status.json",
-				type : "POST",
-				dataType : "json",
-				traditional : "true",
-				data : {
-					"videoIdArr" : videoIdArr,
-					"status" : status
-				},
-				success : function(rtn) {
-					if (rtn.code === "000000") {
-						javaex.optTip({
-							content : rtn.message,
-							type : "success"
-						});
-
-						// 建议延迟加载
-						setTimeout(function() {
-							// 刷新页面
-							window.location.reload();
-						}, 2000);
-					} else {
-						javaex.optTip({
-							content : rtn.message,
-							type : "error"
-						});
-					}
-				}
-			});
-		}
-
-	// 搜索
-	function search(pageNum) {
-		if (pageNum==undefined) {
-			pageNum = 1;
-		}
-
-		window.location.href = "list.action"
-				+ "?mediaId="+mediaId
-				+ "&pageNum="+pageNum;
-	}
-
-	// obj为当前点击的元素对象
-	function img(obj) {
-		javaex.dialog({
-			type : "image",	// 弹出层类型
-			width : "480",	// 弹出层宽度
-			url : obj.children[0].src	// 图片地址
-		});
-	}
-
-	// 视频预览
-	function video(num, videoId) {
-		if (num=="" || num==null) {
-			num = "${biaoti}";
-		} else {
-			num = "第" + num + "集 "
-		}
-		javaex.dialog({
-			type : "window",
-			title : num,
-			url : "play_video.action?videoId="+videoId,	// 页面地址或网址
-			width : "960",	// 弹出层宽度
-			height : "580",	// 弹出层高度
-			isBackground : true,
-			scrolling : "no"
-		});
-	}
-
-	// 更新排序
-	$("#update_sort").click(function() {
-		if (javaexVerify()) {
-			videoIdArr = [];
-			sortArr = [];
-
-			$(':checkbox[name="videoId"]').each(function() {
-				videoIdArr.push($(this).val());
-			});
-
-			// 显示顺序
-			$('input[name="sort"]').each(function() {
-				sortArr.push($(this).val());
-			});
-
-			javaex.optTip({
-				content : "数据提交中，请稍候...",
-				type : "submit"
-			});
-
-			// 向后台提交
-			$.ajax({
-				url : "update_sort.json",
-				dataType : "json",
-				traditional : "true",	// 允许传递数组
-				data : {
-					"videoIdArr" : videoIdArr,
-					"sortArr" : sortArr
-				},
-				success : function(rtn) {
-					if (rtn.code=="000000") {
-						javaex.optTip({
-							content : rtn.message,
-							type : "success"
-						});
-						// 建议延迟加载
-						setTimeout(function() {
-							window.location.reload();
-						}, 2000);
-					} else {
-						javaex.optTip({
-							content : rtn.message,
-							type : "error"
-						});
-					}
-				}
-			});
-
-		}
-	});
-	
-	// 更新统一封面
-	$("#update_image").click(function() {
-		var html = '<input id="imgUrl" type="text" class="text" style="width:100%;" />';
-		
-		javaex.alert({
-			title : "请输入图片地址",
-			width : "500",
-			content : html,
-			callback : "callback()"
-		});
-	});
-	
-	function callback() {
-		javaex.optTip({
-			content : "封面更新中，请稍候...",
-			type : "submit"
-		});
-		
+		console.log(type)
+		// 发起Ajax请求
 		$.ajax({
-			url : "update_image.json",
-			type : "POST",
-			dataType : "json",
-			data : {
-				"mediaId" : mediaId,
-				"imgUrl" : $("#imgUrl").val()
-			},
-			success : function(rtn) {
-				if (rtn.code=="000000") {
-					javaex.optTip({
-						content : rtn.message
-					});
-					// 建议延迟加载
-					setTimeout(function() {
-						window.location.reload();
-					}, 2000);
-				} else {
-					javaex.optTip({
-						content : rtn.message,
-						type : "error"
-					});
+			url: '/vedioInfo/getByType', // 请求的URL
+			type: 'GET', // 请求的方法
+			data: {
+				type: type,
+				pageNum: pageNum,
+				pageSize: pageSize
+			}, // 请求的参数
+			dataType: 'json', // 响应的数据类型
+			success: function(result) {
+				// 请求成功的处理逻辑
+				console.log('请求成功', result);
+				// 可以在这里根据返回的数据更新页面内容
+				// 返回的数据是一个数组，包含多个对象
+				var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+				var html = "";
+
+				// 遍历数据数组，将每个对象添加为一行到表格中
+				for (var i = 0; i < dataArray.length; i++) {
+					html += "<tr>" +
+							"<td><input class='fill listen-1' type='checkbox'></td>" +
+							"<td>"+dataArray[i].id    +"</td>" +
+							"<td>"+dataArray[i].title +"</td>" +
+							"<td>"+dataArray[i].intro +"</td>" +
+							"<td>"+dataArray[i].author+"</td>" +
+							"<td>"+dataArray[i].type  +"</td>" +
+							"<td>"+dataArray[i].img   +"</td>" +
+							"<td>"+dataArray[i].state +"</td>" +
+							"<td>"+dataArray[i].reason+"</td>" +
+							"<td><button>修改</button></td>" +
+							"</tr>"
+
 				}
+				$("#type_result").html(html);
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				// 请求失败的处理逻辑
+				console.log('请求失败', errorThrown);
+				// 可以在这里处理请求失败的情况，例如显示错误信息
+			},
+			complete: function() {
+				// 请求完成的处理逻辑，无论成功或失败都会执行
+				console.log('请求完成');
+				// 可以在这里隐藏加载器等操作
 			}
 		});
-		return false;
-	}
-	
-	// 更新统一权限
-	$("#update_power").click(function() {
-		var html = '<input id="power" type="text" class="text" style="width:100%;" />';
-		
-		javaex.alert({
-			title : "请输入权限值",
-			width : "200",
-			content : html,
-			callback : "setPower()"
-		});
-	});
-	function setPower() {
-		javaex.optTip({
-			content : "权限值设置中，请稍候...",
-			type : "submit"
-		});
-		
+
+	// 根据视频分类查询视频信息(需要绑定"搜索"按键的事件)
+	function searchByType() {
+		var type = $('#type').val(); // 获取输入的视频分类
+		var page = 1; // 设置当前页数
+		var limit = 10; // 设置每页显示条数
 		$.ajax({
-			url : "update_power.json",
-			type : "POST",
-			dataType : "json",
-			data : {
-				"mediaId" : mediaId,
-				"power" : $("#power").val()
+			url: '/vedioInfo/getByType',
+			type: 'get',
+			dataType: 'json',
+			data: {
+				'page': page,
+				'limit': limit,
+				'type': type
 			},
-			success : function(rtn) {
-				if (rtn.code=="000000") {
-					javaex.optTip({
-						content : rtn.message
-					});
-					// 建议延迟加载
-					setTimeout(function() {
-						window.location.reload();
-					}, 2000);
+			success: function (result) {
+				// 处理查询结果
+				if (result.code === 200) {
+					// 渲染视频信息到页面
+					// ...
 				} else {
-					javaex.optTip({
-						content : rtn.message,
-						type : "error"
-					});
+					// 处理错误情况
+					// ...
 				}
+			},
+			error: function () {
+				// 处理请求失败情况
+				// ...
 			}
 		});
-		return false;
 	}
+
+	// 更新视频信息的请求
+	function updateVedioInfo(id, state, reason) {
+		$.ajax({
+			url: '/vedioInfo/update',
+			type: 'POST',
+			data: {
+				id: id,
+				state: state,
+				reason: reason
+			},
+			success: function(data) {
+				// 请求成功处理逻辑
+				console.log(data);
+				// 根据后端返回的数据进行相应的处理
+				if (data.status === 200) {
+					// 更新成功，进行页面跳转或其他操作
+					alert("已完成审核");
+					window.location.href = "/vedioInfo/getAll"; // 页面跳转到视频列表页面
+				} else {
+					// 更新失败，提示错误信息或其他操作
+					alert("审核过程出错啦：" + data.message);
+				}
+			},
+			error: function(error) {
+				// 请求失败处理逻辑
+				console.error(error);
+				// 处理请求失败的情况，例如提示用户重试或其他操作
+				alert("请求失败，请重试：" + error.statusText);
+			},
+
+		});
 	}
+
+	// 更新视频状态为审核已通过，违规原因为"符合社会主义核心价值观"
+	updateVedioInfo(1, 1, "符合社会主义核心价值观");
+
+	// 更新视频状态为审核未通过，违规原因为"色情低俗"
+	updateVedioInfo(2, 2, "色情低俗");
+
+	// 更新视频状态为默认未审核
+	updateVedioInfo(3, 0, "");
+	}
+
+
 </script>
 </html>

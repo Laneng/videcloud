@@ -72,6 +72,7 @@ public class VideoTypeController {
 
         QueryWrapper<VideoTypeEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", name);
+
         List<VideoTypeEntity> videoTypes = videoTypeService.list(queryWrapper);
         // 获取分页后的结果
         PageInfo<VideoTypeEntity> pageInfo = new PageInfo<>(videoTypes);

@@ -16,7 +16,8 @@
         .historyDiv{height: 130px;width: 800px}
         .videoFace{float: left;display: block}
         .videoTitle{float: left;height: 40px;width: 530px;line-height: 40px;font-size: 22px;font-weight: bold;margin-left: 30px}
-        .videoInfo{float:right;height: 30px;width:160px;line-height: 30px;font-size: 16px;margin-top: 60px}
+        .videoInfo{float:right;height: 30px;width:160px;line-height: 30px;font-size: 16px;margin-top: 0px}
+        .videoIntro{float: left;height: 60px;width: 530px;line-height: 30px;font-size: 16px;margin-left: 30px}
 	</style>
 
 </head>
@@ -25,71 +26,8 @@
 <header th:replace="portal/user/personal/header.html"></header>
 <div style="width: 1340px; margin: 20px auto;">
 	<div class="block no-shadow">
-		<div style="width: 880px; margin:10px auto;">
-			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-				<legend>历史记录</legend>
-			</fieldset>
-			<ul class="layui-timeline">
-				<li class="layui-timeline-item">
-					<i class="layui-icon layui-timeline-axis"></i>
-					<div class="layui-timeline-content layui-text">
-						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
-						<div class="historyDiv">
-							<img class="videoFace" th:src="@{/images/wallpaper1.jpg}" style="height: 125px;width: 220px">
-							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
-							<div class="videoInfo">author|type</div>
-						</div>
-
-					</div>
-				</li>
-				<li class="layui-timeline-item">
-					<i class="layui-icon layui-timeline-axis"></i>
-					<div class="layui-timeline-content layui-text">
-						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
-						<div class="historyDiv">
-							<img class="videoFace" th:src="@{/images/wallpaper4.jpg}" style="height: 125px;width: 220px">
-							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
-							<div class="videoInfo">author|type</div>
-						</div>
-
-					</div>
-				</li>
-				<li class="layui-timeline-item">
-					<i class="layui-icon layui-timeline-axis"></i>
-					<div class="layui-timeline-content layui-text">
-						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
-						<div class="historyDiv">
-							<img class="videoFace" th:src="@{/images/wallpaper10.png}" style="height: 125px;width: 220px">
-							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
-							<div class="videoInfo">author|type</div>
-						</div>
-
-					</div>
-				</li>
-				<li class="layui-timeline-item">
-					<i class="layui-icon layui-timeline-axis"></i>
-					<div class="layui-timeline-content layui-text">
-						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
-						<div class="historyDiv">
-							<img class="videoFace" th:src="@{/images/wallpaper7.png}" style="height: 125px;width: 220px">
-							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
-							<div class="videoInfo">author|type</div>
-						</div>
-
-					</div>
-				</li>
-				<li class="layui-timeline-item">
-					<i class="layui-icon layui-timeline-axis"></i>
-					<div class="layui-timeline-content layui-text">
-						<h4 class="layui-timeline-title">2022-03-24 13:22:11</h4>
-						<div class="historyDiv">
-							<img class="videoFace" th:src="@{/images/wallpaper9.png}" style="height: 125px;width: 220px">
-							<div class="videoTitle">xxxxxxxxxxxxxxxxxxx</div>
-							<div class="videoInfo">author|type</div>
-						</div>
-
-					</div>
-				</li>
+		<div style="width: 880px; margin:30px auto;">
+			<ul class="layui-timeline" id="timeline">
 			</ul>
 			<div id="pageDiv" style="text-align: center"></div>
 		</div>
@@ -98,16 +36,39 @@
 </div>
 </body>
 <script>
-    layui.use('laypage', function(){
-        var laypage = layui.laypage;
+    layui.use(['flow'], function(){
+        var flow = layui.flow;
 
-        //执行一个laypage实例
-        //自定义样式
-        laypage.render({
-            elem: 'pageDiv'
-            ,count: 34
-            ,theme: '#1E9FFF'
-        });
+        flow.load({
+	        elem:"#timeline",
+	        done:function (page,next){
+                var lis = [];
+				$.ajax({
+					url:"/videoHistory/select",
+					data:{page:page},
+					dataType:"json",
+					success:function (res){
+                        layui.each(res.data, function(index, item){
+                            var li = "<li class='layui-timeline-item'>" +
+                                "<i class='layui-icon layui-timeline-axis'></i>" +
+                                "<div class='layui-timeline-content layui-text'>" +
+                                "<h4 class='layui-timeline-title'>"+item.watchTime+"</h4>" +
+                                "<div class='historyDiv'>" +
+                                "<a href='/vedioInfo/getOne?id="+item.videoInfo.id+"'><img class='videoFace' src='"+item.videoInfo.img+"' style='height: 125px;width: 220px'></a>" +
+                                "<div class='videoTitle'>"+item.videoInfo.title+"</div>" +
+                                "<div class='videoIntro'>"+item.videoInfo.intro+"</div>" +
+                                "<div class='videoInfo'><img src='"+item.videoInfo.user.avatar+"' style='width: 30px;height: 30px;border-radius: 50%'/>&ensp;"+item.videoInfo.user.name+"&ensp;|&ensp;#"+item.videoInfo.type+"</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</li>"
+                            lis.push(li);
+                        });
+                        next(lis.join(''), page < res.count);
+                    }
+				})
+	        }
+        })
+
     });
 </script>
 </html>

@@ -86,17 +86,45 @@ public class VedioInfoController {
 
 
     /**
-     * 修改视频信息
+     * 修改视频状态（审核）
      * @param vedioInfo
+     * @author Leon Downey
      * @return
      */
     @RequestMapping("/vedioInfo/update")
     public String updateVedioInfo(VedioInfo vedioInfo){
-        Map<String,Object> map = new HashMap<>();
-        Result updateVedioInfo = iVedioInfoService.updateVedioInfo(vedioInfo);
-        map.put("updateVedioInfo",updateVedioInfo);
+        // 获取要更新的视频信息的id和state属性
+        Integer id = vedioInfo.getId();
+        Integer state = vedioInfo.getState();
+        String reason = vedioInfo.getReason(); // 获取违规原因
+
+        // 构造更新后的视频信息对象
+        VedioInfo updatedVedioInfo = new VedioInfo();
+        updatedVedioInfo.setId(id);
+
+        // 更新视频状态
+        if (state == 1) { // 审核已通过
+            updatedVedioInfo.setState(state);
+            updatedVedioInfo.setReason("符合社会主义核心价值观");
+        } else if (state == 2) { // 审核未通过
+            if (reason == null || reason.isEmpty()) { // 未选择违规原因
+                // 返回错误信息
+                Map<String, Object> map = new HashMap<>();
+                map.put("error", "请选择违规原因");
+                return "redirect:/vedioInfo/getAll";
+            }
+            updatedVedioInfo.setState(state);
+            updatedVedioInfo.setReason(reason);
+        } else { // 默认未审核
+            updatedVedioInfo.setState(0);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        Result updateVedioInfo = iVedioInfoService.updateVedioInfo(updatedVedioInfo);
+        map.put("updateVedioInfo", updateVedioInfo);
         return "redirect:/vedioInfo/getAll";
     }
+
 
 
     /**
@@ -185,5 +213,14 @@ public class VedioInfoController {
         return new Result(ResponseEnum.SELECT_SUCCESS,(int)p.getTotal(),list);
     }
 
+    //根据视频的分类进行模糊查询，便于审核，例如擦边和政治视频往往更容易不过审
+    @ResponseBody
+    @GetMapping("/vedioInfo/getByType")
+    public Result selectVedioInfoByType(Integer page, Integer limit, String type, Map<String, Object> map) {
+        // 调用服务层方法进行模糊查询
+        Result vedioInfos = iVedioInfoService.selectVedioInfoByType(page, limit, type);
+        map.put("vedio", vedioInfos);
+        return vedioInfos;
+    }
 
 }
