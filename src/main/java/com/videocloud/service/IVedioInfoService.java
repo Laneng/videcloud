@@ -39,6 +39,10 @@ public interface IVedioInfoService extends IService<VedioInfo> {
 
     Result deleteVedioInfoByIds(List<Integer> ids);
 
+    //根据视频的分类进行模糊查询
+    Result selectVedioInfoByType(Integer page, Integer limit, String type);
+
+
 
 
 

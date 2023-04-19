@@ -2,6 +2,7 @@ package com.videocloud.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.entity.VedioInfo;
+import com.videocloud.entity.VideoTypeEntity;
 import com.videocloud.mapper.VedioInfoMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -106,6 +108,32 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         }
         return new Result(ResponseEnum.DELETE_FAIL,0,i);
     }
+
+    //根据视频的分类进行模糊查询
+    @Override
+    public Result selectVedioInfoByType(Integer page, Integer limit, String type) {
+
+        if (page == null){
+            page = 1;
+        }
+        if(limit == null){
+            limit = 20;
+        }
+        // 创建查询条件
+        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("type", type); // 设置模糊查询条件
+        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(queryWrapper);
+
+        IPage<VedioInfo> page2 = new Page<>(page, limit);
+        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page2, null) ;
+        Long total = vedioInfoIPage.getTotal();
+        if(vedioInfoIPage != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfos);
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfos);
+
+    }
+
 
 
     private static Wrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
