@@ -22,7 +22,7 @@ import java.util.Date;
  * @author lxd
  * @since 2023-04-17
  */
-@TableName("video_info")
+@TableName(value = "video_info",excludeProperty = "user")
 @ApiModel(value = "VedioInfo对象", description = "视频信息表")
 @Data
 @ToString
@@ -72,6 +72,8 @@ public class VedioInfo implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date uploadTime;
+
+    private User user;
 
 
 }

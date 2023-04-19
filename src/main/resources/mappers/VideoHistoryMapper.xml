@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.videocloud.mapper.VideoHistoryMapper">
+
+    <select id="historySelect" resultMap="historyMap">
+        SELECT vh.*,vi.id vid,vi.img,vi.url,vi.title,vi.intro,vi.type,u.id uid,u.name,u.avatar
+        FROM video_history vh left join video_info vi on vh.video_id=vi.id
+        left join user u on vi.user_id = u.id
+        where vh.user_id = #{uid}
+        order by vh.watch_time desc
+    </select>
+
+    <resultMap id="historyMap" type="VideoHistory">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="video_id" property="videoId"/>
+        <result column="watch_time" property="watchTime"/>
+        <association property="videoInfo" javaType="VedioInfo">
+            <id property="id" column="vid"/>
+            <result property="img" column="img"/>
+            <result property="url" column="url"/>
+            <result property="intro" column="intro"/>
+            <result property="title" column="title"/>
+            <result property="type" column="type"/>
+            <association property="user" javaType="User">
+                <id property="id" column="uid"/>
+                <result property="name" column="name"/>
+                <result property="avatar" column="avatar"/>
+            </association>
+        </association>
+    </resultMap>
+</mapper>
