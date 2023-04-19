@@ -74,4 +74,10 @@ public class VedioInfo implements Serializable {
     private Date uploadTime;
 
 
+    @ApiModelProperty("播放量")
+    private Integer viewCount;
+
+    @ApiModelProperty("点赞数")
+    private Integer viewStar;
+
 }

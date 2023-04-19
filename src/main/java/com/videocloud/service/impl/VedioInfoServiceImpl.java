@@ -2,6 +2,7 @@ package com.videocloud.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,7 +13,6 @@ import com.videocloud.entity.VedioInfo;
 import com.videocloud.mapper.VedioInfoMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result saveVedioInfo(VedioInfo vedioInfo) {
         vedioInfo.setUploadTime(new Date());
+        vedioInfo.setReason("未审核");
         int insert = vedioInfoMapper.insert(vedioInfo);
         if(insert == 0){
             return new Result(ResponseEnum.INSERT_FAIL,0,insert);
@@ -50,16 +51,16 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             page = 1;
         }
         if(limit == null){
-            limit = 20;
+            limit = 8;
         }
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(null);
         IPage<VedioInfo> page1 = new Page<>(page, limit);
         IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page1, null);
         Long total = vedioInfoIPage.getTotal();
         if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfos);
+            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfoIPage.getRecords());
         }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfos);
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoIPage.getRecords());
     }
 
     /**
@@ -108,9 +109,43 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
 
+    /**
+     * 获取当前播放量排在第一位的视频信息
+     * @return
+     */
+    @Override
+    public Result selectByCount(){
+        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count");
+        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(wrapper);
+        VedioInfo vedioInfo = vedioInfos.get(0);
+        if(vedioInfo != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,0,vedioInfo);
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfo);
+    }
+
+    @Override
+    public Result selectByDate(Integer page,Integer limit) {
+
+        if(limit == null){
+            limit = 6;
+        }
+        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time");
+        IPage<VedioInfo> vedioInfoPage = new Page<>(page, limit);
+        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(vedioInfoPage, wrapper);
+        Long pages = vedioInfoPage.getPages();
+        if(vedioInfoIPage != null){
+              return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
+    }
+
+
     private static Wrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
         UpdateWrapper<VedioInfo> updateWrapper = new UpdateWrapper<>();
-        LambdaUpdateWrapper<VedioInfo> wrapper = updateWrapper.lambda().eq(StringUtils.isEmpty(vedioInfo.getUrl()), VedioInfo::getUrl, vedioInfo.getUrl())
+        LambdaUpdateWrapper<VedioInfo> wrapper = updateWrapper.lambda().set(StringUtils.isEmpty(vedioInfo.getUrl()), VedioInfo::getUrl, vedioInfo.getUrl())
                 .set(StringUtils.isEmpty(vedioInfo.getTitle()), VedioInfo::getTitle, vedioInfo.getType())
                 .set(StringUtils.isEmpty(vedioInfo.getIntro()), VedioInfo::getIntro, vedioInfo.getIntro())
                 .set(StringUtils.isEmpty(vedioInfo.getAuthor()), VedioInfo::getAuthor, vedioInfo.getAuthor())
@@ -121,6 +156,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
                 .set(vedioInfo.getState() == null, VedioInfo::getState, vedioInfo.getState())
                 .set(vedioInfo.getState() == null, VedioInfo::getUserId, vedioInfo.getUserId())
                 .set(vedioInfo.getVideoTypeId() == null, VedioInfo::getVideoTypeId, vedioInfo.getVideoTypeId())
+                .set(vedioInfo.getViewCount() == null,VedioInfo::getViewCount,vedioInfo.getViewCount())
                 .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 
