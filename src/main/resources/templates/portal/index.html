@@ -1,158 +1,158 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
-<meta charset="utf-8">
-<title>基因重组</title>
-<meta name="keywords" content="${seoInfo.keywords}" />
-<meta name="description" content="${seoInfo.description}" />
+	<meta charset="utf-8">
+	<title>基因重组</title>
+	<meta name="keywords" content="${seoInfo.keywords}" />
+	<meta name="description" content="${seoInfo.description}" />
 	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script th:src="@{../js/layui.js}"></script>
-<template th:replace="portal/common/common.html"></template>
+	<template th:replace="portal/common/common.html"></template>
 </head>
 
 
 <body>
-	<!--头部-->
-	<div class="header-wrap header-channel">
-		<div th:replace="portal/common/header.html"></div>
-	</div>
+<!--头部-->
+<div class="header-wrap header-channel">
+	<div th:replace="portal/common/header.html"></div>
+</div>
 
-	<!--内容-->
-	<div style="width: 1380px; margin: 20px auto;">
-		<!--首页第一个聚合内容-->
-		<div class="block no-shadow">
-			<div class="main" style="margin-bottom: -40px;">
-<!--				<div class="grid-1-1-1 spacing-20">-->
-				<div>
-					<div style="float:left; width: 440px;height: 290px">
-						<div style="width: 420px;height: 244px;position: relative;margin-bottom: 20px;" id="div1">
-								<a href="http://www.javaex.cn/" target="_blank"><img src="http://173.javaex.cn/Fl9vo0PYYkFWc95sJm9UyfSxumNz" width="100%" height="100%"></a>
+<!--内容-->
+<div style="width: 1380px; margin: 20px auto;">
+	<!--首页第一个聚合内容-->
+	<div class="block no-shadow">
+		<div class="main" style="margin-bottom: -40px;">
+			<!--				<div class="grid-1-1-1 spacing-20">-->
+			<div>
+				<div style="float:left; width: 440px;height: 290px">
+					<div style="width: 420px;height: 244px;position: relative;margin-bottom: 20px;" id="div1">
+						<a href="http://www.javaex.cn/" target="_blank"><img src="http://173.javaex.cn/Fl9vo0PYYkFWc95sJm9UyfSxumNz" width="100%" height="100%"></a>
 
-								<div class="t">
-									<p class="t1"><span><a href="http://www.javaex.cn/" target="_blank">java程序员写的前端框架</a></span></p>
-								</div>
+						<div class="t">
+							<p class="t1"><span><a href="http://www.javaex.cn/" target="_blank">java程序员写的前端框架</a></span></p>
+						</div>
+					</div>
+				</div>
+
+				<div style="float:left; width: 880px;height: 300px">
+					<ul class="equal-4" id="juhe4" style="width: 880px;margin-right: -20px;" >
+						<li th:each="vedioInfo:${vedioInfos.data}" >
+							<div class="poly-ul-img">
+								<a th:href="@{/vedioInfo/getOne(id=${vedioInfo.id})}" th:alt="加载失败" target="_blank">
+									<img th:src="${vedioInfo.img}" width="100%" height="100%" />
+									<div  th:text="${vedioInfo.title}"></div>
+									<!--											<div class="poly-title" th:text="${vedioInfo.title}"></div>-->
+								</a>
 							</div>
-					</div>
-
-					<div style="float:left; width: 880px;height: 300px">
-						<ul class="equal-4" id="juhe4" style="width: 880px;margin-right: -20px;" >
-								<li th:each="vedioInfo:${vedioInfos.data}" >
-									<div class="poly-ul-img">
-										<a th:href="@{/vedioInfo/getOne(id=${vedioInfo.id})}" th:alt="加载失败" target="_blank">
-											<img th:src="${vedioInfo.img}" width="100%" height="100%" />
-											<div  th:text="${vedioInfo.title}"></div>
-<!--											<div class="poly-title" th:text="${vedioInfo.title}"></div>-->
-										</a>
-									</div>
-								</li>
-							</ul>
-					</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 
-		<!--正在热播-->
-		<div class="block no-shadow" >
-			<div class="main">
-				<div class="tab">
-					<div class="tab-title">
-						<img class="mod-icon" src="images/ico1.png" />
-						<em>正在热播</em>
-					</div>
-					<div class="tab-content " >
-						<ul id="month_hot" class="equal-6 cover site-demo-flow" align="center" style="margin-left: 20px;">
-							<span class="clearfix"></span>
-						</ul>
-					</div>
-
-
+	<!--正在热播-->
+	<div class="block no-shadow" >
+		<div class="main">
+			<div class="tab">
+				<div class="tab-title">
+					<img class="mod-icon" src="images/ico1.png" />
+					<em>正在热播</em>
 				</div>
+				<div class="tab-content " >
+					<ul id="month_hot" class="equal-6 cover site-demo-flow" align="center" style="margin-left: 20px;">
+						<span class="clearfix"></span>
+					</ul>
+				</div>
+
+
 			</div>
 		</div>
-
 	</div>
 
-	<!--底部-->
-	<div class="footer-wrap js-use-footer" >
-		<div th:replace="portal/common/footer.html"></div>
-	</div>
+</div>
+
+<!--底部-->
+<div class="footer-wrap js-use-footer" >
+	<div th:replace="portal/common/footer.html"></div>
+</div>
 </body>
 <script>
-	javaex.tab({
-		id : "tab1",
-		mode : "click"
-	});
-	
-	javaex.tab({
-		id : "tab2",
-		display : "flex",
-		mode : "click"
-	});
-	
-	javaex.tab({
-		id : "tab3",
-		display : "flex",
-		mode : "click"
-	});
-	
-	javaex.tab({
-		id : "tab4",
-		mode : "click"
-	});
+    javaex.tab({
+        id : "tab1",
+        mode : "click"
+    });
+
+    javaex.tab({
+        id : "tab2",
+        display : "flex",
+        mode : "click"
+    });
+
+    javaex.tab({
+        id : "tab3",
+        display : "flex",
+        mode : "click"
+    });
+
+    javaex.tab({
+        id : "tab4",
+        mode : "click"
+    });
 </script>
 
 
 <script>
-	$(function (){
-		$.ajax({
-			type:"get",
-			url:"/vedioInfo/byCount",
-			success:function (res){
-				var vedioInfo = res.data;
-				var html1 = "";
-				html1 += "<a href='/vedioInfo/getOne?id="+vedioInfo.id+"' target=\"_blank\"><img src='"+vedioInfo.img+"' width=\"100%\" height=\"100%\"></a>\n" +
-						"\n" +
-						"<div class=\"t\">\n" +
-						"<p class=\"t1\"><span><a href='/vedioInfo/getOne?id="+vedioInfo.id+"' target=\"_blank\">"+vedioInfo.title+"</a></span></p>\n" +
-						"</div>" ;
+    $(function (){
+        $.ajax({
+            type:"get",
+            url:"/vedioInfo/byCount",
+            success:function (res){
+                var vedioInfo = res.data;
+                var html1 = "";
+                html1 += "<a href='/vedioInfo/getOne?id="+vedioInfo.id+"' target=\"_blank\"><img src='"+vedioInfo.img+"' width=\"100%\" height=\"100%\"></a>\n" +
+                    "\n" +
+                    "<div class=\"t\">\n" +
+                    "<p class=\"t1\"><span><a href='/vedioInfo/getOne?id="+vedioInfo.id+"' target=\"_blank\">"+vedioInfo.title+"</a></span></p>\n" +
+                    "</div>" ;
 
-			console.log(html1);
-				$("#div1").html(html1);
-			}
-		})
-	})
+                console.log(html1);
+                $("#div1").html(html1);
+            }
+        })
+    })
 
-	layui.use('flow',function (){
-	 var flow = layui.flow;
-		flow.load({
-			elem: '#month_hot'
-			,scrollElem: '#month_hot'   // 滚动条所在元素，一般不用设置
-			,done: function (page,next){
-				setTimeout(function (){
-					var lis = [];
-					$.ajax({
-						type:'get',
-						url: '/vedioInfo/bydate?page='+page
-						,success:function (res){
-							var vedioInfo = res.data;
-							layui.each(vedioInfo,function (index,item){
-								lis.push("\t<li style=\"margin-right: 20px;display: inline-block\">\n" +
-										"<a href='/vedioInfo/getOne?id="+item.id+"' target=\"_blank\" class=\"screenshot\">\n" +
-										"<img src='"+item.img+"' width=\"100%\" height=\"100%\" />\n" +
-										"</a>\n" +
-										"<p class=\"screenshot-title\"><a href='/vedioInfo/getOne?id="+item.id+"' target=\"_blank\">"+item.title+"</a></p>\n" +
-										"<p>播放量:"+item.viewCount+"</p>\n" +
-										"</li>")
-							})
-							next(lis.join(''), page < res.count);
-						}
-					})
-				},300)
+    layui.use('flow',function (){
+        var flow = layui.flow;
+        flow.load({
+            elem: '#month_hot'
+            ,scrollElem: '#month_hot'   // 滚动条所在元素，一般不用设置
+            ,done: function (page,next){
+                setTimeout(function (){
+                    var lis = [];
+                    $.ajax({
+                        type:'get',
+                        url: '/vedioInfo/bydate?page='+page
+                        ,success:function (res){
+                            var vedioInfo = res.data;
+                            layui.each(vedioInfo,function (index,item){
+                                lis.push("\t<li style=\"margin-right: 20px;display: inline-block\">\n" +
+                                    "<a href='/vedioInfo/getOne?id="+item.id+"' target=\"_blank\" class=\"screenshot\">\n" +
+                                    "<img src='"+item.img+"' width=\"100%\" height=\"100%\" />\n" +
+                                    "</a>\n" +
+                                    "<p class=\"screenshot-title\"><a href='/vedioInfo/getOne?id="+item.id+"' target=\"_blank\">"+item.title+"</a></p>\n" +
+                                    "<p>播放量:"+item.viewCount+"</p>\n" +
+                                    "</li>")
+                            })
+                            next(lis.join(''), page < res.count);
+                        }
+                    })
+                },300)
 
-			}
-		})
-	})
+            }
+        })
+    })
 </script>
 </html>
