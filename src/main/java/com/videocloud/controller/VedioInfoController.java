@@ -223,4 +223,12 @@ public class VedioInfoController {
         return vedioInfos;
     }
 
+
+    @PutMapping("/videoInfo/star")
+    @ResponseBody
+    public Result viewStar(String viewStar,String vedioId){
+        Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId);
+        return resultStar;
+    }
+
 }

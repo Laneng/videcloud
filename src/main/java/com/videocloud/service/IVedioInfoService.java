@@ -50,7 +50,5 @@ public interface IVedioInfoService extends IService<VedioInfo> {
     Result selectByDate(Integer page,Integer limit);
 
 
-
-
-
+    Result updateStar(String star,String videoId);
 }

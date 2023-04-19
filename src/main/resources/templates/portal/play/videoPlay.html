@@ -204,19 +204,39 @@
 
         <!--正文内容-->
 
-    <div class="block no-shadow" style="background-color:white; width: 840px">
-        <h1 th:text="${vedioPlay.data.title}" style="color: white"></h1>
+    <div class="block no-shadow" style="background-color:white; width: 1340px">
+<!--        <h5  style="black: white;margin-left: 30px;margin-top: 30px">-->
+<!--            <span style="color: black">播放数</span>-->
+<!--            <span th:text="${vedioPlay.data.viewCount}" style="color: black;margin-right: 50px"></span>-->
+
+<!--            <span style="color: black">上传日期</span>-->
+<!--            <span th:text="${#dates.format(vedioPlay.data.uploadTime,'yyyy-MM-dd HH:mm:ss')}" style="color: black;margin-right: 50px"></span>-->
+
+<!--        </h5>-->
         <div style="width: 740px; margin: 20px auto;">
+            <h1 th:text="${vedioPlay.data.title}" style="black: white;margin-top: 30px"></h1>
             <video height="450px" width="740px" controls>
                 <source th:src="${vedioPlay.data.url}" type="video/mp4" align="center">
             </video>
-         </div>
+
+            <span type="hidden" th:text="${vedioPlay.data.id}" id="vedioId"></span>
+
+           <div style="margin-top: 30px">
+              <span onclick="videoStar()"><img  src="../../images/star.png"></span>
+               <span style="margin-right: 50px; font-size: 20px" th:text="${vedioPlay.data.viewStar}" id="viewStar"></span>
+               <span ><img  src="../../images/viewCount.png"></span>
+               <span th:text="${vedioPlay.data.viewCount}" style="color: black;margin-right: 50px;font-size: 20px"></span>
+               <span ><img  src="../../images/date.png"></span>
+               <span th:text="${#dates.format(vedioPlay.data.uploadTime,'yyyy-MM-dd HH:mm:ss')}" style="color: black;margin-right: 50px;font-size: 20px"></span>
+           </div>
+        </div>
 
 
 
-        <div style="margin-left: 70px">
+
+        <div style="margin-left: 40px" align="center">
                <form class="layui-form" onsubmit="return comment();">
-                   <textarea id="comment-input" placeholder="请输入评论内容" style="width: 65%"></textarea>
+                   <textarea id="comment-input" placeholder="请输入评论内容" style="width: 55%"></textarea>
                    <button id="comment-submit" style="margin-top: 8px">提交评论</button>
                </form>
         </div>
@@ -254,7 +274,21 @@
 <script>
 
 
-
+    function videoStar(){
+        var star = $("#viewStar").text();
+        var vedioId = $("#vedioId").text();
+        console.log(vedioId);
+        console.log(star)
+        $.ajax({
+            type:"put",
+            url:"/videoInfo/star",
+            data:{"viewStar":star,"vedioId":vedioId},
+            success:function (res){
+                console.log("点赞成功")
+                location.reload();
+            }
+        })
+    }
 
     // 获取评论列表
     function getCommentList(pageNum) {

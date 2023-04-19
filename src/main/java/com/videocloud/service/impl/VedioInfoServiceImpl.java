@@ -72,11 +72,26 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result selectVedioInfoById(Integer id) {
         VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
+//        播放量
+        Integer viewCount = vedioInfo.getViewCount();
+//        点赞数
+        Integer viewStar = vedioInfo.getViewStar();
+
+        viewCount = viewCount + 1;
+        vedioInfo.setViewCount(viewCount);
+        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
+        int update = vedioInfoMapper.update(vedioInfo, wrapper);
+        if(update == 0){
+            throw new RuntimeException("播放书加载错误，程序停止执行");
+        }
+
         if(vedioInfo != null){
             return new Result(ResponseEnum.SELECT_SUCCESS,0,vedioInfo);
         }
         return new Result(ResponseEnum.SELECT_FAIL,0,null);
     }
+
+
 
     @Override
     public Result updateVedioInfo(VedioInfo vedioInfo) {
@@ -167,6 +182,21 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
               return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
         }
         return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
+    }
+
+    @Override
+    public Result updateStar(String star,String vedioId) {
+        int viewStar = Integer.parseInt(star);
+        int id = Integer.parseInt(vedioId);
+        viewStar++;
+        VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
+        vedioInfo.setViewStar(viewStar);
+        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
+        int update = vedioInfoMapper.update(vedioInfo, wrapper);
+        if(update != 0){
+            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+        }
+        return new Result(ResponseEnum.UPDATE_FAIL,0,update);
     }
 
 
