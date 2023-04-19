@@ -4,82 +4,132 @@
 	<meta charset="utf-8">
 	<title>分类管理</title>
 	<div th:replace="admin/common/common.html"></div>
+	<!-- 导入Bootstrap样式 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
 </head>
 
 <body>
-<!-- 面包屑导航和主体内容 -->
-<div class="content">
-	<!--面包屑导航-->
-	<div class="content-header">
-		<div class="breadcrumb">
-			<span>视频</span>
-			<span class="divider">/</span>
-			<span class="active">分类管理</span>
-		</div>
+
+<div th:replace="admin/common/nav.html"></div>
+
+<div class="admin-iframe-content">
+	<div class="admin-iframe-menu">
+		<ul class="menu">
+			<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
+			<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
+			<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
+			<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+		</ul>
 	</div>
 
-	<!--全部主体内容-->
-	<div class="list-content">
-		<!--块元素-->
-		<div class="block">
-			<!--页面有多个表格时，可以用于标识表格-->
-			<h2>分类列表</h2>
-			<a href="javascript:history.back();">
-				<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
-			</a>
-			<!--正文内容-->
-			<div class="main">
-				<!--表格上方的操作元素，添加、删除、搜索等-->
-				<div class="operation-wrap">
-					<div class="buttons-wrap">
-						<button id="add" class="button blue"><span class="icon-plus"></span> 添加</button>
-						<button id="delete" class="button red"><span class="icon-minus"></span> 删除</button>
-						<button id="save" class="button green"><span class="icon-check2"></span> 保存</button>
-						<button id="search" class="button yellow"><span class="icon-search2"></span> 搜索</button>
-						<input id="text" class="button text" type="text">
+	<!-- 面包屑导航和主体内容 -->
+	<div class="content">
+		<!--面包屑导航-->
+		<div class="content-header">
+			<div class="breadcrumb">
+				<span>视频</span>
+				<span class="divider">/</span>
+				<span class="active">分类管理</span>
+			</div>
+		</div>
+
+		<!--全部主体内容-->
+		<div class="list-content">
+			<!--块元素-->
+			<div class="block">
+				<!--页面有多个表格时，可以用于标识表格-->
+				<h2>分类列表</h2>
+				<a href="javascript:history.back();">
+					<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+				</a>
+				<!--正文内容-->
+				<div class="main">
+					<!--表格上方的操作元素，添加、删除、搜索等-->
+					<div class="operation-wrap">
+						<div class="buttons-wrap">
+							<button id="add" class="button blue" data-toggle="modal" data-target="#myModal"><span class="icon-plus"></span> 添加</button>
+							<button id="delete" class="button red"><span class="icon-minus"></span> 删除</button>
+							<button id="save" class="button green"><span class="icon-check2"></span> 保存</button>
+							<button id="search" class="button yellow" onclick="sendSearchRequest()"><span class="icon-search2"></span> 搜索</button>
+							<input id="text" class="button text" type="text">
+						</div>
 					</div>
+					<!-- 弹出框的内容 -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="myModalLabel">新增视频分类</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<!-- 弹出框的内容 -->
+									<input type="text" class="form-control" id="inputName" placeholder="请输入分类名称">
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-primary">保存</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--class加上color可以实现隔行变色-->
+					<!--color1表示奇数行着色、color2表示偶数行着色-->
+					<table id="table" class="table">
+						<thead>
+						<tr>
+							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
+													<th style="width:20%;">显示顺序</th>
+							<th>索引</th>
+							<th>分类名称</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody id="type_result">
+						<tr>
+<!--							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>-->
+							<td> </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+<!--						<tr th:each="entity, status : ${list}">-->
+<!--							<td class="checkbox"><input type="checkbox" class="fill listen-1-2" value="${entity.id}" name="id" /></td>-->
+<!--							<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>-->
+<!--							<td th:text="${entity.id}"></td>-->
+<!--							<td><input type="text" class="text" name="name" th:value="${entity.name}" data-type="必填" error-pos="36" /></td>-->
+<!--							<td>-->
+<!--								<select class="select" name="profileTemplate">-->
+<!--									<option value="">无详情页</option>-->
+<!--									<option th:each="profile : ${profileList}" th:value="${profile.value}" th:selected="${profile.value==entity.profileTemplate}" th:text="${profile.name}"></option>-->
+<!--								</select>-->
+<!--							</td>-->
+<!--							<td>-->
+<!--								<select class="select" name="playTemplate">-->
+<!--									<option th:each="play : ${playList}" th:value="${play.value}" th:selected="${play.value==entity.playTemplate}" th:text="${play.name}"></option>-->
+<!--								</select>-->
+<!--							</td>-->
+<!--							<td>-->
+<!--								<a th:href="@{/type_field/list.action(typeId=${entity.id},typeName=${entity.name})}">-->
+<!--									<button class="button wathet"><span class="icon-edit-2"></span> 字段配置</button>-->
+<!--								</a>-->
+<!--							</td>-->
+<!--						</tr>-->
+						</tbody>
+					</table>
 				</div>
-				<!--class加上color可以实现隔行变色-->
-				<!--color1表示奇数行着色、color2表示偶数行着色-->
-				<table id="table" class="table">
-					<thead>
-					<tr>
-						<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
-<!--						<th style="width:20%;">显示顺序</th>-->
-						<th>索引</th>
-						<th>分类名称</th>
-						<th>操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr th:each="entity, status : ${list}">
-						<td class="checkbox"><input type="checkbox" class="fill listen-1-2" value="${entity.id}" name="id" /></td>
-						<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>
-						<td th:text="${entity.id}"></td>
-						<td><input type="text" class="text" name="name" th:value="${entity.name}" data-type="必填" error-pos="36" /></td>
-						<td>
-							<select class="select" name="profileTemplate">
-								<option value="">无详情页</option>
-								<option th:each="profile : ${profileList}" th:value="${profile.value}" th:selected="${profile.value==entity.profileTemplate}" th:text="${profile.name}"></option>
-							</select>
-						</td>
-						<td>
-							<select class="select" name="playTemplate">
-								<option th:each="play : ${playList}" th:value="${play.value}" th:selected="${play.value==entity.playTemplate}" th:text="${play.name}"></option>
-							</select>
-						</td>
-						<td>
-							<a th:href="@{/type_field/list.action(typeId=${entity.id},typeName=${entity.name})}">
-								<button class="button wathet"><span class="icon-edit-2"></span> 字段配置</button>
-							</a>
-						</td>
-					</tr>
-					</tbody>
-				</table>
 			</div>
 		</div>
 	</div>
 </div>
+
+
+<!-- 导入jQuery和Bootstrap的JavaScript文件 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 <script th:inline="javascript">
 	javaex.loading();
@@ -247,5 +297,74 @@
 			}
 		});
 	});
+</script>
+<script>
+	function sendSearchRequest() {
+		// 获取请求参数
+		var name = $("#text").val(); // 从页面中获取输入的名称
+		var pageNum = 1; // 设置页码
+		var pageSize = 10; // 设置每页显示的数量
+
+		console.log(name)
+		// 发起Ajax请求
+		$.ajax({
+			url: '/videotypes/search', // 请求的URL
+			type: 'GET', // 请求的方法
+			data: {
+				name: name,
+				pageNum: pageNum,
+				pageSize: pageSize
+			}, // 请求的参数
+			dataType: 'json', // 响应的数据类型
+			success: function(result) {
+				// 请求成功的处理逻辑
+				console.log('请求成功', result);
+				// 可以在这里根据返回的数据更新页面内容
+				// 返回的数据是一个数组，包含多个对象
+				var dataArray = result.data; // 数据在返回对象的 data 字段中
+				var table = $("#table"); // 获取表格元素
+
+				// 清空表格内容
+				table.empty();
+
+				// 遍历数据数组，将每个对象添加为一行到表格中
+				for (var i = 0; i < dataArray.length; i++) {
+					var row = $("<tr>"); // 创建一行
+					row.append($("<td>").text(dataArray[i].id)); // 假设每个对象中有字段 field1，将其作为表格的一列
+					row.append($("<td>").text(dataArray[i].name)); // 假设每个对象中有字段 field2，将其作为表格的一列
+					row.append($("<td>").text(dataArray[i].opar)); // 假设每个对象中有字段 field2，将其作为表格的一列
+					// 继续根据需要添加其他字段到表格的列中
+					table.append(row); // 将行添加到表格中
+				}
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				// 请求失败的处理逻辑
+				console.log('请求失败', errorThrown);
+				// 可以在这里处理请求失败的情况，例如显示错误信息
+			},
+			complete: function() {
+				// 请求完成的处理逻辑，无论成功或失败都会执行
+				console.log('请求完成');
+				// 可以在这里隐藏加载器等操作
+			}
+		});
+	// 		success: function(result) {
+	// 			// 请求成功的处理逻辑
+	// 			console.log('请求成功', result);
+	// 			// 可以在这里根据返回的数据更新页面内容
+	// 		},
+	// 		error: function(xhr, textStatus, errorThrown) {
+	// 			// 请求失败的处理逻辑
+	// 			console.log('请求失败', errorThrown);
+	// 			// 可以在这里处理请求失败的情况，例如显示错误信息
+	// 		},
+	// 		complete: function() {
+	// 			// 请求完成的处理逻辑，无论成功或失败都会执行
+	// 			console.log('请求完成');
+	// 			// 可以在这里隐藏加载器等操作
+	// 		}
+	// 	});
+	}
+
 </script>
 </html>
