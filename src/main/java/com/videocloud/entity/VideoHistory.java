@@ -9,7 +9,9 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @ApiModel(value = "VideoHistory对象", description = "")
 @Data
 @ToString
+@NoArgsConstructor
 public class VideoHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,4 +45,9 @@ public class VideoHistory implements Serializable {
 
     private VedioInfo videoInfo;
 
+    public VideoHistory(Integer userId,Integer videoId,Date watchTime){
+        this.userId = userId;
+        this.videoId = videoId;
+        this.watchTime = watchTime;
+    }
 }

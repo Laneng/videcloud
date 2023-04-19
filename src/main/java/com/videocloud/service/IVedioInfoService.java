@@ -39,16 +39,14 @@ public interface IVedioInfoService extends IService<VedioInfo> {
 
     Result deleteVedioInfoByIds(List<Integer> ids);
 
-//    查询点赞数最高的视频
-    Result selectByCount();
     //根据视频的分类进行模糊查询
     Result selectVedioInfoByType(Integer page, Integer limit, String type);
 
 
 
-//    根据时间排序显示视频
-    Result selectByDate(Integer page,Integer limit);
 
 
-    Result updateStar(String star,String videoId);
+
+
+
 }

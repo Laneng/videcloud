@@ -118,7 +118,6 @@ public class UserController {
     @RequestMapping("/saveOrUpdate")
     @ResponseBody
     public Result userSaveOrUpdate(User user,HttpSession session){
-        user.setAvatar("https://jycz-view.oss-cn-beijing.aliyuncs.com/b1800e92caa4425aad66738eea2fc09a.jpg");
         boolean b = userService.saveOrUpdate(user);
         if (b){
             User user1 = userService.getById(user.getId());

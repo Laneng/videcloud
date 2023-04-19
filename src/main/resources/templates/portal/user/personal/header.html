@@ -72,9 +72,12 @@ a:visited {color: #666}
 .alien #goTopBtn img{display: inline-block;}
 .userInfo{height: 100px;position: relative;top: 70px;overflow: hidden}
 .avatarDiv{height: 100px;width: 100px; float: left;line-height: 100px}
-.userAvatar{height: 60px;width: 60px;border-radius: 50%;margin: 20px auto;display:block;border: 2px}
+.userAvatar{height: 70px;width: 70px;border-radius: 50%;margin: 15px auto;display:block;border: 2px}
 .userName{float: left;height: 40px;width: 200px;line-height: 60px;font-size: 22px;font-weight: bold;color: #1E9FFF;}
 .userComment{float: left;height: 60px;width:1100px;line-height: 60px;font-size: 18px;font-weight: bold}
+#avatar{display: block;position: relative}
+#mask{opacity: 0;position: absolute;width: 70px;height: 70px;top:0px;left: 15px;background: rgb(167 199 209 / 40%);border-radius: 50%;line-height: 70px;color: #403d3d;text-align: center;font-size: 16px;}
+#avatar:hover #mask{opacity: 1}
 </style>
 
 <!--头部-->
@@ -114,14 +117,14 @@ a:visited {color: #666}
 		<div class="head-content yaoqishan-wrapper">
 			<div class="userInfo">
 				<div class="avatarDiv">
-					<a href="javascript:;" onclick="changeAvatar()"><img class="userAvatar" th:src="${session.user.avatar}"></a>
+					<a id="avatar" href="javascript:;" onclick="changeAvatar()"><img class="userAvatar" th:src="${session.user.avatar}"><div id="mask">修改头像</div></a>
 				</div>
 				<div class="userName">
 					<span th:text="${session.user.name}"></span>
 				</div>
 				<div class="userComment">
 <!--					<span th:text="${session.user.msg}"></span>-->
-					<input id="msg" type="text" th:value="${session.user.msg}" style="background: none;border: none;font-size: 18px;font-weight: bold" onchange="changeMsg()"/>
+					<input id="msg" type="text" th:value="${session.user.msg}" style="background: none;border: none;font-size: 18px;font-weight: bold;width: 80%" onchange="changeMsg()"/>
 				</div>
 			</div>
 		</div>
@@ -201,6 +204,7 @@ a:visited {color: #666}
                         content: "修改成功",
                         type: "success"
                     })
+	                $("#msg").reload();
                 }else {
                     javaex.optTip({
                         content: "修改失败",

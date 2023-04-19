@@ -14,6 +14,7 @@ import com.videocloud.entity.VideoTypeEntity;
 import com.videocloud.mapper.VedioInfoMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,16 +53,16 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             page = 1;
         }
         if(limit == null){
-            limit = 8;
+            limit = 20;
         }
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(null);
         IPage<VedioInfo> page1 = new Page<>(page, limit);
         IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page1, null);
         Long total = vedioInfoIPage.getTotal();
         if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfoIPage.getRecords());
+            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfos);
         }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoIPage.getRecords());
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfos);
     }
 
     /**
@@ -72,26 +73,11 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result selectVedioInfoById(Integer id) {
         VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
-//        播放量
-        Integer viewCount = vedioInfo.getViewCount();
-//        点赞数
-        Integer viewStar = vedioInfo.getViewStar();
-
-        viewCount = viewCount + 1;
-        vedioInfo.setViewCount(viewCount);
-        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
-        int update = vedioInfoMapper.update(vedioInfo, wrapper);
-        if(update == 0){
-            throw new RuntimeException("播放书加载错误，程序停止执行");
-        }
-
         if(vedioInfo != null){
             return new Result(ResponseEnum.SELECT_SUCCESS,0,vedioInfo);
         }
         return new Result(ResponseEnum.SELECT_FAIL,0,null);
     }
-
-
 
     @Override
     public Result updateVedioInfo(VedioInfo vedioInfo) {
@@ -151,58 +137,9 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
 
 
-    /**
-     * 获取当前播放量排在第一位的视频信息
-     * @return
-     */
-    @Override
-    public Result selectByCount(){
-        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count");
-        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(wrapper);
-        VedioInfo vedioInfo = vedioInfos.get(0);
-        if(vedioInfo != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,0,vedioInfo);
-        }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfo);
-    }
-
-    @Override
-    public Result selectByDate(Integer page,Integer limit) {
-
-        if(limit == null){
-            limit = 6;
-        }
-        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time");
-        IPage<VedioInfo> vedioInfoPage = new Page<>(page, limit);
-        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(vedioInfoPage, wrapper);
-        Long pages = vedioInfoPage.getPages();
-        if(vedioInfoIPage != null){
-              return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
-        }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
-    }
-
-    @Override
-    public Result updateStar(String star,String vedioId) {
-        int viewStar = Integer.parseInt(star);
-        int id = Integer.parseInt(vedioId);
-        viewStar++;
-        VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
-        vedioInfo.setViewStar(viewStar);
-        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
-        int update = vedioInfoMapper.update(vedioInfo, wrapper);
-        if(update != 0){
-            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
-        }
-        return new Result(ResponseEnum.UPDATE_FAIL,0,update);
-    }
-
-
     private static Wrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
         UpdateWrapper<VedioInfo> updateWrapper = new UpdateWrapper<>();
-        LambdaUpdateWrapper<VedioInfo> wrapper = updateWrapper.lambda().set(StringUtils.isEmpty(vedioInfo.getUrl()), VedioInfo::getUrl, vedioInfo.getUrl())
+        LambdaUpdateWrapper<VedioInfo> wrapper = updateWrapper.lambda().eq(StringUtils.isEmpty(vedioInfo.getUrl()), VedioInfo::getUrl, vedioInfo.getUrl())
                 .set(StringUtils.isEmpty(vedioInfo.getTitle()), VedioInfo::getTitle, vedioInfo.getType())
                 .set(StringUtils.isEmpty(vedioInfo.getIntro()), VedioInfo::getIntro, vedioInfo.getIntro())
                 .set(StringUtils.isEmpty(vedioInfo.getAuthor()), VedioInfo::getAuthor, vedioInfo.getAuthor())
@@ -213,7 +150,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
                 .set(vedioInfo.getState() == null, VedioInfo::getState, vedioInfo.getState())
                 .set(vedioInfo.getState() == null, VedioInfo::getUserId, vedioInfo.getUserId())
                 .set(vedioInfo.getVideoTypeId() == null, VedioInfo::getVideoTypeId, vedioInfo.getVideoTypeId())
-                .set(vedioInfo.getViewCount() == null,VedioInfo::getViewCount,vedioInfo.getViewCount())
                 .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 

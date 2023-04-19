@@ -29,11 +29,10 @@
 		<div style="width: 880px; margin:30px auto;">
 			<ul class="layui-timeline" id="timeline">
 			</ul>
-			<div id="pageDiv" style="text-align: center"></div>
 		</div>
-
 	</div>
 </div>
+<footer th:replace="portal/common/footer.html"></footer>
 </body>
 <script>
     layui.use(['flow'], function(){
@@ -42,30 +41,33 @@
         flow.load({
 	        elem:"#timeline",
 	        done:function (page,next){
-                var lis = [];
-				$.ajax({
-					url:"/videoHistory/select",
-					data:{page:page},
-					dataType:"json",
-					success:function (res){
-                        layui.each(res.data, function(index, item){
-                            var li = "<li class='layui-timeline-item'>" +
-                                "<i class='layui-icon layui-timeline-axis'></i>" +
-                                "<div class='layui-timeline-content layui-text'>" +
-                                "<h4 class='layui-timeline-title'>"+item.watchTime+"</h4>" +
-                                "<div class='historyDiv'>" +
-                                "<a href='/vedioInfo/getOne?id="+item.videoInfo.id+"'><img class='videoFace' src='"+item.videoInfo.img+"' style='height: 125px;width: 220px'></a>" +
-                                "<div class='videoTitle'>"+item.videoInfo.title+"</div>" +
-                                "<div class='videoIntro'>"+item.videoInfo.intro+"</div>" +
-                                "<div class='videoInfo'><img src='"+item.videoInfo.user.avatar+"' style='width: 30px;height: 30px;border-radius: 50%'/>&ensp;"+item.videoInfo.user.name+"&ensp;|&ensp;#"+item.videoInfo.type+"</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</li>"
-                            lis.push(li);
-                        });
-                        next(lis.join(''), page < res.count);
-                    }
-				})
+                setTimeout(function (){
+                    var lis = [];
+                    $.ajax({
+                        url:"/videoHistory/select",
+                        data:{page:page},
+                        dataType:"json",
+                        success:function (res){
+                            layui.each(res.data, function(index, item){
+                                var li = "<li class='layui-timeline-item'>" +
+                                    "<i class='layui-icon layui-timeline-axis'></i>" +
+                                    "<div class='layui-timeline-content layui-text'>" +
+                                    "<h4 class='layui-timeline-title'>"+item.watchTime+"</h4>" +
+                                    "<div class='historyDiv'>" +
+                                    "<a href='/vedioInfo/getOne?id="+item.videoInfo.id+"'><img class='videoFace' src='"+item.videoInfo.img+"' style='height: 125px;width: 220px'></a>" +
+                                    "<div class='videoTitle'>"+item.videoInfo.title+"</div>" +
+                                    "<div class='videoIntro'>"+item.videoInfo.intro+"</div>" +
+                                    "<div class='videoInfo'><img src='"+item.videoInfo.user.avatar+"' style='width: 30px;height: 30px;border-radius: 50%'/>&ensp;"+item.videoInfo.user.name+"&ensp;|&ensp;#"+item.videoInfo.type+"</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</li>"
+                                lis.push(li);
+                            });
+                            next(lis.join(''), page < res.count);
+                        }
+                    })
+                },500)
+
 	        }
         })
 

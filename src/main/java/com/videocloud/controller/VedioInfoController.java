@@ -2,19 +2,16 @@ package com.videocloud.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.videocloud.entity.ResponseEnum;
-import com.videocloud.entity.Result;
-import com.videocloud.entity.User;
-import com.videocloud.entity.VedioInfo;
+import com.videocloud.entity.*;
 import com.videocloud.service.IVedioInfoService;
+import com.videocloud.service.IVideoHistoryService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -30,6 +27,8 @@ public class VedioInfoController {
 
     @Autowired
     private IVedioInfoService iVedioInfoService;
+    @Autowired
+    private IVideoHistoryService iVideoHistoryService;
 
     /**
      * 返回信息到页面
@@ -48,14 +47,19 @@ public class VedioInfoController {
 
 
     /**
-     * 查询当前播放量排在第一位的视频
+     * 这里不用管，还没有完善
+     * @param page
+     * @param limit
+     * @param map
      * @return
      */
-    @RequestMapping("/vedioInfo/byCount")
     @ResponseBody
-    public Result selectByCount(){
-        Result result = iVedioInfoService.selectByCount();
-        return result;
+    @GetMapping("/vedioInfo/getAll")
+    public Result selectAll(Integer page,Integer limit,Map<String,Object> map){
+
+        Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
+        map.put("vedio",vedioInfos);
+        return vedioInfos;
     }
 
 
@@ -78,8 +82,26 @@ public class VedioInfoController {
      * @return
      */
     @RequestMapping("/vedioInfo/getOne")
-    public String selectVedioInfoById(Integer id,Map<String,Object> map){
+    public String selectVedioInfoById(Integer id,Map<String,Object> map,HttpSession session){
+        User user = (User) session.getAttribute("user");
         Result vedioInfoResult = iVedioInfoService.selectVedioInfoById(id);
+        if (user != null) {
+            Integer uid = user.getId();
+            QueryWrapper<VideoHistory> q = new QueryWrapper<VideoHistory>().eq("user_id",uid).eq("video_id",id);
+            VideoHistory one = iVideoHistoryService.getOne(q);
+            if (one != null) {
+                one.setWatchTime(new Date());
+                iVideoHistoryService.updateById(one);
+            }else{
+                VideoHistory videoHistory = new VideoHistory(uid,id,new Date());
+                iVideoHistoryService.save(videoHistory);
+            }
+        }
+
+        VedioInfo data = (VedioInfo) vedioInfoResult.getData();
+        data.setViewCount(data.getViewCount()+1);
+        iVedioInfoService.updateVedioInfo(data);
+
         map.put("vedioPlay",vedioInfoResult);
         return "portal/play/videoPlay";
     }
@@ -158,14 +180,6 @@ public class VedioInfoController {
     }
 
 
-    @GetMapping("/vedioInfo/bydate")
-    @ResponseBody
-    public Result selectByDate(Integer page,Integer limit){
-        Result result = iVedioInfoService.selectByDate(page, limit);
-        return result;
-    }
-
-
     /**
      * 查询已经审核的视频
      * @param page
@@ -221,14 +235,6 @@ public class VedioInfoController {
         Result vedioInfos = iVedioInfoService.selectVedioInfoByType(page, limit, type);
         map.put("vedio", vedioInfos);
         return vedioInfos;
-    }
-
-
-    @PutMapping("/videoInfo/star")
-    @ResponseBody
-    public Result viewStar(String viewStar,String vedioId){
-        Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId);
-        return resultStar;
     }
 
 }
