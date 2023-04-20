@@ -10,14 +10,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
+import com.videocloud.service.IStarTableService;
+import com.videocloud.mapper.VideoHistoryMapper;
+import com.videocloud.mapper.VideoTypeMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -48,22 +51,38 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
     @Override
-    public Result selectVedioInfo(Integer page,Integer limit) {
+    public Result selectVedioInfo(Integer limit,Integer uid) {
 
-        if (page == null){
-            page = 1;
-        }
+        List<VedioInfo> rsList = new ArrayList<>();
+
         if(limit == null){
             limit = 8;
         }
-        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(null);
-        IPage<VedioInfo> page1 = new Page<>(page, limit);
-        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page1, null);
-        Long total = vedioInfoIPage.getTotal();
-        if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfoIPage.getRecords());
+
+        if (uid == 0) {
+            rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+        }else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+            Date start = calendar.getTime();
+
+            QueryWrapper<VideoHistory> timeWrapper = new QueryWrapper<VideoHistory>().ge("watch_time",start).eq("user_id",uid);
+            List<VideoHistory> videoHistories = videoHistoryMapper.selectList(timeWrapper);
+            List<Integer> watchIds = new ArrayList<>();
+            for (VideoHistory videoHistory : videoHistories) {
+                watchIds.add(videoHistory.getVideoId());
+            }
+
+            if (watchIds.size() == 0) {
+                rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+            }else {
+                rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper,starTableMapper);
+            }
         }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoIPage.getRecords());
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,0,rsList);
     }
 
     /**
@@ -195,6 +214,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         if(user == null){
             return new Result(ResponseEnum.LOGIN_B,0,null);
         }
+
 
 //        如果用户已经登录
         int viewStar = Integer.parseInt(star);

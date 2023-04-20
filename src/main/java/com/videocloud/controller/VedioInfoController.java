@@ -38,9 +38,16 @@ public class VedioInfoController {
      * @return
      */
     @RequestMapping({"/","/index","/index.html"})
-    public String selectVedioInfo(Integer page,Integer limit,Map<String,Object> map){
-//        Map<String,Object> map = new HashMap<>();
-        Result vedioInfos = iVedioInfoService.selectVedioInfo(page, limit);
+    public String selectVedioInfo(Integer limit,Map<String,Object> map,HttpSession session){
+
+        User user = (User) session.getAttribute("user");
+
+        Integer uid = 0;
+        if (user != null){
+            uid = user.getId();
+        }
+
+        Result vedioInfos = iVedioInfoService.selectVedioInfo(limit,uid);
         map.put("vedioInfos",vedioInfos);
         return "portal/index";
     }
