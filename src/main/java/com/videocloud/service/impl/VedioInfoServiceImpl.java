@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
@@ -15,6 +16,7 @@ import com.videocloud.mapper.VideoHistoryMapper;
 import com.videocloud.mapper.VideoTypeMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.videocloud.util.RecommendUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,10 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
     @Autowired
     private VedioInfoMapper vedioInfoMapper;
+    @Autowired
+    private VideoHistoryMapper videoHistoryMapper;
+    @Autowired
+    private VideoTypeMapper videoTypeMapper;
 
     @Autowired
     private StarTableMapper starTableMapper;
@@ -274,7 +280,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         return wrapper;
 
     }
-    
+
 
 
 }
