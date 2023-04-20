@@ -1,21 +1,17 @@
 package com.videocloud.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.videocloud.entity.Recommend;
-import com.videocloud.entity.VedioInfo;
-import com.videocloud.entity.VideoHistory;
-import com.videocloud.entity.VideoTypeEntity;
+import com.videocloud.entity.*;
+import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
 import com.videocloud.mapper.VideoHistoryMapper;
 import com.videocloud.mapper.VideoTypeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.*;
 
 /**
  * Author：Saika(jiangtao_liu)
  * Date：2023/4/20
- * Description：
+ * Description：'简单'的首页推荐
  */
 
 public class RecommendUtil {
@@ -25,33 +21,80 @@ public class RecommendUtil {
      * @param uid
      * @return
      */
-    public static List<VedioInfo> activeRecommend(Integer limit,Integer uid,List<Integer> watchIds,Date start,
-                                           VideoHistoryMapper videoHistoryMapper,
-                                           VideoTypeMapper videoTypeMapper,
-                                           VedioInfoMapper vedioInfoMapper){
+    public static List<VedioInfo> activeRecommend(Integer limit, Integer uid, List<Integer> watchIds, Date start,
+                                                  VideoHistoryMapper videoHistoryMapper,
+                                                  VideoTypeMapper videoTypeMapper,
+                                                  VedioInfoMapper vedioInfoMapper,
+                                                  StarTableMapper starTableMapper){
 
         //查询一个月内用户的视频播放类型记录数
         List<Recommend> playRecommends = videoHistoryMapper.playHistory(uid,start);
 
         //查询用户一个月内的播放总数
-        QueryWrapper<VideoHistory> queryWrapper1 = new QueryWrapper<VideoHistory>().eq("user_id",uid);
-        double total = videoHistoryMapper.selectCount(queryWrapper1);
+        QueryWrapper<VideoHistory> hisWrapper = new QueryWrapper<VideoHistory>().eq("user_id",uid);
+        double total1 = videoHistoryMapper.selectCount(hisWrapper);
+
+        //查询一个月内用户的点赞类型记录数
+        List<Recommend> starRecommends = starTableMapper.starHistory(uid,start);
+        //查询用户一个月内的点赞总数
+        QueryWrapper<StarTable> starWrapper = new QueryWrapper<StarTable>().eq("user_id",uid);
+        double total2 = starTableMapper.selectCount(starWrapper);
 
         //计算每种类型占用户观看总数的百分比的区间
         List<String> userTypes = new ArrayList<>();
         for (int i=0;i<playRecommends.size();i++) {
-            if (i == 0) {
-                playRecommends.get(i).setPercent(playRecommends.get(i).getCount()/total);
-            }else{
-                playRecommends.get(i).setPercent(playRecommends.get(i).getCount()/total+playRecommends.get(i-1).getPercent());
-            }
+
             if (playRecommends.get(i).getType() != null) {
                 userTypes.add(playRecommends.get(i).getType());//得到用户观看的所有类型
             }else{
+                total1 = total1 - (playRecommends.get(i).getCount()==null?0:playRecommends.get(i).getCount());
                 playRecommends.remove(i);
                 i = i-1;
+                continue;
+            }
+            playRecommends.get(i).setPercent(playRecommends.get(i).getCount()/total1);
+        }
+
+        //用户点赞视频类型占比分析
+        if (starRecommends.size() != 0) {
+            for (int i=0;i<starRecommends.size();i++) {
+
+                if (starRecommends.get(i).getType() != null) {
+                    userTypes.add(starRecommends.get(i).getType());//得到用户观看的所有类型
+                }else{
+                    total2 = total2 - (starRecommends.get(i).getCount()==null?0:starRecommends.get(i).getCount());
+                    starRecommends.remove(i);
+                    i = i-1;
+                    continue;
+                }
+                starRecommends.get(i).setPercent(starRecommends.get(i).getCount()/total2);
+            }
+
+            //进行点赞行为对最终类型占比的影响
+            for (Recommend playRecommend : playRecommends) {
+                String type = playRecommend.getType();
+                boolean b = true;
+                for (Recommend starRecommend : starRecommends) {
+                    if (type.equals(starRecommend.getType())){
+                        b = false;
+                        double sPercent = starRecommend.getPercent();
+                        double pPercent = playRecommend.getPercent();
+                        playRecommend.setPercent(pPercent + (sPercent-pPercent)/2);
+                    }
+                }
+                if (b){
+                    playRecommend.setPercent(playRecommend.getPercent()/2);
+                }
             }
         }
+
+        //计算各类型的百分比区间
+        for (int i = 0; i < playRecommends.size(); i++) {
+            if (i > 0) {
+                playRecommends.get(i).setPercent(playRecommends.get(i).getPercent()+playRecommends.get(i-1).getPercent());
+            }
+        }
+
         //对库内的视频按照用户看过的类型和没看过的类型进行分组
         QueryWrapper<VideoTypeEntity> queryWrapper2 = new QueryWrapper<VideoTypeEntity>().in("name",userTypes);
         QueryWrapper<VideoTypeEntity> queryWrapper3 = new QueryWrapper<VideoTypeEntity>().notIn("name",userTypes);
@@ -166,7 +209,10 @@ public class RecommendUtil {
         }
 
         if (rsList.size() < limit){
-            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().notIn("id",recommendIds);
+            QueryWrapper<VedioInfo> queryWrapper = null;
+            if (recommendIds.size() != 0) {
+                queryWrapper = new QueryWrapper<VedioInfo>().notIn("id",recommendIds);
+            }
             List<VedioInfo> batchList = vedioInfoMapper.selectList(queryWrapper);
             for (int i = rsList.size();i<limit;i++){
                 if (batchList.size() != 0) {

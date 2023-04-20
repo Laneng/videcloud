@@ -83,7 +83,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             if (watchIds.size() == 0) {
                 rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
             }else {
-                rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+                rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper,starTableMapper);
             }
         }
 

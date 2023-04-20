@@ -1,7 +1,11 @@
 package com.videocloud.mapper;
 
+import com.videocloud.entity.Recommend;
 import com.videocloud.entity.StarTable;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface StarTableMapper extends BaseMapper<StarTable> {
 
+    List<Recommend> starHistory(Integer uid, Date start);
 }
