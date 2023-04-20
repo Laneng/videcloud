@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>视频播放页面</title>
     <script th:src="@{js/jquery-1.9.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/layui.js}"></script>
+<!--    <script type="text/javascript" th:src="@{js/layui.js}"></script>-->
+    <script type="text/javascript" th:src="@{../../js/layui.js}"></script>
     <template th:replace="portal/common/common.html"></template>
 </head>
 <body>
+
 <!-- 头部 -->
 <div class="yaoqishan-header">
     <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
@@ -161,42 +163,135 @@
 
 
 
-
         <div style="margin-left: 40px" align="center">
-            <form class="layui-form" onsubmit="return comment();">
+            <div id="comment-list"></div>
+            <div id="comment-form">
+                <label>评论：</label>
                 <textarea id="comment-input" placeholder="请输入评论内容" style="width: 55%"></textarea>
                 <button id="comment-submit" style="margin-top: 8px">提交评论</button>
-            </form>
+            </div>
+
+
+
+    </div>
+
+        <div style="width: 58%;margin-top: 30px" align="center">
+            <h1 style="margin-bottom: 20px">评论列表</h1>
+            <div class="block no-shadow">
+
+                <!--        <div class="main">-->
+                <!--            &lt;!&ndash; 评论列表 &ndash;&gt;-->
+                <!--            <div id="comment" class="comment">-->
+
+                <!--            </div>-->
+
+                <!--            &lt;!&ndash; 分页 &ndash;&gt;-->
+                <!--            <div class="page">-->
+                <!--                <ul id="page" class="pagination"></ul>-->
+                <!--            </div>-->
+                <!--        </div>-->
+                <ul class="flow-default" id="comments_ul">
+
+                </ul>
+
+            </div>
         </div>
 
+
+
+
+</div>
+
+
+
+
+    <!--底部-->
+    <div class="footer-wrap" >
+        <div th:replace="portal/common/footer.html"></div>
     </div>
 
 </div>
 
-
-<div>
-    <div class="block no-shadow">
-
-        <div class="main">
-            <!-- 评论列表 -->
-            <div id="comment" class="comment">
-
-            </div>
-
-            <!-- 分页 -->
-            <div class="page">
-                <ul id="page" class="pagination"></ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--底部-->
-<div class="footer-wrap" >
-    <div th:replace="portal/common/footer.html"></div>
-</div>
 </body>
 
+<script>
+    var vedioId = $("#vedioId").text();
+    layui.use('flow',function (){
+       var flow =  layui.flow;
+       flow.load({
+           elem: '#comments_ul'
+           ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
+            ,done: function(page, next) { //执行下一页的回调
+               //模拟数据插入
+               setTimeout(function(){
+                   var lis = [];
+                   $.ajax({
+                       url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                       type:"get",
+                       success: function (res){
+                            var comments = res.data;
+                            layui.each(comments,function (index,item){
+                                console.log(item.user.avatar)
+                                console.log(item)
+
+                                lis.push(" <li style=\"margin-bottom: 30px\"><span><img src='"+item.user.avatar +"' style=\"width: 50px;height: 30px \"></span>&ensp;&ensp;\n" +
+                                    "                        <span style=\"font-size: 7px;color: #CEC9CE;font-weight: bold;margin-top: 0px;margin-bottom: 5px\">"+item.user.name+"</span> &ensp;&ensp;\n" +
+                                    "                        <div  style=\"margin-left: 30px;width: 200px;height: 25px\">"+item.commentsInfo+"</div>\n" +
+                                    "                        <span style=\"color: #CEC9CE;font-size: 7px;margin-left: 30px;margin-bottom: 30px\">"+item.commentsDate+"</span>\n &ensp;&ensp;" +
+                                    "<a href='' onclick='deleteComments("+item.id+")' style='font-size: 7px;color: #CEC9CE'>删除</a>\n"+
+                                    "                    </li>")
+                            })
+                           next(lis.join(''), page < res.count); //假设总页数为 10
+                       }
+                   })
+
+               }, 50);
+           }
+       })
+    });
+
+
+    function deleteComments(id){
+       $.ajax({
+           url:"/user/deleteById/"+id,
+           type:"delete",
+           success:function (res){
+               console.log(res);
+           }
+       })
+    }
+</script>
+
+<script>
+
+
+
+
+    // 发送评论并更新评论区域的显示
+    function postComment() {
+        var commentText = $("#comment-input").val();
+        var vedioId = $("#vedioId").text();
+
+        console.log(commentText)
+        console.log(vedioId)
+        $.ajax({
+            type: "post",
+            url: "/user/saveComments",
+            data: { "commentsInfo": commentText,"viewId":vedioId},
+            success: function(res) {
+                if(res.code == 18){
+                    alert("请登录之后在发表评论")
+                }
+                $("#comment-input").val("");
+            }
+        });
+    }
+
+    // 为提交按钮添加点击事件监听器
+    $("#comment-submit").click(function() {
+        postComment();
+    });
+</script>
 
 
 <script>
@@ -212,6 +307,7 @@
 
 
 
+    // 点赞功能实现
     function videoStar(){
         var star = $("#viewStar").text();
         var vedioId = $("#vedioId").text();
@@ -381,4 +477,6 @@
         });
     }
 </script>
+
+
 </html>
