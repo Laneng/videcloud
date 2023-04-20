@@ -29,4 +29,12 @@
             </association>
         </association>
     </resultMap>
+    
+    <select id="playHistory" resultType="Recommend">
+        SELECT vi.type,count(*) as count
+        FROM video_history vh left join video_info vi on vh.video_id=vi.id
+        where vh.user_id = #{arg0}
+        and vh.watch_time >= #{arg1}
+        group by vi.type
+    </select>
 </mapper>
