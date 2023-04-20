@@ -59,7 +59,7 @@
 			<div class="tab">
 				<div class="tab-title">
 					<img class="mod-icon" src="images/ico1.png" />
-					<em>正在热播</em>
+					<em>最近上映</em>
 				</div>
 				<div class="tab-content " >
 					<ul id="month_hot" class="equal-6 cover site-demo-flow" align="center" style="margin-left: 20px;">
@@ -137,6 +137,7 @@
                         url: '/vedioInfo/bydate?page='+page
                         ,success:function (res){
                             var vedioInfo = res.data;
+							console.log(vedioInfo);
                             layui.each(vedioInfo,function (index,item){
                                 lis.push("\t<li style=\"margin-right: 20px;display: inline-block\">\n" +
                                     "<a href='/vedioInfo/getOne?id="+item.id+"' target=\"_blank\" class=\"screenshot\">\n" +

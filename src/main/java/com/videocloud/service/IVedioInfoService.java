@@ -7,6 +7,7 @@ import com.videocloud.mapper.VedioInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public interface IVedioInfoService extends IService<VedioInfo> {
     Result selectByDate(Integer page,Integer limit);
 
 
-    Result updateStar(String star,String videoId);
+    Result updateStar(String star, String videoId, HttpSession session);
 
 
 
