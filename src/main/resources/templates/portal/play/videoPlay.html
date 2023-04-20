@@ -147,10 +147,10 @@
                 <source th:src="${vedioPlay.data.url}" type="video/mp4" align="center">
             </video>
 
-            <span type="hidden" th:text="${vedioPlay.data.id}" id="vedioId"></span>
+            <span style="display: none" th:text="${vedioPlay.data.id}" id="vedioId"></span>
 
             <div style="margin-top: 30px">
-                <span onclick="videoStar()"><img  src="../../images/star.png"></span>
+                <span onclick="videoStar()"><img  src="../../images/star2.png" id="starImg1"></span>
                 <span style="margin-right: 50px; font-size: 20px" th:text="${vedioPlay.data.viewStar}" id="viewStar"></span>
                 <span ><img  src="../../images/viewCount.png"></span>
                 <span th:text="${vedioPlay.data.viewCount}" style="color: black;margin-right: 50px;font-size: 20px"></span>
@@ -201,6 +201,16 @@
 
 <script>
 
+    var img1 = document.getElementById("starImg1");
+    img1.addEventListener('mousemove',() =>{
+        img1.src = '../../images/star3.png'
+    });
+    //
+    img1.addEventListener('mouseout',()=>{
+        img1.src = '../../images/star1.png'
+    });
+
+
 
     function videoStar(){
         var star = $("#viewStar").text();
@@ -212,8 +222,22 @@
             url:"/videoInfo/star",
             data:{"viewStar":star,"vedioId":vedioId},
             success:function (res){
-                console.log("点赞成功")
+                console.log(res);
+                var img1 = document.getElementById("starImg1");
+                console.log(img1);
+                if(res.code == 18){
+                    alert("请您先点击右上角图案进行登录");
+                }
+
+                if(res.code == 2){
+                    img1.src = "../../images/star1.png";
+                }
+
+                if(res.code == 3){
+                    img1.src = "../../images/star1.png";
+                }
                 location.reload();
+
             }
         })
     }

@@ -100,9 +100,9 @@ public class VedioInfoController {
             }
         }
 
-        VedioInfo data = (VedioInfo) vedioInfoResult.getData();
-        data.setViewCount(data.getViewCount()+1);
-        iVedioInfoService.updateVedioInfo(data);
+//        VedioInfo data = (VedioInfo) vedioInfoResult.getData();
+//        data.setViewCount(data.getViewCount()+1);
+//        iVedioInfoService.updateVedioInfo(data);
 
         map.put("vedioPlay",vedioInfoResult);
         return "portal/play/videoPlay";
@@ -248,8 +248,8 @@ public class VedioInfoController {
 
     @PutMapping("/videoInfo/star")
     @ResponseBody
-    public Result viewStar(String viewStar,String vedioId){
-        Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId);
+    public Result viewStar(String viewStar,String vedioId,HttpSession session){
+        Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId,session);
         return resultStar;
     }
 

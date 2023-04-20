@@ -62,7 +62,7 @@ public class VedioInfo implements Serializable {
     private String oper;
 
     @ApiModelProperty("用户id")
-    private String userId;
+    private Integer userId;
 
     @ApiModelProperty("视频类型id")
     private Integer videoTypeId;

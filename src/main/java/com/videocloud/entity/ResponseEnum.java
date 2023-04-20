@@ -31,7 +31,9 @@ public enum ResponseEnum {
     WRONG_PASSWORD(16,"密码错误!"),
     CODE_SUCCESS(0,"校验成功"),
     CODE_FAIL(1,"校验失败"),
-    EMAIL_SUCCESS(0,"发送邮箱成功");
+    EMAIL_SUCCESS(0,"发送邮箱成功"),
+    LOGIN_A(17,"已经登录"),
+    LOGIN_B(18,"未登录");
 
 
 

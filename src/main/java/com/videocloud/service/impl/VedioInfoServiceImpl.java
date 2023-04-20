@@ -7,8 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.videocloud.entity.*;
+import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
+import com.videocloud.service.IStarTableService;
 import com.videocloud.mapper.VideoHistoryMapper;
 import com.videocloud.mapper.VideoTypeMapper;
 import com.videocloud.service.IVedioInfoService;
@@ -18,6 +21,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -37,6 +41,9 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     private VideoHistoryMapper videoHistoryMapper;
     @Autowired
     private VideoTypeMapper videoTypeMapper;
+
+    @Autowired
+    private StarTableMapper starTableMapper;
 
     @Override
     public Result saveVedioInfo(VedioInfo vedioInfo) {
@@ -205,18 +212,53 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
     @Override
-    public Result updateStar(String star,String vedioId) {
-        int viewStar = Integer.parseInt(star);
-        int id = Integer.parseInt(vedioId);
-        viewStar++;
-        VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
-        vedioInfo.setViewStar(viewStar);
-        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
-        int update = vedioInfoMapper.update(vedioInfo, wrapper);
-        if(update != 0){
-            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+    public Result updateStar(String star,String vedioId,HttpSession session) {
+
+//        从session域中获取用户信息
+        User user = (User) session.getAttribute("user");
+//       判断用户是否登录  如果没有登录 直接返回
+        if(user == null){
+            return new Result(ResponseEnum.LOGIN_B,0,null);
         }
-        return new Result(ResponseEnum.UPDATE_FAIL,0,update);
+
+
+//        如果用户已经登录
+        int viewStar = Integer.parseInt(star);
+        int vedioId1 = Integer.parseInt(vedioId);
+
+        VedioInfo vedioInfo1 = vedioInfoMapper.selectById(vedioId);
+        Integer userId = user.getId();
+
+        //        判断点赞表里面是否有该数据
+        QueryWrapper<StarTable> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<StarTable> wrapper = queryWrapper.eq("user_id", userId)
+                .eq("video_id",vedioId1);
+        StarTable starTable = starTableMapper.selectOne(wrapper);
+//        如果点赞表里面没有该数据，表示该用户没有给本条视频点赞过，所以现在可以点赞
+        if(starTable == null){
+            starTable = new StarTable();
+            starTable.setVideoId(vedioId1);
+            starTable.setUserId(userId);
+            starTable.setCreateTime(new Date());
+            int insert = starTableMapper.insert(starTable);
+
+            viewStar++;
+            vedioInfo1.setViewStar(viewStar);
+            Wrapper<VedioInfo> updateWrapper = updateWrapper(vedioInfo1);
+            int update = vedioInfoMapper.update(vedioInfo1, updateWrapper);
+            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+        }else{
+            QueryWrapper<StarTable> queryWrapper1 = new QueryWrapper<>();
+            QueryWrapper<StarTable> queryWrapper2 = queryWrapper1
+                    .eq("user_id", userId)
+                    .eq("video_id", vedioId1);
+            int delete = starTableMapper.delete(queryWrapper2);
+            viewStar--;
+            vedioInfo1.setViewStar(viewStar);
+            Wrapper<VedioInfo> updateWrapper = updateWrapper(vedioInfo1);
+            int update = vedioInfoMapper.update(vedioInfo1, updateWrapper);
+            return new Result(ResponseEnum.UPDATE_FAIL,0,update);
+        }
     }
 
 
