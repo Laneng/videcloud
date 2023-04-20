@@ -2,4 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.videocloud.mapper.VedioInfoMapper">
 
+
+
+
+
+<!--搜索查询-->
+    <select id="searchLike" resultMap="videoAndUser">
+        SELECT v.*, u.name as userName
+        FROM video_info v
+        INNER JOIN user u ON v.user_id = u.id
+        where u.name like  concat('%',  #{keyword},  '%')
+           or title like concat('%',  #{keyword},  '%')
+           or intro like  concat('%',  #{keyword},  '%')
+           or type like   concat('%',  #{keyword},  '%')
+    </select>
+
+    <resultMap id="videoAndUser" type="VedioInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="intro" column="intro" />
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="img" column="img" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="reason" column="reason" jdbcType="INTEGER"/>
+        <result property="oper" column="oper" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="videoTypeId" column="video_type_id" jdbcType="INTEGER"/>
+        <result property="viewCount" column="view_count" jdbcType="INTEGER"/>
+        <result property="viewStar" column="view_star" jdbcType="INTEGER"/>
+        <result property="uploadTime" column="upload_time" />
+        <association property="user" javaType="User">
+
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+
+        </association>
+    </resultMap>
+
+
+
+
+
+
+
+
+
+
 </mapper>

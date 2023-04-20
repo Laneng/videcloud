@@ -7,14 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
-import com.videocloud.service.IStarTableService;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -199,7 +196,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             return new Result(ResponseEnum.LOGIN_B,0,null);
         }
 
-
 //        如果用户已经登录
         int viewStar = Integer.parseInt(star);
         int vedioId1 = Integer.parseInt(vedioId);
@@ -258,7 +254,15 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         return wrapper;
 
     }
-    
 
 
+    @Override
+    public Result searchLike(String keyword) {
+
+        List list = vedioInfoMapper.searchLike(keyword);
+
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
+    }
 }

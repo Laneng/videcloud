@@ -122,7 +122,7 @@ a:visited {color: #666}
 			<!--搜索框-->
 			<div class="search">
 				<div class="searchform">
-					<input type="text" id="keyWord" class="search-keyword original" value="${keyWord}" onkeydown="if(event.keyCode==13){search(this.value);}" />
+					<input type="text" id="keyWord" class="search-keyword original" value="" onkeydown="if(event.keyCode==13){search(this.value);}" />
 					<button id="search" class="search-submit"></button>
 				</div>
 				<a href="#" target="_blank" class="link-ranking"><span>排行榜</span></a>
@@ -159,7 +159,8 @@ a:visited {color: #666}
 		keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
 		if (keyWord!="") {
 			keyWord = keyWord.replace(":", "：");
-			window.location.href = "${pageContext.request.contextPath}/portal/search.action?keyWord="+ keyWord;
+			sessionStorage.setItem("keyword",keyWord)
+			window.location.href = "/search"
 		}
 	}
 

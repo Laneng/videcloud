@@ -22,8 +22,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 判断用户是否登录
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
+
+
+
             // 未登录，跳转到登录页面
             response.sendRedirect("/user/loginPage");
+
+
             return false;
         }
         // 登录成功，继续执行
