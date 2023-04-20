@@ -20,7 +20,7 @@ import lombok.ToString;
  * @author 兰晓东
  * @since 2023-04-20
  */
-@TableName("star_table")
+@TableName(value = "star_table",excludeProperty = "videoInfo")
 @ApiModel(value = "StarTable对象", description = "点赞表")
 @Data
 @ToString
@@ -40,6 +40,9 @@ public class StarTable implements Serializable {
 
     @ApiModelProperty("点赞时间")
     private Date createTime;
+
+
+    private VedioInfo videoInfo;
 
 
 

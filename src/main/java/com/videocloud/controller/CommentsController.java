@@ -110,8 +110,8 @@ public class CommentsController {
     }
 
 
-    @DeleteMapping("/deleteById")
-    public Result deleteById(Integer id){
+    @DeleteMapping("/deleteById/{id}")
+    public Result deleteById(@PathVariable("id") Integer id){
         boolean b = iCommentsService.removeById(id);
 
         if(b){

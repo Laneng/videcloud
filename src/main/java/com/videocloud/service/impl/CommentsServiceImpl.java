@@ -46,7 +46,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
     @Override
     public Result getCommentsByVid(Integer vid,Integer page,Integer limit) {
         if(limit == null){
-            limit = 10;
+            limit = 5;
         }
         List<Comments> comments = commentsMapper.getCommentsByVid(vid);
         int pages = comments.size()/limit + 1;

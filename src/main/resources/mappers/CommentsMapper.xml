@@ -27,10 +27,11 @@
     </resultMap>
 
     <select id="getCommentsByVid" resultMap="commentsAndUser">
-        SELECT u.`name`,u.avatar,c.comments_date,comments_info
+        SELECT u.`name`,u.avatar,c.comments_date,comments_info,c.id
         FROM comments c JOIN `user` u
         ON c.user_id = u.id
         WHERE c.video_id = #{vid}
+        order by c.comments_date desc
     </select>
 
 

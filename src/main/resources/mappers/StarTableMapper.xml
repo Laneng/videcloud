@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.videocloud.mapper.StarTableMapper">
 
+    
+    <select id="starHistory" resultType="Recommend">
+        select vi.type,count(*) as count
+        from star_table st left join video_info vi on st.video_id = vi.id
+        where st.user_id = #{arg0}
+        and create_time >= #{arg1}
+        group by vi.type
+    </select>
+
 </mapper>

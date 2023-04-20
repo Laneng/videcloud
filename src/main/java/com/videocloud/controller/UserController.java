@@ -163,7 +163,7 @@ public class UserController {
         OSS ossClient = OSSUtil.getOSS(multipartFile);
         String newName = FileUtil.UUID(multipartFile);
 
-        boolean b = FileUtil.uploadSmallFile((OSSClient) ossClient, "jycz-view", newName, file, session);
+        boolean b = FileUtil.uploadImgFile((OSSClient) ossClient, "jycz-view", newName, file);
 
         if(b){
             user.setAvatar(OSSUtil.ALI_DOMAIN+newName);
