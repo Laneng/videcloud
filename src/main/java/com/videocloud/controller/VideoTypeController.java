@@ -29,7 +29,9 @@ public class VideoTypeController {
 
     // 创建视频类型
     @PostMapping
-    public Result createVideoType(@RequestBody VideoTypeEntity videoType) {
+    public Result createVideoType(String name) {
+        VideoTypeEntity videoType = new VideoTypeEntity();
+        videoType.setName(name);
         boolean result = videoTypeService.save(videoType);
         if (result) {
             return new Result(ResponseEnum.INSERT_SUCCESS, 1, videoType);
@@ -40,8 +42,9 @@ public class VideoTypeController {
 
     // 更新视频类型
     @PutMapping("/{id}")
-    public Result updateVideoType(@PathVariable("id") Integer id, @RequestBody VideoTypeEntity videoType) {
-        videoType.setId(id);
+    public Result updateVideoType(@PathVariable("id") Integer id, String name) {
+        VideoTypeEntity videoType = videoTypeService.getById(id);
+        videoType.setName(name);
         boolean result = videoTypeService.updateById(videoType);
         if (result) {
             return new Result(ResponseEnum.UPDATE_SUCCESS, 1, videoType);
@@ -61,7 +64,6 @@ public class VideoTypeController {
         }
     }
 
-    // 根据名称模糊查询视频类型
     // 根据名称模糊查询视频类型并分页
     @GetMapping("/search")
     public Result searchVideoTypes(@RequestParam("name") String name,
