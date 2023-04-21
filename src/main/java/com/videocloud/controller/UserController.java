@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyuncs.exceptions.ClientException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.entity.User;
@@ -13,6 +15,7 @@ import com.videocloud.util.OSSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * <p>
@@ -176,6 +180,44 @@ public class UserController {
         }
         return new Result(ResponseEnum.UPDATE_FAIL,0,null);
     }
+
+
+
+
+
+    /*
+         管理员查询所有用户信息
+    */
+
+    @RequestMapping("/getAll")
+    @ResponseBody
+    public Result getAll(Integer page,Integer limit){
+
+
+        return  userService.getAll(page, limit);
+
+    }
+
+    @RequestMapping("/getNormal")
+    @ResponseBody
+    public Result getNormal(Integer page,Integer limit){
+
+
+        return  userService.getNormal(page, limit);
+
+    }
+
+    @RequestMapping("/getStop")
+    @ResponseBody
+    public Result getStop(Integer page,Integer limit){
+
+
+        return  userService.getStop(page, limit);
+
+    }
+
+
+
 }
 
 

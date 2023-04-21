@@ -1,8 +1,14 @@
 package com.videocloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.entity.User;
+import com.videocloud.entity.VedioInfo;
 import com.videocloud.mapper.UserMapper;
 import com.videocloud.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * <p>
@@ -78,5 +85,56 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         int i = userMapper.updateById(user);
 
         return i==1?true:false;
+    }
+
+    /*
+            查询所有用户
+    */
+    @Override
+    public Result getAll(Integer page, Integer limit) {
+
+        IPage<User> vedioInfoPage = new Page<>(page, limit);
+        IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, null);
+        Long pages = vedioInfoPage.getPages();
+        if(vedioInfoIPage != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
+    }
+
+
+    /*
+          查询正常用户
+    */
+    @Override
+    public Result getNormal(Integer page, Integer limit) {
+
+        IPage<User> vedioInfoPage = new Page<>(page, limit);
+        QueryWrapper<User> wrapper = new QueryWrapper<User>();
+        wrapper.eq("status","正常" );
+        IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, wrapper);
+        Long pages = vedioInfoPage.getPages();
+        if(vedioInfoIPage != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
+    }
+
+
+    /*
+         查询封禁用户
+    */
+    @Override
+    public Result getStop(Integer page, Integer limit) {
+
+        IPage<User> vedioInfoPage = new Page<>(page, limit);
+        QueryWrapper<User> wrapper = new QueryWrapper<User>();
+        wrapper.eq("status","封禁" );
+        IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, wrapper);
+        Long pages = vedioInfoPage.getPages();
+        if(vedioInfoIPage != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
     }
 }

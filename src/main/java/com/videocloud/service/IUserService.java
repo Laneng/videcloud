@@ -1,6 +1,7 @@
 package com.videocloud.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.videocloud.entity.Result;
 import com.videocloud.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,5 +21,9 @@ public interface IUserService extends IService<User> {
     public User selectOne(QueryWrapper<User> wrapper);
 
     public boolean updatePwd(User user);
+
+    Result getAll(Integer page,Integer limit);
+    Result getNormal(Integer page,Integer limit);
+    Result getStop(Integer page,Integer limit);
 
 }

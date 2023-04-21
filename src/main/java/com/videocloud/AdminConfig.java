@@ -16,6 +16,9 @@ public class AdminConfig implements WebMvcConfigurer {
         registry.addViewController("/admin").setViewName("admin/index");
         registry.addViewController("/admin/index").setViewName("admin/index");
         registry.addViewController("/admin/user").setViewName("admin/menu/user");
+        registry.addViewController("/admin/users").setViewName("admin/menu/userList");
+        registry.addViewController("/admin/normal").setViewName("admin/menu/normal");
+        registry.addViewController("/admin/stop").setViewName("admin/menu/stop");
         registry.addViewController("/admin/video").setViewName("admin/video_info/list");
         registry.addViewController("/admin/video/type").setViewName("admin/video_type/list");
         registry.addViewController("/admin/video/check").setViewName("admin/video_check/list");

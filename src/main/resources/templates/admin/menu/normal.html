@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/css/layui.css">
+    <script src="/js/layui.js"></script>
+
+
+</head>
+<body>
+
+
+
+
+
+
+<table id="table" lay-filter="test"></table>
+
+
+<script>
+
+
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#table'
+            , height: 700
+            , width: 1600
+            , url: '/user/getNormal' //数据接口
+            , toolbar: '#toolbarDemo'
+            , page: true //开启分页
+            , cols: [
+                [ //表头
+                    {field: 'id', title: 'ID', width: 80, sort: true}
+                    , {field: 'name', title: '昵称', width: 90}
+                    , {field: 'age', title: '年龄', width: 90}
+                    , {field: 'gender', title: '性别', width: 90}
+                    , {field: 'birth', title: '生日', width: 80}
+                    , {field: 'email', title: '邮箱', width: 60}
+                    , {field: 'phone', title: '电话', width: 90}
+                    , {field: 'msg', title: '简介', width: 90}
+                    , {field: 'status', title: '状态', width: 90}
+                    , {field: 'avatar', title: '头像', width: 90, templet: "#imgTpl"}
+                    , {field: 'rtime', title: '注册时间', width: 90}
+                    , {field: 'password', title: '密码', width: 90}
+                    , {field: "right", title: "操作", width: 180, toolbar: '#barDemo'}
+                ]
+            ]
+        })
+    });
+
+
+
+
+
+</script>
+
+
+<script type="text/html" id="imgTpl">
+    <img src="{{ d.avatar }}">
+</script>
+
+
+</body>
+</html>
