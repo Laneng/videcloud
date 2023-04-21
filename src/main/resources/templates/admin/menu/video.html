@@ -11,10 +11,9 @@
 	<div class="admin-iframe-content">
 		<div class="admin-iframe-menu">
 			<ul class="menu">
-				<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
-				<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
-				<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
-<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+				<li id="menu-type"><a th:href="@{/admin/video/type}">分类管理</a></li>
+				<li id="menu-check"><a th:href="@{/admin/video/check}">审核管理</a></li>
+				<li id="menu-info" class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
 			</ul>
 		</div>
 
@@ -26,5 +25,40 @@
 
 	<!-- 底部js函数 -->
 	<c:import url="../common/footer.jsp"></c:import>
+
+	<script>
+		// 获取菜单项
+		var menuType = document.getElementById('menu-type');
+		var menuCheck = document.getElementById('menu-check');
+		var menuInfo = document.getElementById('menu-info');
+
+		// 为菜单项绑定点击事件
+		menuType.addEventListener('click', function () {
+			// 移除其他菜单项的选中状态
+			menuCheck.classList.remove('active');
+			menuInfo.classList.remove('active');
+			// 为当前点击的菜单项添加选中状态
+			menuType.classList.add('active');
+		});
+
+		menuCheck.addEventListener('click', function () {
+			// 移除其他菜单项的选中状态
+			menuType.classList.remove('active');
+			menuInfo.classList.remove('active');
+			// 为当前点击的菜单项添加选中状态
+			menuCheck.classList.add('active');
+		});
+
+		menuInfo.addEventListener('click', function () {
+			// 移除其他菜单项的选中状态
+			menuType.classList.remove('active');
+			menuCheck.classList.remove('active');
+			// 为当前点击的菜单项添加选中状态
+			menuInfo.classList.add('active');
+		});
+
+
+	</script>
+
 </body>
 </html>
