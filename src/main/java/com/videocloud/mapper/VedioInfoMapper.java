@@ -16,6 +16,10 @@ import java.util.List;
  */
 public interface VedioInfoMapper extends BaseMapper<VedioInfo> {
 
-    List searchLike( @Param("keyword") String keyword);
+    List<VedioInfo> selectVedioInfoByType(@Param("page") Integer page, @Param("limit") Integer limit, @Param("type") String type);
+
+    List searchLike(@Param("keyword") String keyword, @Param("page")  Integer page, @Param("limit")  Integer limit);
+
+
 
 }

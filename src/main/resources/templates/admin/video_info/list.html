@@ -16,10 +16,9 @@
 <div class="admin-iframe-content">
 	<div class="admin-iframe-menu">
 		<ul class="menu">
-			<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
-			<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
-			<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
-			<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+			<li id="menu-type"><a th:href="@{/admin/video/type}">分类管理</a></li>
+			<li id="menu-check"><a th:href="@{/admin/video/check}">审核管理</a></li>
+			<li id="menu-info" class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
 		</ul>
 	</div>
 
@@ -79,52 +78,9 @@
 						</tr>
 					</thead>
 					<tbody id="type_result">
-					<tr>
-						<!--							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>-->
-						<td> </td>
-						<td> </td>
-						<td> </td>
-					</tr>
-<!--					<th:block th:if="${#lists.isEmpty(pageInfo.list)}">-->
-<!--						<tr>-->
-<!--							<td colspan="8" style="text-align:center;">暂无记录</td>-->
-<!--						</tr>-->
-<!--					</th:block>-->
-<!--					<th:block th:unless="${#lists.isEmpty(pageInfo.list)}">-->
-<!--						<tr th:each="entity, status : ${pageInfo.list}">-->
-<!--							<td class="checkbox"><input type="checkbox" class="fill listen-1-2" value="${entity.videoId}" name="videoId" /></td>-->
-<!--							<td>-->
-<!--								<div style="width:48px;height:24.8px;overflow:hidden;">-->
-<!--									<a href="javascript:;" onclick="img(this)">-->
-<!--										<img th:src="${entity.image}" width="100%" />-->
-<!--									</a>-->
-<!--								</div>-->
-<!--							</td>-->
-<!--							<td><input type="text" class="text" name="sort" th:value="${entity.sort}" th:data-type="非负整数" th:error-msg="请填写非负整数" th:error-pos="36" /></td>-->
-<!--							<td th:text="${entity.num}"></td>-->
-<!--							<td th:text="${entity.title}"></td>-->
-<!--							<td th:text="${entity.viewCount}"></td>-->
-<!--							<td>-->
-<!--								<span th:if="${entity.status=='1'}" style="color:green;">正常</span>-->
-<!--								<span th:unless="${entity.status=='1'}" style="color:red;">禁用</span>-->
-<!--							</td>-->
-<!--							<td>-->
-<!--								<a href="javascript:;" onclick="video('${entity.num}', '${entity.videoId}')">-->
-<!--									<button class="button wathet"><span class="icon-eye"></span> 预览</button>-->
-<!--								</a>-->
-<!--								<a th:href="@{/edit.action(videoId=${entity.videoId}, mediaId=${mediaId})}">-->
-<!--									<button class="button wathet"><span class="icon-edit-2"></span> 编辑</button>-->
-<!--								</a>-->
-<!--							</td>-->
-<!--						</tr>-->
-<!--					</th:block>-->
+
 					</tbody>
 				</table>
-
-				<!-- 分页 -->
-<!--				<div class="page">-->
-<!--					<ul id="page" class="pagination"></ul>-->
-<!--				</div>-->
 			</div>
 		</div>
 	</div>
@@ -140,16 +96,54 @@
 </body>
 
 <script>
+	// 获取菜单项
+	var menuType = document.getElementById('menu-type');
+	var menuCheck = document.getElementById('menu-check');
+	var menuInfo = document.getElementById('menu-info');
+
+	// 为菜单项绑定点击事件
+	menuType.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuCheck.classList.remove('active');
+		menuInfo.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuType.classList.add('active');
+	});
+
+	menuCheck.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuType.classList.remove('active');
+		menuInfo.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuCheck.classList.add('active');
+	});
+
+	menuInfo.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuType.classList.remove('active');
+		menuCheck.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuInfo.classList.add('active');
+	});
+	// 初始化时设置默认选中项
+	// 这里使用URL来判断当前页面的路径，根据路径设置相应的菜单项为选中状态
+	var currentUrl = window.location.pathname;
+	if (currentUrl.indexOf('/admin/video/type') === 0) {
+		menuType.classList.add('active');
+	} else if (currentUrl.indexOf('/admin/video/check') === 0) {
+		menuCheck.classList.add('active');
+	} else if (currentUrl.indexOf('/admin/video/info') === 0) {
+		menuInfo.classList.add('active');
+	}
+</script>
+
+<script>
 
 	$(function (){
-
-	})
-
-	function sendSearchRequest() {
 		// 获取请求参数
 		var type = $("#text").val(); // 从页面中获取输入的名称
-		var pageNum = 1; // 设置页码
-		var pageSize = 10; // 设置每页显示的数量
+		var page = 1; // 设置页码
+		var limit = 10; // 设置每页显示的数量
 
 		console.log(type)
 		// 发起Ajax请求
@@ -158,8 +152,8 @@
 			type: 'GET', // 请求的方法
 			data: {
 				type: type,
-				pageNum: pageNum,
-				pageSize: pageSize
+				page: page,
+				limit: limit
 			}, // 请求的参数
 			dataType: 'json', // 响应的数据类型
 			success: function(result) {
@@ -167,7 +161,7 @@
 				console.log('请求成功', result);
 				// 可以在这里根据返回的数据更新页面内容
 				// 返回的数据是一个数组，包含多个对象
-				var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+				var dataArray = result.data; // 数据在返回对象的 data 字段中
 				var html = "";
 
 				// 遍历数据数组，将每个对象添加为一行到表格中
@@ -179,7 +173,63 @@
 							"<td>"+dataArray[i].intro +"</td>" +
 							"<td>"+dataArray[i].author+"</td>" +
 							"<td>"+dataArray[i].type  +"</td>" +
-							"<td>"+dataArray[i].img   +"</td>" +
+							"<td><img height='80px' width='45px' src='"+dataArray[i].img+"' ></img></td>" +
+							"<td>"+dataArray[i].state +"</td>" +
+							"<td>"+dataArray[i].reason+"</td>" +
+							"<td><button id=\"update\" class=\"button blue\" onclick=\"\"><span class=\"icon-airplay\" aria-hidden=\"true\"></span> 播放</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id=\"delete\" class=\"button red\"><span class=\"icon-gear\"></span> 审核</button></td>" +
+							"</tr>"
+
+				}
+				$("#type_result").html(html);
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				// 请求失败的处理逻辑
+				console.log('请求失败', errorThrown);
+				// 可以在这里处理请求失败的情况，例如显示错误信息
+			},
+			complete: function() {
+				// 请求完成的处理逻辑，无论成功或失败都会执行
+				console.log('请求完成');
+				// 可以在这里隐藏加载器等操作
+			}
+		});
+	})
+	// 根据视频分类查询视频信息(需要绑定"搜索"按键的事件
+	function sendSearchRequest() {
+		// 获取请求参数
+		var type = $("#text").val(); // 从页面中获取输入的名称
+		var page = 1; // 设置页码
+		var limit = 10; // 设置每页显示的数量
+
+		console.log(type)
+		// 发起Ajax请求
+		$.ajax({
+			url: '/vedioInfo/getByType', // 请求的URL
+			type: 'GET', // 请求的方法
+			data: {
+				type: type,
+				page: page,
+				limit: limit
+			}, // 请求的参数
+			dataType: 'json', // 响应的数据类型
+			success: function(result) {
+				// 请求成功的处理逻辑
+				console.log('请求成功', result);
+				// 可以在这里根据返回的数据更新页面内容
+				// 返回的数据是一个数组，包含多个对象
+				var dataArray = result.data; // 数据在返回对象的 data 字段中
+				var html = "";
+
+				// 遍历数据数组，将每个对象添加为一行到表格中
+				for (var i = 0; i < dataArray.length; i++) {
+					html += "<tr>" +
+							"<td><input class='fill listen-1' type='checkbox'></td>" +
+							"<td>"+dataArray[i].id    +"</td>" +
+							"<td>"+dataArray[i].title +"</td>" +
+							"<td>"+dataArray[i].intro +"</td>" +
+							"<td>"+dataArray[i].author+"</td>" +
+							"<td>"+dataArray[i].type  +"</td>" +
+							"<td><img height='80px' width='45px' src='"+dataArray[i].img+"' ></img></td>" +
 							"<td>"+dataArray[i].state +"</td>" +
 							"<td>"+dataArray[i].reason+"</td>" +
 							"<td><button>修改</button></td>" +
@@ -200,36 +250,6 @@
 			}
 		});
 
-	// 根据视频分类查询视频信息(需要绑定"搜索"按键的事件)
-	function searchByType() {
-		var type = $('#type').val(); // 获取输入的视频分类
-		var page = 1; // 设置当前页数
-		var limit = 10; // 设置每页显示条数
-		$.ajax({
-			url: '/vedioInfo/getByType',
-			type: 'get',
-			dataType: 'json',
-			data: {
-				'page': page,
-				'limit': limit,
-				'type': type
-			},
-			success: function (result) {
-				// 处理查询结果
-				if (result.code === 200) {
-					// 渲染视频信息到页面
-					// ...
-				} else {
-					// 处理错误情况
-					// ...
-				}
-			},
-			error: function () {
-				// 处理请求失败情况
-				// ...
-			}
-		});
-	}
 
 	// 更新视频信息的请求
 	function updateVedioInfo(id, state, reason) {

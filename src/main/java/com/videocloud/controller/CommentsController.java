@@ -140,12 +140,46 @@ public class CommentsController {
     }
 
 
-
+    /**
+     * 获取视频的评论信息
+     * @param page
+     * @param limit
+     * @param vid
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/getCommentsByVid")
     public Result getCommentsByVid(Integer page, Integer limit, String vid){
         int vid1 = Integer.parseInt(vid);
         Result commentsByVid = iCommentsService.getCommentsByVid(vid1, page, limit);
         return commentsByVid;
+    }
+
+
+    /**
+     * 获取评论审核信息
+     * @param page
+     * @param limit
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getCommentsByAutid")
+    public Result audit(Integer page,Integer limit){
+        Result commentsPage = iCommentsService.getCommentsByAutid(page, limit);
+        return commentsPage;
+    }
+
+
+    /**
+     * 修改状态
+     * @param id
+     * @param state
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/changeCommentsState")
+    public Result changeCommentsState( Integer id,  String state){
+        Result result = iCommentsService.updateCommentsState(id, state);
+        return result;
     }
 }

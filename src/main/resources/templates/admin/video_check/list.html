@@ -15,10 +15,9 @@
 <div class="admin-iframe-content">
 	<div class="admin-iframe-menu">
 		<ul class="menu">
-			<li ><a th:href="@{/admin/video/type}">分类管理</a></li>
-			<li ><a th:href="@{/admin/video/check}">审核管理</a></li>
-			<li class="active"><a th:href="@{/admin/video/info}">视频信息</a></li>
-			<!--<li><a th:href="javascript:page('${pageContext.request.contextPath}/media_info/list_recycle.action');">回收站</a></li>-->
+			<li id="menu-type"><a th:href="@{/admin/video/type}">分类管理</a></li>
+			<li id="menu-check"><a th:href="@{/admin/video/check}">审核管理</a></li>
+			<li id="menu-info" ><a th:href="@{/admin/video/info}">视频信息</a></li>
 		</ul>
 	</div>
 	<!-- 面包屑导航和主体内容 -->
@@ -44,21 +43,12 @@
 
 				<!--正文内容-->
 				<div class="main">
-	<!--				<div style="display: flow-root;margin-bottom:20px;">-->
-	<!--					<ul class="equal-6">-->
-	<!--						<li th:each="field : ${fieldList}">-->
-	<!--							<input type="checkbox" class="fill" name="field" th:value="${field.id}" th:checked="${field.isSelected=='1'}" /> <span th:text="${field.name}"></span>-->
-	<!--						</li>-->
-	<!--					</ul>-->
-	<!--				</div>-->
-
 					<!--表格上方的操作元素，添加、删除等-->
 					<div class="operation-wrap">
 						<div class="buttons-wrap">
 							<button id="add" class="button blue" data-toggle="modal" data-target="#myModal"><span class="icon-plus"></span> 添加</button>
 							<button id="delete" class="button red"><span class="icon-minus"></span> 删除</button>
-							<button id="save" class="button green"><span class="icon-check2"></span> 保存</button>
-							<button id="search" class="button yellow"><span class="icon-search2"></span> 搜索</button>
+							<button id="search" class="button yellow"><span class="icon-search2" onclick="sendSearchRequest()"></span> 搜索</button>
 							<input id="text" class="button text" type="text">
 						</div>
 					</div>
@@ -78,7 +68,7 @@
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-									<button type="button" class="btn btn-primary">保存</button>
+									<button type="button" class="btn btn-primary" onclick="sendAddRequest()">保存</button>
 								</div>
 							</div>
 						</div>
@@ -89,162 +79,244 @@
 						<thead>
 						<tr>
 							<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
-	<!--						<th style="width:20%;">显示顺序</th>-->
 							<th>索引</th>
 							<th>违规原因</th>
 							<th>操作</th>
 						</tr>
 						</thead>
-
-						<tbody>
-						<tr th:each="entity, status : ${list}">
-							<td class="checkbox"><input type="checkbox" class="fill listen-1-2" name="fieldId" th:value="${entity.fieldId}" /> </td>
-							<td><input type="text" class="text" name="sort" th:value="${entity.sort}" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>
-							<td th:text="${entity.fieldName}"></td>
-							<td><input type="checkbox" class="fill" name="isScreen" value="1" th:checked="${entity.isScreen eq '1'}" /> </td>
-							<td><input type="checkbox" class="fill" name="isRequired" value="1" th:checked="${entity.isRequired eq '1'}" /> </td>
-						</tr>
+						<tbody id="type_result">
 						</tbody>
 					</table>
+					<!-- 分页功能 -->
+					<div class="pagination-wrap">
+						<ul class="pagination">
+							<li class="page-item">
+								<a class="page-link" href="#" onclick="changePage(1)">首页</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#" onclick="changePage(currentPage-1)">上一页</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#">
+									<input type="text" class="form-control" id="pageNumInput" style="display: inline-block; width: 50px;height: 20px">
+								</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#" onclick="changePage(currentPage+1)">下一页</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#" onclick="changePage(totalPages)">尾页</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#" onclick="changePage($('#pageNumInput').val())">跳转</a>
+							</li>
+						</ul>
+					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	// 获取菜单项
+	var menuType = document.getElementById('menu-type');
+	var menuCheck = document.getElementById('menu-check');
+	var menuInfo = document.getElementById('menu-info');
+
+	// 为菜单项绑定点击事件
+	menuType.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuCheck.classList.remove('active');
+		menuInfo.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuType.classList.add('active');
+	});
+
+	menuCheck.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuType.classList.remove('active');
+		menuInfo.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuCheck.classList.add('active');
+	});
+
+	menuInfo.addEventListener('click', function () {
+		// 移除其他菜单项的选中状态
+		menuType.classList.remove('active');
+		menuCheck.classList.remove('active');
+		// 为当前点击的菜单项添加选中状态
+		menuInfo.classList.add('active');
+	});
+	// 初始化时设置默认选中项
+	// 这里使用URL来判断当前页面的路径，根据路径设置相应的菜单项为选中状态
+	var currentUrl = window.location.pathname;
+	if (currentUrl.indexOf('/admin/video/type') === 0) {
+		menuType.classList.add('active');
+	} else if (currentUrl.indexOf('/admin/video/check') === 0) {
+		menuCheck.classList.add('active');
+	} else if (currentUrl.indexOf('/admin/video/info') === 0) {
+		menuInfo.classList.add('active');
+	}
+</script>
+
 <!-- 导入jQuery和Bootstrap的JavaScript文件 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
-<script th:inline="javascript">
-	javaex.loading();
+<script>
+	$(function () {
+		var reason = $("#text").val(); // 从页面中获取输入的名称
+		var pageNum = 1; // 设置页码
+		var pageSize = 10; // 设置每页显示的数量
 
-	var fieldIdArr = new Array();
-	var sortArr = new Array();
-	var isScreenArr = new Array();
-	var isRequiredArr = new Array();
+		console.log(reason)
+		// 发起Ajax请求
+		$.ajax({
+			url: '/videochecks/search', // 请求的URL
+			type: 'GET', // 请求的方法
+			data: {
+				reason: reason,
+				pageNum: pageNum,
+				pageSize: pageSize
+			}, // 请求的参数
+			dataType: 'json', // 响应的数据类型
+			success: function(result) {
+				// 请求成功的处理逻辑
+				console.log('请求成功', result);
+				// 可以在这里根据返回的数据更新页面内容
+				// 返回的数据是一个数组，包含多个对象
+				var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+				var html = "";
 
-	$("#add").click(function() {})
-	// 点击字段复选框事件
-	$(':checkbox[name="field"]').click(function() {
-		var fieldId = $(this).val();
+				// 遍历数据数组，将每个对象添加为一行到表格中
+				for (var i = 0; i < dataArray.length; i++) {
+					html += "<tr>" +
+							"<td class=\"checkbox\"><input type=\"checkbox\" class=\"fill listen-1\" /></td>" +
+							"<td>"+dataArray[i].id+"</td>" +
+							"<td>"+dataArray[i].reason+"</td>" +
+							"<td><button id=\"update\" class=\"button green\" onclick=\"\"><span class=\"icon-gear\"></span> 编辑</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id=\"delete\" class=\"button red\"><span class=\"icon-minus\"></span> 删除</button></td>" +
+							"</tr>"
 
-		// 判断是否选中
-		if ($(this).is(":checked")) {
-			// 选中时，向表格中添加该字段
-			var trHtml = '';
-			trHtml += '<tr>';
-			trHtml += '<td class="checkbox"><input type="checkbox" class="fill listen-1-2" name="fieldId" value="'+fieldId+'" /> </td>';
-			trHtml += '<td><input type="text" class="text" name="sort" value="" data-type="非负整数" error-msg="请填写非负整数" error-pos="36" /></td>';
-			trHtml += '<td>'+$(this).next("span").text()+'</td>';
-			trHtml += '<td><input type="checkbox" class="fill" name="isScreen" value="1" /> </td>';
-			trHtml += '<td><input type="checkbox" class="fill" name="isRequired" value="1" /> </td>';
-			trHtml += '</tr>';
-			$("#table tbody").append(trHtml);
-			// 动态加载html代码之后，需要重新渲染
-			javaex.render();
-		} else {
-			// 删除表格中对应的字段
-			// 遍历表格
-			$(':checkbox[name="fieldId"]').each(function() {
-				if (fieldId==$(this).val()) {
-					$(this).parent().parent().parent().remove();
 				}
-			});
-		}
+
+				$("#type_result").html(html);
+
+
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				// 请求失败的处理逻辑
+				console.log('请求失败', errorThrown);
+				// 可以在这里处理请求失败的情况，例如显示错误信息
+			},
+			complete: function() {
+				// 请求完成的处理逻辑，无论成功或失败都会执行
+				console.log('请求完成');
+				// 可以在这里隐藏加载器等操作
+			}
+		});
 	});
+	function sendAddRequest() {
+		// 获取请求参数
+		var reason = $("#inputName").val(); // 从页面中获取输入的名称
+		console.log(reason);
+		// 发起Ajax请求
+		$.ajax({
+			url: '/videochecks/add', // 请求的URL，假设为添加接口
+			type: 'POST', // 请求的方法为POST，添加操作一般使用POST请求
+			data: {
+				reason: reason,
+			}, // 请求的参数，根据实际情况修改
+			dataType: 'json', // 响应的数据类型
+			success: function(result) {
+				// 请求成功的处理逻辑
+				console.log('请求成功', result);
+				// 可以在这里根据返回的数据更新页面内容
+				// 返回的数据是一个数组，包含多个对象
+				var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+				var html = "";
+				// 遍历数据数组，将每个对象添加为一行到表格中
+				for (var i = 0; i < dataArray.length; i++) {
+					html += "<tr>" +
+							"<td><input class='fill listen-1' type='checkbox'></td>" +
+							"<td>" + dataArray[i].id + "</td>" +
+							"<td>" + dataArray[i].reason + "</td>" +
+							"<td><button id=\"update\" class=\"button blue\" onclick=\"\"><span class=\"icon-gear\"></span> 编辑</button><button id=\"delete\" class=\"button red\"><span class=\"icon-minus\"></span> 删除</button></td>" +
+							"</tr>"
 
-	// 点击删除按钮事件
-	$("#delete").click(function() {
-		fieldIdArr = [];
-		// 遍历表格中选中的列
-		$(':checkbox[name="fieldId"]:checked').each(function() {
-			var fieldId = $(this).val();
+				}
 
-			// 删除选中列
-			$(this).parent().parent().parent().remove();
+				$("#type_result").html(html);
 
-			// 遍历上面所有字段列
-			$(':checkbox[name="field"]:checked').each(function() {
-				if (fieldId==$(this).val()) {
-					$(this).attr("checked", false);
+
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				// 请求失败的处理逻辑
+				console.log('请求失败', errorThrown);
+				// 可以在这里处理请求失败的情况，例如显示错误信息
+			},
+			complete: function() {
+				// 请求完成的处理逻辑，无论成功或失败都会执行
+				console.log('请求完成');
+				// 可以在这里隐藏加载器等操作
+			}
+		});
+	}
+
+	function sendSearchRequest() {
+		$(function () {
+			var reason = $("#text").val(); // 从页面中获取输入的名称
+			var pageNum = 1; // 设置页码
+			var pageSize = 10; // 设置每页显示的数量
+
+			console.log(reason)
+			// 发起Ajax请求
+			$.ajax({
+				url: '/videochecks/search', // 请求的URL
+				type: 'GET', // 请求的方法
+				data: {
+					reason: reason,
+					pageNum: pageNum,
+					pageSize: pageSize
+				}, // 请求的参数
+				dataType: 'json', // 响应的数据类型
+				success: function(result) {
+					// 请求成功的处理逻辑
+					console.log('请求成功', result);
+					// 可以在这里根据返回的数据更新页面内容
+					// 返回的数据是一个数组，包含多个对象
+					var dataArray = result.data.list; // 数据在返回对象的 data 字段中
+					var html = "";
+
+					// 遍历数据数组，将每个对象添加为一行到表格中
+					for (var i = 0; i < dataArray.length; i++) {
+						html += "<tr>" +
+								"<td class=\"checkbox\"><input type=\"checkbox\" class=\"fill listen-1\" /></td>" +
+								"<td>"+dataArray[i].id+"</td>" +
+								"<td>"+dataArray[i].reason+"</td>" +
+								"<td><button id=\"update\" class=\"button green\" onclick=\"\"><span class=\"icon-gear\"></span> 编辑</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id=\"delete\" class=\"button red\"><span class=\"icon-minus\"></span> 删除</button></td>" +
+								"</tr>"
+
+					}
+
+					$("#type_result").html(html);
+
+
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					// 请求失败的处理逻辑
+					console.log('请求失败', errorThrown);
+					// 可以在这里处理请求失败的情况，例如显示错误信息
+				},
+				complete: function() {
+					// 请求完成的处理逻辑，无论成功或失败都会执行
+					console.log('请求完成');
+					// 可以在这里隐藏加载器等操作
 				}
 			});
 		});
-	});
-	
-	// 点击保存按钮事件
-	$("#save").click(function() {
-		// 表单验证函数
-		if (javaexVerify()) {
-			fieldIdArr = [];
-			sortArr = [];
-			isScreenArr = [];
-
-			// fieldId 字段主键
-			$(':checkbox[name="fieldId"]').each(function() {
-				fieldIdArr.push($(this).val());
-			});
-			
-			// 显示顺序
-			$('input[name="sort"]').each(function() {
-				sortArr.push($(this).val());
-			});
-			
-			// 是否允许列表筛选
-			$(':checkbox[name="isScreen"]').each(function() {
-				if ($(this).is(":checked")) {
-					isScreenArr.push($(this).val());
-				} else {
-					isScreenArr.push("");
-				}
-			});
-
-			// 是否必填
-			$(':checkbox[name="isRequired"]').each(function() {
-				if ($(this).is(":checked")) {
-					isRequiredArr.push($(this).val());
-				} else {
-					isRequiredArr.push("");
-				}
-			});
-			
-			// 向后台提交
-			javaex.optTip({
-				content : "数据提交中，请稍候...",
-				type : "submit"
-			});
-			
-			$.ajax({
-				url : "save.json",
-				dataType : "json",
-				traditional : "true",	// 允许传递数组
-				data : {
-					"typeId" : "${typeId}",
-					"fieldIdArr" : fieldIdArr,
-					"sortArr" : sortArr,
-					"isScreenArr" : isScreenArr,
-					"isRequiredArr" : isRequiredArr
-				},
-				success : function(rtn) {
-					if (rtn.code=="000000") {
-						javaex.optTip({
-							content : rtn.message,
-							type : "success"
-						});
-						// 建议延迟加载
-						setTimeout(function() {
-							window.location.reload();
-						}, 2000);
-					} else {
-						javaex.optTip({
-							content : rtn.message,
-							type : "error"
-						});
-					}
-				}
-			});
-		}
-	});
+	}
 </script>
 </html>

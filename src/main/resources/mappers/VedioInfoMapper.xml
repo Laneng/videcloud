@@ -4,17 +4,28 @@
 
 
 
+    <!--用户视频两表联查-->
+    <select id="selectVedioInfoByType" resultMap="videoAndUser">
+        SELECT vi.id, vi.title, vi.intro, u.name, vi.type, vi.img, vi.state, vi.reason
+        FROM video_info vi 
+                 INNER JOIN user u ON vi.user_id = u.id
+        WHERE vi.type like  concat('%',  #{type},  '%')
+        ORDER BY vi.id DESC
+            LIMIT #{page}, #{limit}
+    </select>
 
 
-<!--搜索查询-->
+
+    <!--搜索查询-->
     <select id="searchLike" resultMap="videoAndUser">
-        SELECT v.*, u.name as userName
+        SELECT v.*, u.name
         FROM video_info v
         INNER JOIN user u ON v.user_id = u.id
         where u.name like  concat('%',  #{keyword},  '%')
            or title like concat('%',  #{keyword},  '%')
            or intro like  concat('%',  #{keyword},  '%')
            or type like   concat('%',  #{keyword},  '%')
+        limit  #{page},#{limit}
     </select>
 
     <resultMap id="videoAndUser" type="VedioInfo">
@@ -39,8 +50,6 @@
 
         </association>
     </resultMap>
-
-
 
 
 
