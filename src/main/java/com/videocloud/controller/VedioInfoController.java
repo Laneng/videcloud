@@ -3,6 +3,7 @@ package com.videocloud.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.videocloud.entity.*;
+import com.videocloud.service.IUserService;
 import com.videocloud.service.IVedioInfoService;
 import com.videocloud.service.IVideoHistoryService;
 import io.swagger.models.auth.In;
@@ -29,6 +30,8 @@ public class VedioInfoController {
     private IVedioInfoService iVedioInfoService;
     @Autowired
     private IVideoHistoryService iVideoHistoryService;
+    @Autowired
+    private IUserService iUserService;
 
     /**
      * 返回信息到页面
@@ -87,6 +90,13 @@ public class VedioInfoController {
     public String selectVedioInfoById(Integer id,Map<String,Object> map,HttpSession session){
         User user = (User) session.getAttribute("user");
         Result vedioInfoResult = iVedioInfoService.selectVedioInfoById(id);
+
+        VedioInfo item = (VedioInfo)vedioInfoResult.getData();
+        QueryWrapper<User> uQuery = new QueryWrapper<User>().eq("id",item.getUserId());
+        User author = iUserService.selectOne(uQuery);
+        item.setUser(author);
+        vedioInfoResult.setData(item);
+
         if (user != null) {
             Integer uid = user.getId();
             QueryWrapper<VideoHistory> q = new QueryWrapper<VideoHistory>().eq("user_id",uid).eq("video_id",id);
