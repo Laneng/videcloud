@@ -26,13 +26,42 @@
         </association>
     </resultMap>
 
+
+    <resultMap id="commentsAndUserAndVedio" type="comments">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="commentsInfo" column="comments_info" jdbcType="VARCHAR"/>
+        <result property="commentsDate" column="comments_date" />
+        <result property="commentsState" column="comments_state" jdbcType="VARCHAR"/>
+        <association property="user" javaType="user">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+        </association>
+        <association property="vedioInfo" javaType="vedioInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+        </association>
+
+    </resultMap>
+
     <select id="getCommentsByVid" resultMap="commentsAndUser">
         SELECT u.`name`,u.avatar,c.comments_date,comments_info,c.id
         FROM comments c JOIN `user` u
         ON c.user_id = u.id
         WHERE c.video_id = #{vid}
+        and c.comments_state = '通过'
         order by c.comments_date desc
     </select>
 
+
+
+
+    <select id="getCommentsByAutid" resultMap="commentsAndUserAndVedio">
+
+        SELECT c.id,c.comments_info,c.comments_date,u.`name`,c.comments_state,v.title
+        FROM comments c JOIN `user` u
+        on c.user_id = u.id
+        JOIN video_info v
+        on v.id = c.video_id
+    </select>
 
 </mapper>

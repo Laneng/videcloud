@@ -2,7 +2,6 @@ package com.videocloud.mapper;
 
 import com.videocloud.entity.VedioInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,6 +16,10 @@ import java.util.List;
  */
 public interface VedioInfoMapper extends BaseMapper<VedioInfo> {
 
+    List<VedioInfo> selectVedioInfoByType(@Param("page") Integer page, @Param("limit") Integer limit, @Param("type") String type);
+
     List searchLike(@Param("keyword") String keyword, @Param("page")  Integer page, @Param("limit")  Integer limit);
+
+
 
 }

@@ -10,11 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.*;
-import com.videocloud.mapper.StarTableMapper;
-import com.videocloud.mapper.VedioInfoMapper;
+import com.videocloud.mapper.*;
 import com.videocloud.service.IStarTableService;
-import com.videocloud.mapper.VideoHistoryMapper;
-import com.videocloud.mapper.VideoTypeMapper;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.videocloud.util.RecommendUtil;
@@ -46,6 +43,8 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Autowired
     private StarTableMapper starTableMapper;
 
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public Result saveVedioInfo(VedioInfo vedioInfo) {
         vedioInfo.setUploadTime(new Date());
@@ -155,30 +154,13 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     //根据视频的分类进行模糊查询
     @Override
     public Result selectVedioInfoByType(Integer page, Integer limit, String type) {
-
-        if (page == null){
-            page = 1;
-        }
-        if(limit == null){
-            limit = 20;
-        }
-        // 创建查询条件
-        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("type", type); // 设置模糊查询条件
-        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(queryWrapper);
-
-        IPage<VedioInfo> page2 = new Page<>(page, limit);
-        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page2, null) ;
-        Long total = vedioInfoIPage.getTotal();
-        if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfos);
-        }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfos);
-
+        Result result = new Result();
+        // 查询视频信息
+        List<VedioInfo> vedioInfos = vedioInfoMapper.selectVedioInfoByType(page, limit, type);
+        // 查询用户信息
+        result.setData(vedioInfos);
+        return result;
     }
-
-
-
     /**
      * 获取当前播放量排在第一位的视频信息
      * @return

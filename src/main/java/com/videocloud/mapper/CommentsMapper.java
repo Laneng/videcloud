@@ -18,5 +18,7 @@ public interface CommentsMapper extends BaseMapper<Comments> {
 
     List getCommentsByVid(@Param("vid") Integer vid);
 
+    List<Comments> getCommentsByAutid();
+
 
 }

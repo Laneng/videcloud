@@ -24,6 +24,12 @@
 						<li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_ban.action');">封禁用户</a></li>
 					</ul>
 				</li>
+				<li>
+					<a href="javascript:;">评论管理</a>
+					<ul class="menu">
+						<li><a href="javascript:page('/admin/commentsManger');">评论管理</a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 
@@ -33,7 +39,9 @@
 		</div>
 	</div>
 	
-	<!-- 底部js函数 -->
-	<c:import url="../common/footer.jsp"></c:import>
+
+	<div class="footer-wrap" >
+		<div th:replace="admin/common/footer.html"></div>
+	</div>
 </body>
 </html>

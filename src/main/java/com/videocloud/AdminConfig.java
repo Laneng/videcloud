@@ -25,5 +25,6 @@ public class AdminConfig implements WebMvcConfigurer {
         registry.addViewController("/admin/video/info").setViewName("admin/video_info/list");
 //        registry.addViewController("/admin/content").setViewName("admin/menu/content");
         registry.addViewController("/admin/centerInfo").setViewName("admin/menu/centerInfo");
+        registry.addViewController("/admin/commentsManger").setViewName("admin/group_info/commentsManger");
     }
 }

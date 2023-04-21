@@ -93,7 +93,6 @@ a:visited {color: #666}
 			<!--右侧菜单-->
 			<div class="menu-con fr">
 				<ul>
-					<c:choose>
 <!--							<li class="menu-item"><a th:href="@{/user/loginPage}" target="_self" class="title">登录</a></li>-->
 <!--							<li class="menu-item"><a th:href="@{/user/registerPage}" target="_self" class="title">注册</a></li>-->
 							<li id="im-list-box" class="menu-item">
@@ -105,12 +104,11 @@ a:visited {color: #666}
 								<div class="im-list-box" th:if="${session.user != null}">
 									<a class="im-list" th:href="@{/user/accountSet}" target="_blank">个人设置</a>
 									<a class="im-list" th:href="@{/user/addVideo}" target="_blank">视频上传</a>
+									<a class="im-list" th:href="@{/user/history}" target="_blank">历史记录</a>
+									<a class="im-list" th:href="@{/user/myVideo}" target="_blank">我的视频</a>
 									<a class="im-list" href="javascript:;" onclick="logout()">退出账号</a>
 								</div>
 							</li>
-						</c:otherwise>
-					</c:choose>
-					
 				</ul>
 			</div>
 		</div>
@@ -137,9 +135,7 @@ a:visited {color: #666}
 <div class="yaoqishan-nav">
 	<div class="nav">
 		<ul>
-			<li class="active"><a href="${pageContext.request.contextPath}/${entity.link}">首页</a></li>
-			<li><a href="${entity.link}" target="_blank">游戏</a></li>
-			<li><a href="${pageContext.request.contextPath}/${entity.link}">科技</a></li>
+			<li class="active"><a th:href="@{/}">首页</a></li>
 		</ul>
 	</div>
 </div>

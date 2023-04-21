@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>评论管理</title>
+    <link rel="stylesheet" th:href="@{/js/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+</head>
+<body>
+
+
+<table class="layui-hide" id="commentsManager" lay-filter="comments_filter"></table>
+
+
+
+<script th:inline="javascript" type="text/javascript" >
+
+    layui.use(['table','form'],function (){
+        var table = layui.table;
+        var form = layui.form;
+
+        table.render({
+            elem: '#commentsManager'
+            ,url: '/user/getCommentsByAutid'
+            ,cellMinWidth: 80
+            ,page: true
+            ,cols: [
+                [
+                {type: 'checkbox',fixed: 'left'}
+                ,{field: 'id',title: 'id',width: '80',sort: 'true'}
+                ,{field: 'user.name',title: '姓名',width: 100,templet: function (d){
+                        return d.user ? d.user.name : '';
+                    }}
+                ,{field: 'commentsInfo',title: '评论内容',width: 300}
+                ,{field: 'commentsDate', title: '评论时间',width: 150}
+                ,{field: 'vedioInfo.title', title: '评论视频',width: 300,templet: function (d){
+                        return d.vedioInfo ? d.vedioInfo.title : '';
+                    }}
+                ,{field: 'commentsState',title: '状态',width: 100, templet: function (d){
+                        var checked = d.commentsState === '通过' ? 'checked' : '';
+                        var html = '<input type="checkbox" name="state" lay-skin="switch" lay-text="通过|不通过" ' + checked + '>';
+                        return html;
+                    }}
+                ]
+            ]
+            ,done: function(res, curr, count) {
+                // 表格渲染完成后，给每个表格行添加 data-id 属性
+                var rows = $('.layui-table-body table tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows.eq(i);
+                    row.attr('data-id', res.data[i].id);
+                }
+            }
+        });
+
+        // 监听开关组件的状态变化
+        form.on('switch', function(data) {
+
+            var id = $(data.elem).closest('tr').data('id');
+            var state = data.elem.checked ? '通过' : '不通过';
+            console.log(id)
+            console.log(state)
+
+            // 发送修改请求到后台
+            $.ajax({
+                url: '/user/changeCommentsState',
+                method: 'post',
+                // contentType: 'application/json',
+                data: {id:id,state:state},
+                success: function(res) {
+                    if (res.code === 2) {
+                        layer.msg('修改成功');
+                    } else {
+                        layer.msg('修改失败');
+                    }
+                },
+                error: function() {
+                    layer.msg('网络错误');
+                }
+            })
+        })
+    })
+
+</script>
+
+
+
+
+</body>
+
+
+
+
+
+
+</html>
