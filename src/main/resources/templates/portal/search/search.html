@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<style>
+    .jianjie p {display: initial;}
+
+    .mod-header{height: 18px; margin-bottom: 16px; color: #333;}
+    .mod-header h1{display: inline; font-size: 24px; height: 24px; margin-right: 15px;}
+    .base-type{position: relative; display: inline-block; border: 1px solid #e0e0e0; height: 16px; line-height: 16px; padding: 0 3px; border-radius: 2px; vertical-align: top; margin-right: 8px; font-weight: 200;}
+    .mod-header .base-type{font-weight: 200;}
+    .mod-header span{vertical-align: super; font-weight: 500; font-size: 14px; white-space: nowrap;}
+
+    .video-item{margin: 1px 0 0 1px;margin-top: 20px;}
+    .video-item li a{display: block;margin-left: -1px;margin-top: -1px;height: 31px;line-height: 31px;padding: 10px 0;background: #fbfcff;border: 1px solid #d8e1f2;text-align: center;font-size: 18px;font-family: arial,"Microsoft yahei";overflow: hidden;}
+    .video-item li a:hover{background: #eaf0fa;color: #333;}
+</style>
+
+
+
+
+<body>
+<!-- 头部导航 -->
+<div th:replace="portal/common/common.html"></div>
+<div th:replace="portal/common/header.html"></div>
+
+
+<div id="container" class="container"></div>
+
+
+
+
+
+
+
+<script>
+
+
+
+
+    $(function (){
+        var keyword = sessionStorage.getItem(`keyword`)
+        var html = '<div class="block no-shadow">';
+
+        $("#search-list").empty();
+        $("#search-list").append(html);
+        $.ajax({
+            url: "/search/like",
+            type: "POST",
+            data: {keyword:keyword},
+            success: function (rtn) {
+                if (rtn.code == 0) {
+                    javaex.optTip({
+                        content: rtn.msg,
+                        type: "success"
+                    });
+
+
+                    var videoHtml = "";
+
+                    for(var  i=0;  i<rtn.data.length;  i++){
+                        var  video  =  rtn.data[i];
+                        console.log(video)
+                        //  创建HTML标签
+                        videoHtml  +=  '<div  class="video">'+
+                            '<a  href="'+video.url+'"><img  src="'+video.img+'"   width="100px"  length="100px"></a>'+
+                            '<h3> 标题   '+video.title+'</h3>'+
+                            '<p> 简介  '+video.intro+'</p>'+
+                            // up主+'<p>'+video.title+'</p>'+
+                            '</div>';
+
+                    }
+                    var container = $("#container").html(videoHtml)
+
+
+
+
+                } else {
+                    javaex.optTip({
+                        content: rtn.msg,
+                        type: "error"
+                    });
+                }
+            }
+        });
+
+    })
+
+
+
+</script>
+
+
+<style>
+    .container    {
+        display:    flex;
+        justify-content:    space-between;
+        align-items:  center;
+        margin:  0  200px;
+        flex-wrap:  wrap;
+    }
+    .container    div    {
+        width:    18%;
+    }
+</style>
+
+
+<div th:replace="portal/common/footer.html"  style="position: fixed; bottom: 0;"></div>
+</body>
+</html>

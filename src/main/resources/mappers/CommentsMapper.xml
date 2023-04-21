@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.videocloud.mapper.CommentsMapper">
+
+    <resultMap id="commentsAndUser" type="Comments">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="commentsInfo" column="comments_info" jdbcType="VARCHAR"/>
+        <result property="commentsDate" column="comments_date" />
+        <result property="commentsState" column="comments_state" jdbcType="VARCHAR"/>
+        <result property="videoId" column="video_id" jdbcType="INTEGER"/>
+        <association property="user" javaType="User">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="age" column="age" jdbcType="INTEGER"/>
+            <result property="gender" column="gender" jdbcType="VARCHAR"/>
+            <result property="birth" column="birth" />
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="msg" column="msg" jdbcType="VARCHAR"/>
+            <result property="location" column="location" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="rtime" column="rtiem" />
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <select id="getCommentsByVid" resultMap="commentsAndUser">
+        SELECT u.`name`,u.avatar,c.comments_date,comments_info,c.id
+        FROM comments c JOIN `user` u
+        ON c.user_id = u.id
+        WHERE c.video_id = #{vid}
+        order by c.comments_date desc
+    </select>
+
+
+</mapper>

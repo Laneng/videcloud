@@ -4,129 +4,18 @@
     <meta charset="UTF-8">
     <title>视频播放页面</title>
     <script th:src="@{js/jquery-1.9.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/layui.js}"></script>
+<!--    <script type="text/javascript" th:src="@{js/layui.js}"></script>-->
+    <script type="text/javascript" th:src="@{../../js/layui.js}"></script>
     <template th:replace="portal/common/common.html"></template>
 </head>
 <body>
+
 <!-- 头部 -->
-<div class="yaoqishan-header">
-    <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
-    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
-
-    <style>
-        a:link {color: #666}
-        a:visited {color: #666}
-        .t{width: 420px;height: 62px;line-height: 24px;overflow: hidden;position: absolute;left: 0;bottom: 0;color: #fff;background: url(/images/gradient.png) repeat-x;}
-        .t1{font-size: 16px;padding: 0;color: #999;display: block;overflow: hidden;height: 80px;line-height: 80px;padding-left: 15px;}
-        .t1 a{font-size: 16px;color: #fff;text-decoration: none;}
-        .yaoqishan-header .top-menu{position: relative;z-index: 200;height: 42px;color: #222;}
-        .yaoqishan-header .top-menu .scrub{position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-position: center -10px;background-repeat: no-repeat;-webkit-filter: blur(4px);filter: blur(4px);}
-        .yaoqishan-header .top-menu .top-mask{position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-color: hsla(0,0%,100%,.4);-webkit-box-shadow: rgba(0,0,0,.1) 0 1px 2px;box-shadow: 0 1px 2px rgba(0,0,0,.1);}
-        .yaoqishan-header .yaoqishan-wrapper{margin: 0 auto;width: 1340px;}
-        .yaoqishan-header .fl{float: left;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home{margin-left: -10px;padding-left: 12px;}
-        .yaoqishan-header .top-menu .menu-con .menu-item{float: left;text-align: center;line-height: 42px;height: 42px;position: relative;background-color: hsla(0,0%,100%,0);-webkit-transition: all .3s;-o-transition: all .3s;transition: all .3s;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home a{padding-left: 20px;}
-        .yaoqishan-header .top-menu .menu-con .menu-item .title{color: #222;height: 100%;display: block;padding: 0 11px;}
-        .yaoqishan-header a{-webkit-transition: color .2s;-o-transition: color .2s;transition: color .2s;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home i{position: absolute;width: 17px;height: 14px;left: 14px;top: 12px;display: inline-block;background-image: url(/images/home.png);}
-        .yaoqishan-header .top-menu .up-load{position: relative;width: 58px;height: 42px;}
-        .yaoqishan-header .fr{float: right;}
-        .yaoqishan-header .fl, .yaoqishan-header .fr{display: inline;}
-        .yaoqishan-header .top-menu .up-load .u-link{display: block;width: 100%;height: 48px;line-height: 42px;text-align: center;font-size: 14px;color: #fff;background-image: url(/images/upload.png);}
-        .yaoqishan-header .profile-info{width: 58px;}
-        .yaoqishan-header .profile-info .i-face{position: absolute;z-index: 20;width: 36px;height: 36px;left: 11px;top: 0;-webkit-transition: .3s;-o-transition: .3s;transition: .3s;}
-        .yaoqishan-header .profile-info .i-face .face{border: 0 solid #fff;width: 100%;height: 100%;border-radius: 50%;}
-        .yaoqishan-header fieldset, .yaoqishan-header img{border: none;vertical-align: middle;}
-        .yaoqishan-header .head-banner{position: relative;z-index: 199;height: 170px;margin-top: -42px;background: #eee;background-position: center -10px;background-repeat: no-repeat;}
-        .yaoqishan-header .head-banner .head-content{position: relative;height: 170px;}
-        .yaoqishan-header .search{position: absolute;bottom: 20px;right: 0;width: 268px;height: 32px;padding: 2px 2px 2px 72px;background-color: #e5e9ef;background-color: rgba(0,0,0,.12);border-radius: 6px;font-size: 12px;z-index: 10;}
-        .yaoqishan-header .search .searchform{background-color: #fff;background-color: hsla(0,0%,100%,.88);display: block;height: 32px;border-radius: 4px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
-        .yaoqishan-header .search .search-keyword{float: left;width: 200px;color: #222;font-size: 12px;overflow: hidden;height: 32px;line-height: 32px;padding: 0 12px;border: 0;-webkit-box-shadow: none;box-shadow: none;background-color: transparent;}
-        .yaoqishan-header .search button.search-submit{display: block;position: absolute;right: 0;width: 48px;min-width: 0;cursor: pointer;height: 32px;background: url(/images/search-blue.png) center center no-repeat;margin: 0;padding: 0;border: 0;}
-        .yaoqishan-header .search .link-ranking{position: absolute;left: 2px;top: 2px;height: 32px;line-height: 32px;background-color: #fff;background-color: hsla(0,0%,100%,.88);border-radius: 4px;width: 68px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
-        .yaoqishan-header .search .link-ranking span{padding-left: 26px;color: #f25d8e;display: inline-block;background: url(/images/ranking-red.png) 0 center no-repeat;}
-        .yaoqishan-header .head-banner .head-content .head-logo{position: absolute;width: 220px;height: 105px;left: 24px;top: 55px;background: transparent no-repeat 0;z-index: 10;}
-        .im-list-box{display: none;font-size: 12px;color: #222;position: absolute;width: 110px;left: calc(50% - 55px) !important;background: #FFF;-webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;border-radius: 0 0 4px 4px;overflow: hidden;}
-        #im-list-box:hover .im-list-box{display: block;}
-        .im-list{display: block;text-align: center;position: relative;line-height: 42px;height: 42px;}
-        .im-notify.im-number.im-center{top: 14px;left: 80px;}
-        .im-notify.im-number{height: 14px;line-height: 13px;border-radius: 10px;padding: 1px 3px;font-size: 12px;min-width: 20px;text-align: center;color: #fff;}
-        .im-notify{position: absolute;background-color: #fb7299;}
-        .yaoqishan-wrapper ul li:hover a{background: rgba(255,255,255,0.3);}
-        .im-list-box .im-list:hover{background-color:#e5e9ef;color:#2fb3ff;}
-
-        .yaoqishan-nav{width: 100%;margin: 0 auto;border-bottom: 1px solid #e5e5e5;background: #fff;}
-        .yaoqishan-nav .nav{width: 1340px;margin: 0 auto;}
-        .yaoqishan-nav .nav ul{overflow: hidden;height: 46px;white-space: nowrap;}
-        .yaoqishan-nav .nav ul li{float: left;height: 46px;line-height: 46px;margin-right: 35px;}
-        .yaoqishan-nav .nav ul li.active a{color: #2fb3ff;line-height: 46px;height: 43px;border-bottom: 3px solid #2fb3ff;}
-        .yaoqishan-nav .nav ul li a{display: block;float: left;padding: 0 7px;height: 46px;color: #222;font-size: 16px;transition: none;}
-
-        /*底部*/
-        .footer-wrap{font-size: 20px;position: relative;background: #fff;color: #333;padding-bottom: 35px;margin-top:20px;}
-        .footer-inner{padding-top:15px;}
-        .footmenu{text-align: center;}
-        .footmenu .menu-item{color: #333; font-size: 14px; line-height: 2.6; display: inline-block; margin-top: 20px;}
-        .footmenu .dl{display: inline-block; width: 1px; height: 14px; vertical-align: middle; margin: 0 15px; background: #e5e9ef;}
-        .copyright{line-height: 2.6; text-align: center; font-size: 14px;}
-
-        /*回到顶部*/
-        .alien{position: fixed;bottom: 12px;right: 10px;z-index: 99999;color: #fff;padding-bottom: 65px;min-width: 50px;}
-        .alien .feedback{margin-bottom: 15px;}
-        .alien div{text-align: center;}
-        .alien .feedback a{display: block;height: 57px;background: url(/images/feedback_1.png) no-repeat 0 0;margin: 0 auto;}
-        .alien .feedback a:hover{background: url(/images/feedback_2.png) no-repeat 0 0;}
-        .alien #goTopBtn{display: none;min-width: 29px;height: 65px;cursor: pointer;position: absolute;width: 100%;}
-        .alien #goTopBtn img{display: inline-block;}
-    </style>
-
-    <!--头部-->
-    <header th:replace="portal/common/header.html"></header>
-
-    <script>
-        var path = "${webInfo.domain}";
-
-        $("#search").click(function() {
-            // 关键词检索
-            var keyWord = $("#keyWord").val();
-            search(keyWord);
-        });
-
-        // 搜索
-        function search(keyWord) {
-            // 判断关键词是否为空
-            keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
-            if (keyWord!="") {
-                keyWord = keyWord.replace(":", "：");
-                window.location.href = "${pageContext.request.contextPath}/portal/search.action?keyWord="+ keyWord;
-            }
-        }
 
 
-        // 退出登录
-        function logout() {
-            $.ajax({
-                url : "/user/logout",
-                type : "POST",
-                success : function(rtn) {
-                    if (rtn.code==11) {
-                        javaex.optTip({
-                            content : rtn.msg,
-                            type : "success"
-                        });
-                    }else if(rtn.code==10){
-                        javaex.optTip({
-                            content : rtn.msg,
-                            type : "success"
-                        });
-                    }
-                }
-            });
-        }
-    </script>
-</div>
 
+<!--头部-->
+<header th:replace="portal/common/header.html"></header>
 <!--播放内容-->
 <div >
 
@@ -161,42 +50,215 @@
 
 
 
-
         <div style="margin-left: 40px" align="center">
-            <form class="layui-form" onsubmit="return comment();">
+            <div id="comment-list"></div>
+            <div id="comment-form">
+                <label>评论：</label>
                 <textarea id="comment-input" placeholder="请输入评论内容" style="width: 55%"></textarea>
                 <button id="comment-submit" style="margin-top: 8px">提交评论</button>
-            </form>
+            </div>
+
+
+
+    </div>
+
+        <div style="width: 58%;margin-top: 30px" align="center">
+            <h1 style="margin-bottom: 20px">评论列表</h1>
+            <div class="block no-shadow">
+
+                <ul class="flow-default" id="comments_ul">
+
+                </ul>
+
+            </div>
         </div>
 
+
+
+
+</div>
+
+
+
+
+    <!--底部-->
+    <div class="footer-wrap" >
+        <div th:replace="portal/common/footer.html"></div>
     </div>
 
 </div>
 
-
-<div>
-    <div class="block no-shadow">
-
-        <div class="main">
-            <!-- 评论列表 -->
-            <div id="comment" class="comment">
-
-            </div>
-
-            <!-- 分页 -->
-            <div class="page">
-                <ul id="page" class="pagination"></ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--底部-->
-<div class="footer-wrap" >
-    <div th:replace="portal/common/footer.html"></div>
-</div>
 </body>
 
+<script>
+
+    $(function (){
+        commentsList();
+    })
+
+    var vedioId = $("#vedioId").text();
+    function commentsList(){
+        layui.use('flow',function (){
+            var flow =  layui.flow;
+            flow.load({
+                elem: '#comments_ul'
+                ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
+                ,done: function(page, next) { //执行下一页的回调
+                    //模拟数据插入
+                    setTimeout(function(){
+                        var lis = [];
+                        $.ajax({
+                            url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                            type:"get",
+                            success: function (res){
+                                var comments = res.data;
+                                layui.each(comments,function (index,item){
+                                    console.log(item.user.avatar)
+                                    console.log(item)
+
+                                    lis.push(" <li style=\"margin-bottom: 30px\"><span><img src='"+item.user.avatar +"' style=\"width: 50px;height: 30px \"></span>&ensp;&ensp;\n" +
+                                        "                        <span style=\"font-size: 7px;color: #CEC9CE;font-weight: bold;margin-top: 0px;margin-bottom: 5px\">"+item.user.name+"</span> &ensp;&ensp;\n" +
+                                        "                        <div  style=\"margin-left: 30px;width: 200px;height: 25px\">"+item.commentsInfo+"</div>\n" +
+                                        "                        <span style=\"color: #CEC9CE;font-size: 7px;margin-left: 30px;margin-bottom: 30px\">"+item.commentsDate+"</span>\n &ensp;&ensp;" +
+                                        "<a href='javascript:;' onclick='deleteComments("+item.id+")' style='font-size: 7px;color: #CEC9CE'>删除</a>\n"+
+                                        "                    </li>")
+                                })
+                                next(lis.join(''), page < res.count); //假设总页数为 10
+                            }
+                        })
+
+                    }, 50);
+
+                }
+
+            })
+
+            // 监听滚动，到达底部时重新渲染
+            $(window).scroll(function(){
+                if($(document).scrollTop() >= $(document).height()-$(window).height()){
+                    flow.load({
+                        elem: '#comments_ul',
+                        done: function(page, next){
+                            // 模拟异步请求
+                            setTimeout(function(){
+                                var lis = [];
+                                $.ajax({
+                                    url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                                    type:"get",
+                                    success: function (res){
+                                        var comments = res.data;
+                                        layui.each(comments,function (index,item){
+                                            console.log(item.user.avatar)
+                                            console.log(item)
+
+                                            lis.push(" <li style=\"margin-bottom: 30px\"><span><img src='"+item.user.avatar +"' style=\"width: 50px;height: 30px \"></span>&ensp;&ensp;\n" +
+                                                "                        <span style=\"font-size: 7px;color: #CEC9CE;font-weight: bold;margin-top: 0px;margin-bottom: 5px\">"+item.user.name+"</span> &ensp;&ensp;\n" +
+                                                "                        <div  style=\"margin-left: 30px;width: 200px;height: 25px\">"+item.commentsInfo+"</div>\n" +
+                                                "                        <span style=\"color: #CEC9CE;font-size: 7px;margin-left: 30px;margin-bottom: 30px\">"+item.commentsDate+"</span>\n &ensp;&ensp;" +
+                                                "<a href='javascript:;' onclick='deleteComments("+item.id+")' style='font-size: 7px;color: #CEC9CE'>删除</a>\n"+
+                                                "                    </li>")
+                                        })
+                                        next(lis.join(''), page < res.count); //假设总页数为 10
+                                    }
+                                })
+                            }, 50);
+                        }
+                    });
+                }
+            });
+
+
+            // 刷新数据
+            function refreshData(){
+                flow.load({
+                    elem: '#comments_ul',
+                    done: function(page, next){
+                        // 模拟异步请求
+                        setTimeout(function(){
+                            var lis = [];
+                            $.ajax({
+                                url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                                type:"get",
+                                success: function (res){
+                                    var comments = res.data;
+                                    layui.each(comments,function (index,item){
+                                        console.log(item.user.avatar)
+                                        console.log(item)
+
+                                        lis.push(" <li style=\"margin-bottom: 30px\"><span><img src='"+item.user.avatar +"' style=\"width: 50px;height: 30px \"></span>&ensp;&ensp;\n" +
+                                            "                        <span style=\"font-size: 7px;color: #CEC9CE;font-weight: bold;margin-top: 0px;margin-bottom: 5px\">"+item.user.name+"</span> &ensp;&ensp;\n" +
+                                            "                        <div  style=\"margin-left: 30px;width: 200px;height: 25px\">"+item.commentsInfo+"</div>\n" +
+                                            "                        <span style=\"color: #CEC9CE;font-size: 7px;margin-left: 30px;margin-bottom: 30px\">"+item.commentsDate+"</span>\n &ensp;&ensp;" +
+                                            "<a href='javascript:;' onclick='deleteComments("+item.id+")' style='font-size: 7px;color: #CEC9CE'>删除</a>\n"+
+                                            "                    </li>")
+                                    })
+                                    next(lis.join(''), page < res.count); //假设总页数为 10
+                                }
+                            })
+                        }, 500);
+                    }
+                });
+            }
+
+
+        });
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+    function deleteComments(id){
+       $.ajax({
+           url:"/user/deleteById/"+id,
+           type:"delete",
+           success:function (res){
+               console.log(res);
+               commentsList();
+           }
+       })
+    }
+</script>
+
+<script>
+
+
+
+
+    // 发送评论并更新评论区域的显示
+    function postComment() {
+        var commentText = $("#comment-input").val();
+        var vedioId = $("#vedioId").text();
+
+        console.log(commentText)
+        console.log(vedioId)
+        $.ajax({
+            type: "post",
+            url: "/user/saveComments",
+            data: { "commentsInfo": commentText,"viewId":vedioId},
+            success: function(res) {
+                if(res.code == 18){
+                    alert("请登录之后在发表评论")
+                }
+                $("#comment-input").val("");
+                commentsList();
+            }
+        });
+    }
+
+    // 为提交按钮添加点击事件监听器
+    $("#comment-submit").click(function() {
+        postComment();
+    });
+</script>
 
 
 <script>
@@ -212,6 +274,7 @@
 
 
 
+    // 点赞功能实现
     function videoStar(){
         var star = $("#viewStar").text();
         var vedioId = $("#vedioId").text();
@@ -381,4 +444,6 @@
         });
     }
 </script>
+
+
 </html>

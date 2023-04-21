@@ -55,7 +55,7 @@ public interface IVedioInfoService extends IService<VedioInfo> {
     Result updateStar(String star, String videoId, HttpSession session);
 
 
-
+    public Result searchLike(String keyword);
 
 
 

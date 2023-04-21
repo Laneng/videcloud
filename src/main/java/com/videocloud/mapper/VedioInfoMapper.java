@@ -2,6 +2,9 @@ package com.videocloud.mapper;
 
 import com.videocloud.entity.VedioInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2023-04-17
  */
 public interface VedioInfoMapper extends BaseMapper<VedioInfo> {
+
+    List searchLike( @Param("keyword") String keyword);
 
 }

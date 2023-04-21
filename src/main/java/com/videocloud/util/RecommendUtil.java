@@ -176,11 +176,7 @@ public class RecommendUtil {
         //查询所有的类型
         List<VideoTypeEntity> videoTypes = videoTypeMapper.selectList(null);
 
-
-        //按比例随机推荐的所有展示视频对应的种类
-        //从用户常看的类型中添加
         Map<String,Integer> typesMap = new HashMap<>();
-        //从用户不看的类型中添加
         for (int i=1;i <= limit;i++){
             int v = (int)(Math.random() * videoTypes.size());
             if (typesMap.get(videoTypes.get(v).getName()) == null) {
