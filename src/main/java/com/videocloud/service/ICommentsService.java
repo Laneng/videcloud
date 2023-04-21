@@ -20,4 +20,7 @@ public interface ICommentsService extends IService<Comments> {
 
      Result getCommentsByVid(Integer vid,Integer page,Integer limit);
 
+    Result getCommentsByAutid(Integer page,Integer limit);
+
+    Result updateCommentsState(Integer id,String state);
 }

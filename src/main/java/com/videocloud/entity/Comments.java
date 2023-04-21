@@ -54,5 +54,9 @@ public class Comments implements Serializable {
     @ApiModelProperty("用户信息")
     @TableField(exist = false)
     private User user;
+//
+    @ApiModelProperty("视频信息")
+    @TableField(exist = false)
+    private VedioInfo vedioInfo;
 
 }
