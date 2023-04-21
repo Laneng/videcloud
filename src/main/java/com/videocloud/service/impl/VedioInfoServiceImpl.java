@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.StarTableMapper;
 import com.videocloud.mapper.VedioInfoMapper;
@@ -281,9 +283,15 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
 
     @Override
-    public Result searchLike(String keyword) {
+    public Result searchLike(String keyword, Integer page,Integer limit) {
 
-        List list = vedioInfoMapper.searchLike(keyword);
+        if (limit == null){
+            limit = 12;
+        }
+
+
+        List list = vedioInfoMapper.searchLike(keyword,page,limit);
+        System.out.println(list);
 
 
 

@@ -101,7 +101,8 @@
             keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
             if (keyWord!="") {
                 keyWord = keyWord.replace(":", "：");
-                window.location.href = "${pageContext.request.contextPath}/portal/search.action?keyWord="+ keyWord;
+                sessionStorage.setItem("keyword",keyWord)
+                window.location.href = "/search"
             }
         }
 
