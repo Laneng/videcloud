@@ -284,7 +284,13 @@ public class VedioInfoController {
         return new Result(ResponseEnum.SELECT_SUCCESS,(int)p.getTotal(),list);
     }
 
-    //根据视频的分类进行模糊查询，便于审核，例如擦边和政治视频往往更容易不过审
+    /**
+     * 根据视频的分类进行模糊查询，便于审核，例：擦边和政治视频往往更容易不过审
+     * 用户表 和 视频表 两表联查
+     * @param List<Integer> ids
+     * @author Leon Downey
+     * @return
+     */
     @ResponseBody
     @GetMapping("/vedioInfo/getByType")
     public Result selectVedioInfoByType(Integer page, Integer limit, String type, Map<String, Object> map) {
