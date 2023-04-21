@@ -43,13 +43,56 @@
                     , {field: 'email', title: '邮箱', width: 60}
                     , {field: 'phone', title: '电话', width: 90}
                     , {field: 'msg', title: '简介', width: 90}
-                    , {field: 'status', title: '状态', width: 90}
                     , {field: 'avatar', title: '头像', width: 90, templet: "#imgTpl"}
                     , {field: 'rtime', title: '注册时间', width: 90}
                     , {field: 'password', title: '密码', width: 90}
-                    , {field: "right", title: "操作", width: 180, toolbar: '#barDemo'}
+                    , {
+                    field: 'status', title: '状态', width: 100, templet: function (d) {
+                        var checked = d.status === '正常' ? 'checked' : '';
+                        var html = '<input type="checkbox" name="state" lay-skin="switch" lay-text="正常|封禁" ' + checked + '>';
+                        return html;
+                    }
+                }
                 ]
             ]
+
+            , done: function (res, curr, count) {
+                // 表格渲染完成后，给每个表格行添加 data-id 属性
+                //获取行id
+                var rows = $('.layui-table-body table tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows.eq(i);
+                    row.attr('data-id', res.data[i].id);
+                }
+            }
+
+        })
+
+
+        // 监听开关组件的状态变化
+        form.on('switch', function (data) {
+
+            var id = $(data.elem).closest('tr').data('id');
+            var status = data.elem.checked ? '正常' : '封禁';
+            console.log(id)
+
+            // 发送修改请求到后台
+            $.ajax({
+                url: '/user/status',
+                data: {id: id, status: status},
+                success: function (res) {
+                    if (res.code === 2) {
+                        layer.msg('修改成功');
+                    } else {
+                        layer.msg('修改失败');
+                    }
+                },
+                error: function () {
+                    layer.msg('网络错误');
+                }
+            })
+
+
         })
     });
 

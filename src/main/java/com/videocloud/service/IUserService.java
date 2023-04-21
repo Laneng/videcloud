@@ -26,4 +26,6 @@ public interface IUserService extends IService<User> {
     Result getNormal(Integer page,Integer limit);
     Result getStop(Integer page,Integer limit);
 
+    Result upStatus(Integer id,String status);
+
 }

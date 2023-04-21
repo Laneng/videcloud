@@ -1,6 +1,7 @@
 package com.videocloud.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
@@ -42,6 +43,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             wrapper.eq("email", loginName).eq("passWord", passWord);
             User user = userMapper.selectOne(wrapper);
+
+
 
             return  user;
         }else {
@@ -95,7 +98,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         IPage<User> vedioInfoPage = new Page<>(page, limit);
         IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, null);
-        Long pages = vedioInfoPage.getPages();
+//        Long pages = vedioInfoPage.getPages();//页数
+        Long pages = vedioInfoPage.getTotal();//数据条数
         if(vedioInfoIPage != null){
             return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
         }
@@ -113,7 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
         wrapper.eq("status","正常" );
         IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, wrapper);
-        Long pages = vedioInfoPage.getPages();
+        Long pages = vedioInfoPage.getTotal();
         if(vedioInfoIPage != null){
             return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
         }
@@ -126,15 +130,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     */
     @Override
     public Result getStop(Integer page, Integer limit) {
-
+        if (limit==null){
+            limit = 10;
+        }
         IPage<User> vedioInfoPage = new Page<>(page, limit);
+
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
         wrapper.eq("status","封禁" );
         IPage<User> vedioInfoIPage = userMapper.selectPage(vedioInfoPage, wrapper);
-        Long pages = vedioInfoPage.getPages();
+        Long pages = vedioInfoPage.getTotal();
         if(vedioInfoIPage != null){
             return new Result(ResponseEnum.SELECT_SUCCESS,pages.intValue(),vedioInfoIPage.getRecords());
         }
         return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoPage.getRecords());
+    }
+
+    @Override
+    public Result upStatus(Integer id, String status) {
+
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id).set("status", status);
+        boolean b = this.update(updateWrapper);
+
+
+        return  b?new Result(ResponseEnum.UPDATE_SUCCESS,0,null):new Result(ResponseEnum.UPDATE_FAIL,0,null);
+
     }
 }
