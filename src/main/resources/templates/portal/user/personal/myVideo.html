@@ -15,6 +15,7 @@
         .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
         #pageDiv1,#pageDiv2{height: 40px;text-align: center}
         #tr1_1,#tr1_2,#tr2_1,#tr2_2{height: 250px}
+        .videoTitle {width: 220px;height: 40px;overflow: hidden;}
 	</style>
 </head>
 <body>
@@ -85,7 +86,7 @@
                                 var end1 = (list.length>=5?5:list.length)
                                 for (var i = 0; i < end1; i++) {
                                     html1 += "<td style='padding: 0;width: 230px'>" +
-                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
+                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><div class='videoTitle'>" + list[i].title + "</div><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
                                 }
                                 for(var i = end1;i<5;i++){
@@ -97,7 +98,7 @@
                                 var end2 = (list.length>=10?10:list.length);
                                 for (var i = 5; i < end2; i++) {
                                     html2 += "<td style='padding: 0;width: 230px'>" +
-                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><p>" + list[i].title + "</p><p>" + list[i].uploadTime + "</p>" +
+                                        "<img src='" + list[i].img + "' style='height: 125px;width: 220px'><div class='videoTitle'>" + list[i].title + "</div><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
                                 }
                                 for(var i = end2>=5?end2:5;i < 10; i++) {
@@ -132,7 +133,7 @@
                                 for (var i = 0; i < end1; i++) {
                                     html1 += "<td style='padding: 0;width: 230px'>" +
                                         "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
-	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
+	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><div class='videoTitle'>" + list[i].title + "</div></a><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
                                 }
                                 for(var i = end1;i<5;i++){
@@ -145,7 +146,7 @@
                                 for (var i = 5; i < end2; i++) {
                                     html2 += "<td style='padding: 0;width: 230px'>" +
                                         "<a href='/vedioInfo/getOne?id="+list[i].id+"'><img src='" + list[i].img + "' style='height: 125px;width: 220px'></a>" +
-	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><p>" + list[i].title + "</p></a><p>" + list[i].uploadTime + "</p>" +
+	                                    "<a href='/vedioInfo/getOne?id="+list[i].id+"'><div class='videoTitle'>" + list[i].title + "</div></a><p>" + list[i].uploadTime + "</p>" +
                                         "</td>"
                                 }
                                 for(var i = end2>=5?end2:5;i<10;i++){

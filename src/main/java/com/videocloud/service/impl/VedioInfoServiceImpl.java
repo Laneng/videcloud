@@ -66,7 +66,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         }
 
         if (uid == 0) {
-            rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+            rsList = RecommendUtil.randomRecommend(limit,videoTypeMapper,vedioInfoMapper);
         }else {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -81,14 +81,14 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             }
 
             if (watchIds.size() == 0) {
-                rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+                rsList = RecommendUtil.randomRecommend(limit,videoTypeMapper,vedioInfoMapper);
             }else {
                 rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper,starTableMapper);
             }
         }
 
 
-        return new Result(ResponseEnum.SELECT_SUCCESS,0,rsList);
+        return new Result(ResponseEnum.SELECT_SUCCESS,rsList.size(),rsList);
     }
 
     /**

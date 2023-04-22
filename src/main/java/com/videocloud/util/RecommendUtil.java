@@ -139,7 +139,7 @@ public class RecommendUtil {
         Set<Map.Entry<String, Integer>> entries = typesMap.entrySet();
         for (Map.Entry<String, Integer> entry : entries) {
             String key = entry.getKey();
-            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().eq("type",key).notIn("id",watchIds);
+            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().eq("type",key).notIn("id",watchIds).eq("state",1);
             List<VedioInfo> vedioInfoList = vedioInfoMapper.selectList(queryWrapper);
             for (int i = 0;i<entry.getValue();i++){
                 if (vedioInfoList.size() != 0) {
@@ -153,7 +153,7 @@ public class RecommendUtil {
 
         recommendIds.addAll(watchIds);
         if (rsList.size() < limit){
-            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().notIn("id",recommendIds);
+            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().notIn("id",recommendIds).eq("state",1);
             List<VedioInfo> batchList = vedioInfoMapper.selectList(queryWrapper);
             for (int i = rsList.size();i<limit;i++){
                 if (batchList.size() != 0) {
@@ -170,9 +170,9 @@ public class RecommendUtil {
 
 
     public static List<VedioInfo> randomRecommend(Integer limit,
-                                           VideoHistoryMapper videoHistoryMapper,
                                            VideoTypeMapper videoTypeMapper,
                                            VedioInfoMapper vedioInfoMapper){
+
         //查询所有的类型
         List<VideoTypeEntity> videoTypes = videoTypeMapper.selectList(null);
 
@@ -191,9 +191,9 @@ public class RecommendUtil {
         Set<Map.Entry<String, Integer>> entries = typesMap.entrySet();
         for (Map.Entry<String, Integer> entry : entries) {
             String key = entry.getKey();
-            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().eq("type",key);
+            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().eq("type",key).eq("state",1);
             List<VedioInfo> vedioInfoList = vedioInfoMapper.selectList(queryWrapper);
-
+            System.out.println(vedioInfoList);
             for (int i = 0;i<entry.getValue();i++){
                 if (vedioInfoList.size() != 0) {
                     int v = (int)(Math.random() * vedioInfoList.size());
@@ -205,11 +205,12 @@ public class RecommendUtil {
         }
 
         if (rsList.size() < limit){
-            QueryWrapper<VedioInfo> queryWrapper = null;
+            QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<VedioInfo>().eq("state",1);;
             if (recommendIds.size() != 0) {
-                queryWrapper = new QueryWrapper<VedioInfo>().notIn("id",recommendIds);
+                queryWrapper.notIn("id",recommendIds);
             }
             List<VedioInfo> batchList = vedioInfoMapper.selectList(queryWrapper);
+            System.out.println(batchList);
             for (int i = rsList.size();i<limit;i++){
                 if (batchList.size() != 0) {
                     int v = (int)(Math.random() * batchList.size());
