@@ -3,16 +3,18 @@ server:
 
 path:
   include:
-    - /admin
     - /portal
     - /user/history
     - /user/addVideo
     - /user/accountSet
     - /user/myVideo
+    - /admin/**
   exclude:
     - /user/loginPage
     - /user/registerPage
     - /
+    - /admin/login
+    - /admin
 
 #DataSource配置
 spring:
@@ -46,24 +48,5 @@ logging:
 
 
 
-#Spring:
-#  mail:
-#    #smtp服务主机  qq邮箱则为smtp.qq.com
-#    host: smtp.163.com
-#    #服务协议
-#    protocol: smtp
-#    # 编码集
-#    default-encoding: UTF-8
-#    #发送邮件的账户
-#    username: 19834090866@163.com
-#    #授权码
-#    password: DVLZROTEPVGZCTES
-#    test-connection: true
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-#            required: true
+
 

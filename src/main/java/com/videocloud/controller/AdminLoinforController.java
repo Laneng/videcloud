@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -55,15 +57,40 @@ public class AdminLoinforController {
         }
     }
 
+
+
+
+
+
+
+
+    /*
+        登出
+     */
+    @ResponseBody
+    @RequestMapping("/logout")
+    public Result logout(HttpServletRequest request){
+        // 获取当前session
+        HttpSession session = request.getSession();
+
+        if (session.getAttribute("login") == null){
+            return new Result(ResponseEnum.LOGOUT_FAIL,0,null);
+
+        }else {
+            session.removeAttribute("login");
+            return new Result(ResponseEnum.LOGOUT_SUCCESS,0,null);
+        }
+    }
+
     @RequestMapping("/getOne")
     @ResponseBody
-    public Result getOne(Integer id, Map map) {
-        System.out.println(id);
+    public Result getOne(Integer id) {
         AdminLoinfor one = ia.getOne(id );
         if (one!=null){
+            List<AdminLoinfor> list = new ArrayList<>();
+            list.add(one);
+            Result result = new Result(ResponseEnum.SELECT_SUCCESS, 1, list);
 
-            Result result = new Result(ResponseEnum.SELECT_SUCCESS, 1, one);
-            map.put("re",result);
             return result;
         }else{
             Result result = new Result(ResponseEnum.SELECT_FAIL, 0, null);

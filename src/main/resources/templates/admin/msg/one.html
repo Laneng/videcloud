@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>当前管理员</title>
+    <link rel="stylesheet" th:href="@{/js/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+
+
+</head>
+
+<body>
+<table class="layui-hide" id="table" lay-filter="comments_filter"></table>
+
+
+<input id="id" type="hidden" th:value="${session.login.id}">
+<script th:inline="javascript" type="text/javascript" >
+
+
+    layui.use(['table', 'layer', 'form', 'laydate', 'upload'],function () {
+
+
+
+   var id =  $("#id").val()
+        console.log(id)
+
+
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+        //渲染表格数据
+        table.render({
+            elem: '#table'
+            , height: 700
+            , width: 1600
+            , url: '/adminLoinfor/getOne?id='+id //数据接口
+            , toolbar: '#toolbarDemo'
+            // , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: 80, sort: true}
+                , {field: 'tp', title: '头像', width: 90,templet: "#imgtmp"}
+                , {field: 'name', title: '姓名', width: 90}
+                , {field: 'username', title: '账号', width: 90}
+                , {field: 'password', title: '密码', width: 90}
+                , {field: 'age', title: '年龄', width: 80}
+                , {field: 'gender', title: '性别', width: 60}
+                , {field: 'phone', title: '电话', width: 90}
+                , {field: 'location', title: '地址', width: 90}
+                , {field: "right", title: "操作", width: 90, toolbar: '#barDemo'}
+            ]]
+        })
+
+
+
+        //更新
+        form.on('submit(formDemo)', function(data){
+
+            $.ajax({
+                url:"house",
+                type:"put",//更新
+                data:JSON.stringify(data.field),
+                contentType:"application/json",
+                success:function(res){
+
+                    layer.closeAll();
+
+                    table.reload('demo', {
+                        page: { curr: 1 }//重新从第 1 页开始
+                    }); //只重载数据
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        //行事件绑定
+        table.on('tool(test)', function(obj){
+            var data = obj.data; //获得当前行数据
+            //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var layEvent = obj.event;
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+           if(layEvent === 'edit'){ //编辑
+                var img = document.getElementById("imgsrc")
+                img.src=''
+                //执行一个laydate实例
+                $("#ud input:eq(0)").val(data.id);
+                $("#ud input:eq(1)").val(data.name);
+                $("#ud input:eq(2)").val(data.username);
+                $("#ud input:eq(3)").val(data.password);
+                $("#ud input:eq(4)").val(data.age);
+                $("#ud input:eq(5)").val(data.gender);
+                $("#ud input:eq(6)").val(data.phone);
+                $("#ud input:eq(7)").val(data.location);
+                $("#ud input:eq(9)").val(data.tp);
+
+
+                form.render();
+
+                layer.open(
+                    {
+                        type:1,// 消息框，没有确定按钮
+                        title:["修改信息","padding-left:5px"], // 标题，及标题样式
+                        content:layui.$("#ud"), // dom格式
+                        anim: 4,
+                        area:['560px','700px'],
+                        //offset:'rb',//可以在右下角显示
+                        shade:false //是否遮罩
+                    }
+                )
+            }
+        });
+
+
+    })
+
+
+
+</script>
+
+
+<script type="text/html" id="imgtmp">
+    <img src="{{d.tp}}" style="width: 100px;height: 70px"/>
+</script>
+
+
+
+
+<div id="ud" style="display: none;width: 460px;margin-top: 50px">
+    <form class="layui-form" action="" lay-filter="udForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" readonly lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name"  required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">年龄</label>
+            <div class="layui-input-block">
+                <input type="text" name="age" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="text" name="gender" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="location" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <input type="text" name="location" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div id="ad" style="display: none;width: 460px;margin-top: 50px">
+    <form class="layui-form" action="" lay-filter="udForm">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="nnn" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">年龄</label>
+            <div class="layui-input-block">
+                <input type="text" name="age" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="text" name="gender" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="location" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit lay-filter="formAdd">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+
+<!--新增的按钮样式-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+        </button>
+    </div>
+</script>
+
+
+
+
+</body>
+</html>

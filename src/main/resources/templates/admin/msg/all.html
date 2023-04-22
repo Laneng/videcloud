@@ -1,127 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<link rel="stylesheet" th:href="@{/js/css/layui.css}"/>
-<script th:src="@{/js/jquery-1.9.1.min.js}"></script>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>首页</title>
+    <meta charset="UTF-8">
+    <title>当前管理员</title>
+    <link rel="stylesheet" th:href="@{/js/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+
+
 </head>
-<style>
-    .layui-table-cell .layui-btn {display: inline-block;}
-</style>
+
 <body>
-<!--#httpServletRequest.getQueryString()返回的是url路径后面的查询字符串-->
-<div>
-    <!-- 头部导航 -->
-    <div th:replace="admin/common/nav.html"></div>
-
-    <!--左侧菜单-->
-    <div class="admin-iframe-content">
-        <div class="admin-iframe-menu">
-            <ul class="menu">
-                <li class="" th:classappend="${#httpServletRequest.getQueryString() !='ll' ?'active':''}">
-                    <a href="?mm">管理中心首页</a></li>
-                <li class="" th:classappend="${#httpServletRequest.getQueryString() =='ll' ?'active':''}">
-                    <a href="?ll"> 管理员信息 </a></li>
-            </ul>
-        </div>
+<table class="layui-hide" id="table" lay-filter="comments_filter"></table>
 
 
 
+<script th:inline="javascript" type="text/javascript" >
 
-        <!--载入页面-->
-        <!--		<div class="admin-markdown">-->
-
-
-        <div>
-            <div id="demo01" th:if="${#httpServletRequest.getQueryString() !='ll'}">
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>照片：</p></div>
-
-
-                    <div><img th:src="${session.login.tp}" height="150px" width="150px"></div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>姓名：</p></div>
-                    <div class='right' id="name" th:text="${session.login.name}"></div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>账号：</p></div>
-                    <div class='right' id="zh" th:text="${session.login.username}">QQ：291026192</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>密码：</p></div>
-                    <div class='right' id="mm" th:text="${session.login.password}">陈霓清</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>年龄：</p></div>
-                    <div class='right' id="nl" th:text="${session.login.age}">陈霓清</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>性别：</p></div>
-                    <div class='right' id="xb" th:text="${session.login.gender}">陈霓清</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>电话：</p></div>
-                    <div class='right' id="dh" th:text="${session.login.phone}">陈霓清</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>地址：</p></div>
-                    <div class='right' id="dz" th:text="${session.login.location}">陈霓清</div>
-                    <span class='clearfix'></span>
-                </div>
-
-            </div>
-
-
-            <div class="active" th:if="${#httpServletRequest.getQueryString() =='ll'}">
-
-                <table class="layui-table" id="table" lay-filter="test">
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <div>
-        </div>
-
-
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 底部js函数 -->
-<div th:replace="admin/common/footer.html"></div>
-
-
-
-</body>
-
-<script th:src="@{/js/layui.js}"></script>
-<script th:inline="javascript">
 
     layui.use(['table', 'layer', 'form', 'laydate', 'upload'],function () {
 
@@ -207,7 +103,7 @@
 
                     // 此处可以发送ajax
                     //obj.del(); //删除对应行（tr）的DOM结构
-                    layer.close(index);
+                    layer.close(admin_index);
                 });
             } else if (layEvent === 'edit') {//编辑
                 form.val("udForm", data);   //执行一个laydate实例
@@ -282,17 +178,10 @@
 
 
 
+</script>
 
 
 </script>
-
-<!--<script type="text/html" id="imgtmp">-->
-<!--    <img src="{{d.tp}}" style="width: 100px;height: 70px"/>-->
-<!--</script>-->
-
-
-
-
 
 
 
@@ -466,4 +355,9 @@
         </button>
     </div>
 </script>
+
+
+
+
+</body>
 </html>

@@ -48,6 +48,7 @@
                         data:{page:page},
                         dataType:"json",
                         success:function (res){
+							console.log(res)
                             layui.each(res.data, function(index, item){
                                 var li = "<li class='layui-timeline-item'>" +
                                     "<i class='layui-icon layui-timeline-axis'></i>" +

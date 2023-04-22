@@ -12,9 +12,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class AdminConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/admin/login").setViewName("admin/login");
-        registry.addViewController("/admin").setViewName("admin/index");
-        registry.addViewController("/admin/index").setViewName("admin/index");
+        registry.addViewController("/admin/login").setViewName("admin/login_admin");
+        registry.addViewController("/admin").setViewName("admin/index_admin");
+        registry.addViewController("/admin/index").setViewName("admin/index_admin");
         registry.addViewController("/admin/user").setViewName("admin/menu/user");
         registry.addViewController("/admin/users").setViewName("admin/menu/userList");//全部用户
         registry.addViewController("/admin/normal").setViewName("admin/menu/normal");//正常用户
@@ -27,5 +27,7 @@ public class AdminConfig implements WebMvcConfigurer {
 //        registry.addViewController("/admin/content").setViewName("admin/menu/content");
         registry.addViewController("/admin/centerInfo").setViewName("admin/menu/centerInfo");
         registry.addViewController("/admin/commentsManger").setViewName("admin/group_info/commentsManger");
+        registry.addViewController("/admin/one").setViewName("admin/msg/one");
+        registry.addViewController("/admin/all").setViewName("admin/msg/all");
     }
 }

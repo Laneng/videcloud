@@ -34,7 +34,7 @@
 			<li class="nav">
 				<p class="pull-left margin-left-10" >您好,<span id="admin_name"></span></p>
 				<label class="margin-left-10">|</label>
-				<a th:href="@{/admin/login}">退出</a>
+				<a class="im-list" href="javascript:;" onclick="logout()">退出账号</a>
 			</li>
 			<li class="nav"><a th:href="@{/}" target="_blank">站点首页</a></li>
 		</ul>
@@ -51,7 +51,7 @@
 		$.ajax({
 			url : "/adminLoinfor/getOne",
 			type : "GET",
-			//dataType : "json",
+			dataType : "json",
 			data: {id:id},
 			success : function(rtn) {
 				console.log(rtn)
@@ -66,5 +66,29 @@
 		id : "nav",	// 导航的id
 		isAutoSelected : true
 	});
+
+
+	// 退出登录
+	function logout() {
+		$.ajax({
+			url : "/adminLoinfor/logout",
+			type : "POST",
+			success : function(rtn) {
+				if (rtn.code==11) {
+					javaex.optTip({
+						content : rtn.msg,
+						type : "fail"
+					});
+				}else if(rtn.code==10){
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
+					setTimeout(function (){window.location.href = "/";},1500)
+
+				}
+			}
+		});
+	}
 </script>
 </html>
