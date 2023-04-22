@@ -11,7 +11,7 @@ public class Result {
     private Integer code;
     private String msg;
     private Integer count;
-    private Object data;
+    private Object data;         
 
     public Result(ResponseEnum responseEnum, Integer count, Object data) {
         this.code = responseEnum.getCode();
