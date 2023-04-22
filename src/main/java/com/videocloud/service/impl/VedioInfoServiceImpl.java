@@ -7,15 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.*;
-import com.videocloud.service.IStarTableService;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.videocloud.util.RecommendUtil;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +56,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     public Result selectVedioInfo(Integer limit,Integer uid) {
 
         List<VedioInfo> rsList = new ArrayList<>();
-
         if(limit == null){
             limit = 8;
         }
@@ -75,6 +70,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
             QueryWrapper<VideoHistory> timeWrapper = new QueryWrapper<VideoHistory>().ge("watch_time",start).eq("user_id",uid);
             List<VideoHistory> videoHistories = videoHistoryMapper.selectList(timeWrapper);
+
             List<Integer> watchIds = new ArrayList<>();
             for (VideoHistory videoHistory : videoHistories) {
                 watchIds.add(videoHistory.getVideoId());
@@ -181,7 +177,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result selectByCount(){
         QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count");
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count").eq("state",1);
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(wrapper);
         VedioInfo vedioInfo = vedioInfos.get(0);
         if(vedioInfo != null){
@@ -197,7 +193,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             limit = 6;
         }
         QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time");
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time").eq("state",1);
         IPage<VedioInfo> vedioInfoPage = new Page<>(page, limit);
         IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(vedioInfoPage, wrapper);
         Long pages = vedioInfoPage.getPages();

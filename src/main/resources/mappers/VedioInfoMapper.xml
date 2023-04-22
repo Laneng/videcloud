@@ -14,7 +14,6 @@
                 type like  concat('%',  #{type},  '%')
             </if>
         </where>
-        ORDER BY vi.id DESC
     </select>
 
 
@@ -54,12 +53,6 @@
 
         </association>
     </resultMap>
-
-
-
-
-
-
 
 
 </mapper>
