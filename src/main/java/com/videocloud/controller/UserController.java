@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyuncs.exceptions.ClientException;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.entity.User;
@@ -13,6 +15,7 @@ import com.videocloud.util.OSSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -47,15 +53,27 @@ public class UserController {
 
         User user = userService.login(loginName, passWord);
 
+        if (user != null){
+            if (user.getStatus().equals("封禁")){
+                return new Result(ResponseEnum.STATUS_STOP,0,null);
+            }else if (user.getStatus().equals("")){
+                user.setStatus("正常");
 
-        if(user!=null){
-            httpSession.setAttribute("user",user);
-            Result result = new Result(ResponseEnum.LOGIN_SUCCESS, 1, user);
-            return result;
+                userService.updateById(user);
+
+                httpSession.setAttribute("user",user);
+                return new Result(ResponseEnum.LOGIN_SUCCESS,0,null);
+
+            }else if (user.getStatus().equals("正常")){
+                httpSession.setAttribute("user",user);
+                return new Result(ResponseEnum.LOGIN_SUCCESS, 0, null);
+            }else {
+                return new Result(ResponseEnum.LOGIN_SUCCESS, 0, null);
+            }
+        }else if (user == null){
+            return new Result(ResponseEnum.LOGIN_FAIL,0,null);
         }else {
-            Result result = new Result(ResponseEnum.LOGIN_FAIL, 0, null);
-
-            return result;
+            return new Result(ResponseEnum.LOGIN_FAIL,0,null);
         }
 
     }
@@ -81,15 +99,15 @@ public class UserController {
 
 
     }
-    /*
-         查询注册的账号是否已经存在
-    */
+
+    //查询注册时的填写的邮箱账号是否已经存在
     @ResponseBody
-    @RequestMapping("/getPhone")
+    @RequestMapping("/getEmail")
     public Result ifNullPhone(String loginName){
 
+        System.out.println(loginName);
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
-        wrapper.eq("phone", loginName);
+        wrapper.eq("email", loginName);
         User user = userService.selectOne(wrapper);
 
         if (user == null ){//账号不存在
@@ -99,9 +117,8 @@ public class UserController {
         }
     }
 
-    /*
-         注册
-     */
+
+    //注册
     @ResponseBody
     @RequestMapping("/register")
     public Result register(String loginName, String passWord,HttpSession httpSession){
@@ -109,6 +126,11 @@ public class UserController {
 
         if(user!=null){
             user.setAvatar("https://jycz-view.oss-cn-beijing.aliyuncs.com/b1800e92caa4425aad66738eea2fc09a.jpg");
+            user.setStatus("正常");
+            user.setRtime(new Date());
+            user.setName(UUID.randomUUID().toString().replace("-"," ").substring(5));
+            user.setMsg("这个人很懒，什么也没留下~~~");
+            userService.updateById(user);
             httpSession.setAttribute("user",user);
         }
 
@@ -176,6 +198,59 @@ public class UserController {
         }
         return new Result(ResponseEnum.UPDATE_FAIL,0,null);
     }
+
+
+
+
+
+    /*
+         管理员查询所有用户信息
+    */
+
+    @RequestMapping("/getAll")
+    @ResponseBody
+    public Result getAll(Integer page,Integer limit){
+
+
+        return  userService.getAll(page, limit);
+
+    }
+    /*
+            管理员查询正常用户信息
+       */
+    @RequestMapping("/getNormal")
+    @ResponseBody
+    public Result getNormal(Integer page,Integer limit){
+
+
+        return  userService.getNormal(page, limit);
+
+    }
+    /*
+            管理员查询封禁用户信息
+       */
+    @RequestMapping("/getStop")
+    @ResponseBody
+    public Result getStop(Integer page,Integer limit){
+
+
+        return  userService.getStop(page, limit);
+
+    }
+
+
+    /*
+        管理员修改用户状态：正常|封禁
+   */
+    @ResponseBody
+    @RequestMapping("/status")
+    public Result upStatus(Integer id,String status){
+        System.out.println("状态："+status);
+           return  userService.upStatus(id,status);
+    }
+
+
+
 }
 
 

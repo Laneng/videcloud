@@ -32,9 +32,9 @@
 	<div class="admin-iframe-header-right">
 		<ul class="navs">
 			<li class="nav">
-				<p class="pull-left margin-left-10">欢迎您，<span id="admin_name">管理员</span></p>
+				<p class="pull-left margin-left-10" >您好,<span id="admin_name"></span></p>
 				<label class="margin-left-10">|</label>
-				<a th:href="@{/admin/logout}">退出</a>
+				<a th:href="@{/admin/login}">退出</a>
 			</li>
 			<li class="nav"><a th:href="@{/}" target="_blank">站点首页</a></li>
 		</ul>
@@ -43,15 +43,20 @@
 
 <script>
 
+	var id = sessionStorage.getItem("id")
+	console.log(id)
+
 	$(function() {
 		// 获取登录用户
 		$.ajax({
-			url : "${pageContext.request.contextPath}/admin/get_admin.json",
-			type : "POST",
-			dataType : "json",
+			url : "/adminLoinfor/getOne",
+			type : "GET",
+			//dataType : "json",
+			data: {id:id},
 			success : function(rtn) {
-				if (rtn.code=="000000") {
-					$("#admin_name").text(rtn.data.userInfo.loginName);
+				console.log(rtn)
+				if (rtn.code==0) {
+					$("#admin_name").text(rtn.data.name);
 				}
 			}
 		});

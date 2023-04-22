@@ -61,8 +61,8 @@
 							<td style="position: relative;">
 								<span class="set-con">***********</span>
 								<div id="change_password" class="name-edit">
-									原密码:<input type="password" id="password" class="edit-input original" style="width: 100%;" />
-									新密码:<input type="password" id="newPassword" class="edit-input original" style="width: 100%;" />
+									<span>原密码:</span><input type="password" id="password" class="edit-input original" style="width: 100%;" />
+									<span>新密码:</span><input type="password" id="newPassword" class="edit-input original" style="width: 100%;" />
 									<a class="edit-btn" onclick="changePassword()">保存</a>
 								</div>
 							</td>
@@ -330,31 +330,64 @@
             type: "submit"
         });
 
-        $.ajax({
-            url: "/user/saveOrUpdate",
-            type: "POST",
-            dataType: "json",
-            data: {
-                id: [[${session.user.id}]],
-                birth: $("#birth").val()
-            },
-            success: function (rtn) {
-                if (rtn.code == "2") {
-                    javaex.optTip({
-                        content: "修改成功",
-                        type: "success"
-                    });
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    javaex.optTip({
-                        content: "修改失败",
-                        type: "error"
-                    });
+        if ($("#birth").val() == ''){
+	        javaex.optTip({
+		        content: "请输入生日!",
+		        type: "error"
+	        });
+        }else{
+            $.ajax({
+                url: "/user/saveOrUpdate",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: [[${session.user.id}]],
+                    birth: $("#birth").val()
+                },
+                success: function (rtn) {
+                    if (rtn.code == "2") {
+                        javaex.optTip({
+                            content: "修改成功",
+                            type: "success"
+                        });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        javaex.optTip({
+                            content: "修改失败",
+                            type: "error"
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+    }
+    let arr = [];
+    document.addEventListener("mouseup",ev => {
+        arr.length = 0;
+        let t = document.getElementById("change_name");
+
+        arr.push(ev.target);
+        getParent(ev.target);
+        arr.push(window);
+
+        if (!arr.includes(t)){
+            console.log(1);
+            $("#change_name").css("display","none");
+        }else{
+            console.log(0);
+        }
+    })
+
+
+    function getParent(obj){
+        if (obj.parentNode){
+            arr.push(obj.parentNode);
+        }else{
+            return;
+        }
+        getParent(obj.parentNode);
     }
 </script>
 </html>

@@ -98,49 +98,89 @@
 			$(this).parent().parent().removeClass("accountIn");
 		}
 	});
-	
+
+	// 对邮箱格式进行判断
+	//这个正则表达式包含了多个常见的顶级域名和二级域名，可以匹配常见的邮箱地址，例如：
+	//example@example.com/user@example.cn/john.doe@example.co.uk/alice@example.net/etc.
+	function validateEmail(email) {
+		var re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+		console.log(re.test(email))
+		return re.test(email);
+	}
+
 	// 发送邮件验证码
 	function sendEmail() {
-		if ($("#email").val()=="") {
+		// 获取输入的邮箱地址
+		var email = $("#email").val();
+		console.log(email)
+		//判断邮箱是否为空
+		if (email=="") {
 			javaex.optTip({
 				content : "邮箱不能为空",
 				type : "error"
 			});
-		} else {
+		} else if (!validateEmail(email)){// 验证邮箱格式
+			console.log(email)
 			javaex.optTip({
-				content : "邮件发送中，请稍候...",
-				type : "submit"
+				content : "请输入有效的邮箱地址",
+				type : "error"
 			});
-			
+			return;
+		}else{
+			var loginName = $("#email").val()
+			console.log("邮箱有效，判断是否存在");
+
 			$.ajax({
-				url : "/email/sendEmail",
+				url : "/user/getEmail",
 				type : "POST",
 				dataType : "json",
-				data : {
-					"email" : $("#email").val()
-				},
+				data : {loginName:loginName},
 				success : function(rtn) {
-					if (rtn.code==0) {
+					console.log(rtn.code)
+					console.log(loginName);
+					if (rtn.code==14) {
 						javaex.optTip({
-							content : "邮件已发出，请查看",
-							type : "success"
+							content : "邮件发送中，请稍候...",
+							type : "submit"
 						});
-						
-						// 邮件发送成功
-						// 切换到第二个标签
-						$(".stepNavInnerLt").addClass("lt2").removeClass("lt1");
-						$(".stepNavInnerCt").addClass("ct2").removeClass("ct1");
-						
-						// 隐藏第一个标签下的元素
-						$("#first").hide();
-						$("#first_btn").hide();
-						
-						// 显示第二个标签下的元素
-						$("#second").show();
-						$("#second_btn").css("display", "block");
+
+						$.ajax({
+							url : "/email/sendEmail",
+							type : "POST",
+							dataType : "json",
+							data : {
+								"email" : $("#email").val()
+							},
+							success : function(rtn) {
+								if (rtn.code==0) {
+									javaex.optTip({
+										content : "邮件已发出，请查看",
+										type : "success"
+									});
+
+									// 邮件发送成功
+									// 切换到第二个标签
+									$(".stepNavInnerLt").addClass("lt2").removeClass("lt1");
+									$(".stepNavInnerCt").addClass("ct2").removeClass("ct1");
+
+									// 隐藏第一个标签下的元素
+									$("#first").hide();
+									$("#first_btn").hide();
+
+									// 显示第二个标签下的元素
+									$("#second").show();
+									$("#second_btn").css("display", "block");
+								} else {
+									javaex.optTip({
+										content : "邮件发送失败，请稍后重试",
+										type : "error"
+									});
+								}
+							}
+						});
 					} else {
 						javaex.optTip({
-							content : "邮件发送失败，请稍后重试",
+							content : "该账号不存在",
 							type : "error"
 						});
 					}

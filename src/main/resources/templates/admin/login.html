@@ -39,7 +39,7 @@
 	<div class="form-data pos">
 		<img th:src="@{/images/logo_s.png}" class="head-logo">
 		<!--表单-->
-		<form id="login">
+		<form id="login" >
 			<p class="p-input pos">
 				<input type="text" class="original" name="login_name" data-type="必填" error-pos="25" placeholder="请输入登录名">
 			</p>
@@ -52,29 +52,38 @@
 
 			</div>
 
-			<input type="button" id="submit" class="button yes" value="登录" />
+			<a href="javascript:;" onclick="login()" class="btn-green btn-login">登录</a>
+<!--			<input type="submit" id="submit" class="button yes" value="登录" />-->
+<!--			th:href="@{  ()-->
 		</form>
 	</div>
 </body>
 <script>
 	// 监听点击保存按钮事件
-	$("#submit").click(function() {
+	// $("#submit").click(function() {
+	function login() {
 		// 表单验证函数
 		if (javaexVerify()) {
 			$.ajax({
-				url: "${pageContext.request.contextPath}/admin/login.json",
+				url: "/adminLoinfor/login",
 				type : "post",
 				dataType : "json",
 				data: $("#login").serialize(),
 				success: function (rtn) {
-					if (rtn.code=="000000") {
-						window.location.href = "${pageContext.request.contextPath}/admin/index.action";
+					if (rtn.code == 0) {
+
+
+						sessionStorage.setItem('id',rtn.data.id)
+
+
+						 //window.location.href = "/";
+						 window.open("/admin/index")
 					} else {
-						addErrorMsg("pass_word", rtn.message);
+						addErrorMsg("pass_word", rtn.responseEnum.code);
 					}
 				}
 			});
 		}
-	});
+	};
 </script>
 </html>
