@@ -30,11 +30,10 @@ a:visited {color: #666}
 .yaoqishan-header fieldset, .yaoqishan-header img{border: none;vertical-align: middle;}
 .yaoqishan-header .head-banner{position: relative;z-index: 199;height: 170px;margin-top: -42px;background: #eee;background-position: center -10px;background-repeat: no-repeat;}
 .yaoqishan-header .head-banner .head-content{position: relative;height: 170px;}
-.yaoqishan-header .search{position: absolute;bottom: 20px;right: 0;width: 268px;height: 32px;padding: 2px 2px 2px 72px;background-color: #e5e9ef;background-color: rgba(0,0,0,.12);border-radius: 6px;font-size: 12px;z-index: 10;}
+.yaoqishan-header .search{position: absolute;bottom: 20px;right: 0;height: 32px;background-color: #e5e9ef;background-color: rgba(0,0,0,.12);border-radius: 6px;font-size: 12px;z-index: 10;}
 .yaoqishan-header .search .searchform{background-color: #fff;background-color: hsla(0,0%,100%,.88);display: block;height: 32px;border-radius: 4px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
-.yaoqishan-header .search .search-keyword{float: left;width: 200px;color: #222;font-size: 12px;overflow: hidden;height: 32px;line-height: 32px;padding: 0 12px;border: 0;-webkit-box-shadow: none;box-shadow: none;background-color: transparent;}
-.yaoqishan-header .search button.search-submit{display: block;position: absolute;right: 0;width: 48px;min-width: 0;cursor: pointer;height: 32px;background: url(/images/search-blue.png) center center no-repeat;margin: 0;padding: 0;border: 0;}
-.yaoqishan-header .search .link-ranking{position: absolute;left: 2px;top: 2px;height: 32px;line-height: 32px;background-color: #fff;background-color: hsla(0,0%,100%,.88);border-radius: 4px;width: 68px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
+.yaoqishan-header .search .search-keyword{float: left;width: 300px;color: #222;font-size: 12px;overflow: hidden;height: 32px;line-height: 32px;padding: 0 12px;border: 0;-webkit-box-shadow: none;box-shadow: none;background-color: transparent;}
+.yaoqishan-header .search button.search-submit{display: block;position: absolute;right: -5px;width: 48px;min-width: 0;cursor: pointer;height: 32px;background: url(/images/search-blue.png) center center no-repeat;margin: 0;padding: 0;border: 0;}.yaoqishan-header .search .link-ranking{position: absolute;left: 2px;top: 2px;height: 32px;line-height: 32px;background-color: #fff;background-color: hsla(0,0%,100%,.88);border-radius: 4px;width: 68px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
 .yaoqishan-header .search .link-ranking span{padding-left: 26px;color: #f25d8e;display: inline-block;background: url(/images/ranking-red.png) 0 center no-repeat;}
 .yaoqishan-header .head-banner .head-content .head-logo{position: absolute;width: 220px;height: 105px;left: 24px;top: 55px;background: transparent no-repeat 0;z-index: 10;}
 .im-list-box{display: none;font-size: 12px;color: #222;position: absolute;width: 110px;left: calc(50% - 55px) !important;background: #FFF;-webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;border-radius: 0 0 4px 4px;overflow: hidden;}
@@ -123,7 +122,6 @@ a:visited {color: #666}
 					<input type="text" id="keyWord" class="search-keyword original" value="" onkeydown="if(event.keyCode==13){search(this.value);}" />
 					<button id="search" class="search-submit"></button>
 				</div>
-				<a href="#" target="_blank" class="link-ranking"><span>排行榜</span></a>
 			</div>
 			<a href="#" class="head-logo" style="background-image: url(images/logo.png);"></a>
 		</div>
@@ -142,13 +140,9 @@ a:visited {color: #666}
 
 	// 搜索
 	function search(keyWord) {
-		// 判断关键词是否为空
-		keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
-		if (keyWord!="") {
 			keyWord = keyWord.replace(":", "：");
 			sessionStorage.setItem("keyword",keyWord)
 			window.location.href = "/search"
-		}
 	}
 
 	

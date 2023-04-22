@@ -14,6 +14,7 @@
         .poly-ul-img {width: 200px;height: 112px;position: relative;margin-bottom: 15px;}
         img.poly-img {width: 22px;height: 28px;top: 10px;position: relative;right: 5px;}
         span.poly-viewCount{position: absolute;top: 1px;left: 30px;}
+        span.poly-duration {position: absolute;right: 10px;top: 1px;}
         .videoMask{opacity: 0;position: absolute;width: 200px;height: 112px;top: 0px;background: rgb(236 251 250 / 50%);line-height: 112px;color: #fffefe;}
         .poly-ul-img:hover .videoMask{opacity: 1}
         .screenshot:hover .videoMask{opacity: 1}
@@ -57,7 +58,14 @@
 									<img th:src="${vedioInfo.img}" width="100%" height="100%" />
 									<div class="videoMask"><img class="large_RC" th:src="@{/images/largeRC.png}"></div>
 									<div class="videoTitle"  th:text="${vedioInfo.title}"></div>
-									<div class="poly-title" ><img class="poly-img" th:src="@{/images/RC.png}"><span class="poly-viewCount" th:text="${vedioInfo.viewCount}"></span>
+									<div class="poly-title" >
+										<img class="poly-img" th:src="@{/images/RC.png}">
+										<span class="poly-viewCount" th:text="${vedioInfo.viewCount}"></span>
+										<span class="poly-duration">
+											<span class="hour" th:if="${vedioInfo.duration/3600 !=0}" th:text="${vedioInfo.duration/3600+':'}"></span>
+											<span class="minute" th:text="${((vedioInfo.duration%3600)/60 <=9?('0'+(vedioInfo.duration%3600)/60):(vedioInfo.duration%3600)/60) + ':'}"></span>
+											<span class="seconds" th:text="${(vedioInfo.duration%60) <=9?('0'+(vedioInfo.duration%60)):(vedioInfo.duration%60)}"></span>
+										</span>
 									</div>
 								</a>
 							</div>
@@ -153,12 +161,16 @@
                         url: '/vedioInfo/bydate?page='+page
                         ,success:function (res){
                             var vedioInfo = res.data;
-							console.log(vedioInfo);
                             layui.each(vedioInfo,function (index,item){
                                 lis.push("<li class='timeVideo'>" +
                                     "<a href='/vedioInfo/getOne?id="+item.id+"' target='_blank' class='screenshot'>" +
                                     "<img src='"+item.img+"' width='100%' height='100%' /><div class='videoMask'><img class='large_RC' src='/images/largeRC.png'></div>" +
                                     "<div class='poly-title' ><img class='poly-img' src='/images/RC.png'><span class='poly-viewCount'>"+item.viewCount+"</span>" +
+	                                "<span class='poly-duration'>" +
+	                                "<span class='hour'>"+((Math.floor(item.duration/3600)!=0)?(Math.floor(item.duration/3600)+':'):'')+"</span> " +
+	                                "<span class='minute'>"+((Math.floor((item.duration%3600)/60)<=9)?('0'+Math.floor((item.duration%3600)/60)+':'):(Math.floor((item.duration%3600)/60)+':'))+"</span> " +
+	                                "<span class='seconds'>"+((item.duration%60 <=9)?('0'+item.duration%60):(item.duration%60))+"</span> " +
+	                                "</span>" +
                                     "</div>" +
                                     "</a>" +
 	                                "<div class='videoTitle'><a href='/vedioInfo/getOne?id="+item.id+"' target='_blank'>"+item.title+"</a></div>" +

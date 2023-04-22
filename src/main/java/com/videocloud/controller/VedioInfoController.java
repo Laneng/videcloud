@@ -253,9 +253,10 @@ public class VedioInfoController {
     @RequestMapping("/vedioInfo/pass")
     @ResponseBody
     public Result pass(Integer page, Integer limit, HttpSession session) {
+
         User user = (User) session.getAttribute("user");
         Integer id = user.getId();
-        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("reason","已通过");
+        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("state","1");
 
         Page<VedioInfo> pageH = new Page<>(page,limit);
 
@@ -279,7 +280,7 @@ public class VedioInfoController {
 
         User user = (User) session.getAttribute("user");
         Integer id = user.getId();
-        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("reason","未审核");
+        QueryWrapper<VedioInfo> q = new QueryWrapper<VedioInfo>().eq("user_id",id).eq("state","0");
 
         Page<VedioInfo> pageH = new Page<>(page,limit);
 

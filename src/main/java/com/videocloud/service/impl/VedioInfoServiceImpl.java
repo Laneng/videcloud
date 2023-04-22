@@ -7,15 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.*;
 import com.videocloud.mapper.*;
-import com.videocloud.service.IStarTableService;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.videocloud.util.RecommendUtil;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,13 +56,12 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     public Result selectVedioInfo(Integer limit,Integer uid) {
 
         List<VedioInfo> rsList = new ArrayList<>();
-
         if(limit == null){
             limit = 8;
         }
 
         if (uid == 0) {
-            rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+            rsList = RecommendUtil.randomRecommend(limit,videoTypeMapper,vedioInfoMapper);
         }else {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
@@ -75,20 +70,21 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
             QueryWrapper<VideoHistory> timeWrapper = new QueryWrapper<VideoHistory>().ge("watch_time",start).eq("user_id",uid);
             List<VideoHistory> videoHistories = videoHistoryMapper.selectList(timeWrapper);
+
             List<Integer> watchIds = new ArrayList<>();
             for (VideoHistory videoHistory : videoHistories) {
                 watchIds.add(videoHistory.getVideoId());
             }
 
             if (watchIds.size() == 0) {
-                rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+                rsList = RecommendUtil.randomRecommend(limit,videoTypeMapper,vedioInfoMapper);
             }else {
                 rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper,starTableMapper);
             }
         }
 
 
-        return new Result(ResponseEnum.SELECT_SUCCESS,0,rsList);
+        return new Result(ResponseEnum.SELECT_SUCCESS,rsList.size(),rsList);
     }
 
     /**
@@ -181,7 +177,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     @Override
     public Result selectByCount(){
         QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count");
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("view_count").eq("state",1);
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(wrapper);
         VedioInfo vedioInfo = vedioInfos.get(0);
         if(vedioInfo != null){
@@ -197,7 +193,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             limit = 6;
         }
         QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time");
+        QueryWrapper<VedioInfo> wrapper = queryWrapper.orderByDesc("upload_time").eq("state",1);
         IPage<VedioInfo> vedioInfoPage = new Page<>(page, limit);
         IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(vedioInfoPage, wrapper);
         Long pages = vedioInfoPage.getPages();
@@ -257,24 +253,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
 
-
-
-    @Override
-    public Result searchLike(String keyword, Integer page,Integer limit) {
-
-        if (limit == null){
-            limit = 12;
-        }
-
-
-        List list = vedioInfoMapper.searchLike(keyword,page,limit);
-        System.out.println(list);
-
-
-
-        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
-    }
-
     @Override
     public Result changeVideoState(Integer id, String state) {
         int state1 = Integer.parseInt(state);
@@ -320,5 +298,42 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
                 .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 
+    }
+
+
+    @Override
+    public Result searchLike(String keyword, Integer page,Integer limit) {
+
+        int scrollLimit = 12;
+
+        if (page == 1) {
+            limit = 24;
+        }
+        if (limit == null){
+            limit = scrollLimit;
+        }
+
+        List<VedioInfo> list = vedioInfoMapper.searchLike(keyword);
+
+        int start = (page - 1)*limit;
+        int end = start + limit - 1;
+        if (end >= list.size() - 1){
+            end = list.size() - 1;
+        }
+        int pages = 0;
+        if (list.size() <= 24) {
+            pages = 1;
+        }else{
+            pages = (list.size()-24)/12 + 2;
+        }
+
+        List<VedioInfo> rsList = new ArrayList<>();
+
+        for (int i = start;i <= end;i++) {
+            rsList.add(list.get(i));
+        }
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,pages,rsList);
     }
 }
