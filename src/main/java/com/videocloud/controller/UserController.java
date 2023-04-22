@@ -99,13 +99,13 @@ public class UserController {
 
 
     }
-    /*
-         查询注册的账号是否已经存在
-    */
+
+    //查询注册时的填写的邮箱账号是否已经存在
     @ResponseBody
-    @RequestMapping("/getPhone")
+    @RequestMapping("/getEmail")
     public Result ifNullPhone(String loginName){
 
+        System.out.println(loginName);
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
         wrapper.eq("email", loginName);
         User user = userService.selectOne(wrapper);
@@ -117,9 +117,8 @@ public class UserController {
         }
     }
 
-    /*
-         注册
-     */
+
+    //注册
     @ResponseBody
     @RequestMapping("/register")
     public Result register(String loginName, String passWord,HttpSession httpSession){

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>用户</title>
+</head>
+<body>
+	<!-- 头部导航 -->
+	<div th:replace="admin/common/nav.html"></div>
+	
+	<div class="admin-iframe-content">
+		<div class="admin-iframe-menu">
+
+			
+			<ul class="menus">
+				<li>
+					<a href="javascript:;">视频管理</a>
+					<ul class="menu">
+						<li><a href="javascript:page('/admin/video/type');">分类管理</a></li>
+						<li><a href="javascript:page('/admin/video/check');">审核管理</a></li>
+						<li><a href="javascript:page('/admin/video/info');">视频信息</a></li>
+					</ul>
+				</li>
+
+			</ul>
+		</div>
+
+
+
+		<!--载入页面-->
+		<div class="admin-markdown">
+			<iframe id="page" th:src="@{/admin/video/type}"></iframe>
+		</div>
+	</div>
+	
+
+	<div class="footer-wrap" >
+		<div th:replace="admin/common/footer.html"></div>
+	</div>
+</body>
+</html>

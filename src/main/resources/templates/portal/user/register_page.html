@@ -51,8 +51,8 @@
 							<div class="info-container">
 								<p class="errorInfo vh"><span>账号错误</span></p>
 								<div class="tip-container tip-account-container">
-									<p class="tip-info">请输入账号</p>
-									<input type="text" id="phone" class="txt-info txt-account"  onBlur="txtblur()" name="loginName" />
+									<p class="tip-info">请输入邮箱</p>
+									<input type="text" id="email" class="txt-info txt-account"  onBlur="txtblur()" name="loginName" />
 								</div>
 							</div>
 							<div class="info-container">
@@ -109,17 +109,36 @@
 		}
 	});
 
+	// 对邮箱格式进行判断
+	//这个正则表达式包含了多个常见的顶级域名和二级域名，可以匹配常见的邮箱地址，例如：
+	//example@example.com/user@example.cn/john.doe@example.co.uk/alice@example.net/etc.
+	function validateEmail(email) {
+		var re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+		console.log(re.test(email))
+		return re.test(email);
+	}
 
 	var flag = false;
 	//手机号码输入后失去焦点事件
 	function txtblur(event){ //当前元素失去焦点
 
-		var loginName = $("#phone").serialize()
+		var loginName = $("#email").serialize()
 		console.log(loginName)
-
+		// 获取输入的邮箱地址
+		var email = $("#email").val();
+		console.log(email)
+		// 验证邮箱格式
+		if (!validateEmail(email)) {
+			console.log(email)
+			javaex.optTip({
+				content : "请输入有效的邮箱地址",
+				type : "error"
+			});
+			return;
+		}
 		console.log(123);
 		$.ajax({
-			url : "/user/getPhone",
+			url : "/user/getEmail",
 			type : "POST",
 			dataType : "json",
 			data : loginName,
@@ -143,12 +162,12 @@
 		});
 
 	}
-	
-	// 点击注册
+
+	// 注册按钮点击事件
 	function register() {
-
+		// 执行注册逻辑
 		console.log(flag)
-
+		//
 		if (flag== true){
 
 			$.ajax({
@@ -179,7 +198,7 @@
 
 		}else {
 			javaex.optTip({
-				content : "请重新输入手机号码",
+				content : "请重新输入电子邮箱",
 				type : "error"
 			});
 		}

@@ -154,12 +154,25 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     //根据视频的分类进行模糊查询
     @Override
     public Result selectVedioInfoByType(Integer page, Integer limit, String type) {
-        Result result = new Result();
+
         // 查询视频信息
         List<VedioInfo> vedioInfos = vedioInfoMapper.selectVedioInfoByType(page, limit, type);
-        // 查询用户信息
-        result.setData(vedioInfos);
-        return result;
+        int pages = vedioInfos.size()/limit == 0 ? vedioInfos.size()/limit : vedioInfos.size()/limit + 1;
+        int start = (page-1)*limit;
+        int end = start + limit - 1;
+        if (end >= vedioInfos.size() - 1){
+            end = vedioInfos.size() - 1;
+        }
+        List<VedioInfo> rsList = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            rsList.add(vedioInfos.get(i));
+        }
+
+        if(rsList != null){
+            return new Result(ResponseEnum.SELECT_SUCCESS,vedioInfos.size(),rsList);
+        }
+        return new Result(ResponseEnum.SELECT_FAIL,0,null);
+
     }
     /**
      * 获取当前播放量排在第一位的视频信息
@@ -228,7 +241,7 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             vedioInfo1.setViewStar(viewStar);
             Wrapper<VedioInfo> updateWrapper = updateWrapper(vedioInfo1);
             int update = vedioInfoMapper.update(vedioInfo1, updateWrapper);
-            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+            return new Result(ResponseEnum.UPDATE_SUCCESS,0,viewStar);
         }else{
             QueryWrapper<StarTable> queryWrapper1 = new QueryWrapper<>();
             QueryWrapper<StarTable> queryWrapper2 = queryWrapper1
@@ -239,9 +252,55 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
             vedioInfo1.setViewStar(viewStar);
             Wrapper<VedioInfo> updateWrapper = updateWrapper(vedioInfo1);
             int update = vedioInfoMapper.update(vedioInfo1, updateWrapper);
-            return new Result(ResponseEnum.UPDATE_FAIL,0,update);
+            return new Result(ResponseEnum.UPDATE_FAIL,0,viewStar);
         }
     }
+
+
+
+
+    @Override
+    public Result searchLike(String keyword, Integer page,Integer limit) {
+
+        if (limit == null){
+            limit = 12;
+        }
+
+
+        List list = vedioInfoMapper.searchLike(keyword,page,limit);
+        System.out.println(list);
+
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
+    }
+
+    @Override
+    public Result changeVideoState(Integer id, String state) {
+        int state1 = Integer.parseInt(state);
+        VedioInfo vedioInfo = vedioInfoMapper.selectById(id);
+        vedioInfo.setState(state1);
+        Wrapper<VedioInfo> wrapper = updateWrapper(vedioInfo);
+        int update = vedioInfoMapper.update(vedioInfo, wrapper);
+        if(update != 0){
+            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+        }
+        return new Result(ResponseEnum.UPDATE_FAIL,0,update);
+    }
+
+    @Override
+    public Result changeVideoReason(String id, String reason) {
+        int vedioId = Integer.parseInt(id);
+        VedioInfo vedioInfo = vedioInfoMapper.selectById(vedioId);
+        Wrapper<VedioInfo> updateWrapper = updateWrapper(vedioInfo);
+        vedioInfo.setReason(reason);
+        int update = vedioInfoMapper.update(vedioInfo, updateWrapper);
+        if(update != 0){
+            return new Result(ResponseEnum.UPDATE_SUCCESS,0,update);
+        }
+        return new Result(ResponseEnum.UPDATE_FAIL,0,update);
+    }
+
 
 
     private static Wrapper<VedioInfo> updateWrapper(VedioInfo vedioInfo){
@@ -261,22 +320,5 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
                 .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 
-    }
-
-
-    @Override
-    public Result searchLike(String keyword, Integer page,Integer limit) {
-
-        if (limit == null){
-            limit = 12;
-        }
-
-
-        List list = vedioInfoMapper.searchLike(keyword,page,limit);
-        System.out.println(list);
-
-
-
-        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
     }
 }

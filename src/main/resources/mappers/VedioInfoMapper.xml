@@ -7,11 +7,14 @@
     <!--用户视频两表联查-->
     <select id="selectVedioInfoByType" resultMap="videoAndUser">
         SELECT vi.id, vi.title, vi.intro, u.name, vi.type, vi.img, vi.state, vi.reason
-        FROM video_info vi 
-                 INNER JOIN user u ON vi.user_id = u.id
-        WHERE vi.type like  concat('%',  #{type},  '%')
+        FROM video_info vi
+        INNER JOIN user u ON vi.user_id = u.id
+        <where>
+            <if test="type != null &amp; type != ''">
+                type like  concat('%',  #{type},  '%')
+            </if>
+        </where>
         ORDER BY vi.id DESC
-            LIMIT #{page}, #{limit}
     </select>
 
 
@@ -46,6 +49,7 @@
         <result property="uploadTime" column="upload_time" />
         <association property="user" javaType="User">
 
+            <result property="id" column="id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
 
         </association>
