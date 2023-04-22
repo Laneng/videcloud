@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User register(String loginName, String passWord) {
 
             User user = new User();
-            user.setPhone(loginName);
+            user.setEmail(loginName);
             user.setPassword(passWord);
             int i = userMapper.insert(user);
 
