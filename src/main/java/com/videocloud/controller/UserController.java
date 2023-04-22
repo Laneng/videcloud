@@ -107,7 +107,7 @@ public class UserController {
     public Result ifNullPhone(String loginName){
 
         QueryWrapper<User> wrapper = new QueryWrapper<User>();
-        wrapper.eq("phone", loginName);
+        wrapper.eq("email", loginName);
         User user = userService.selectOne(wrapper);
 
         if (user == null ){//账号不存在
