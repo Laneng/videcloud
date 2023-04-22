@@ -28,14 +28,25 @@ import java.io.IOException;
 public class UploadController {
 
     @ResponseBody
-    @RequestMapping
+    @RequestMapping("/img")
+    public Result uploadImg(MultipartFile file) throws FileNotFoundException, ClientException {
+        File file1 = FileUtil.transferToFile(file);
+        OSS ossClient = OSSUtil.getOSS(file);
+        String newName = FileUtil.UUID(file);
+
+        FileUtil.uploadImgFile((OSSClient) ossClient,"jycz-view",newName, file1);
+        return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
+    }
+
+    @ResponseBody
+    @RequestMapping("/video")
     public Result upload(MultipartFile file, HttpSession session) throws IOException, ClientException {
 
         File file1 = FileUtil.transferToFile(file);
         OSS ossClient = OSSUtil.getOSS(file);
         String newName = FileUtil.UUID(file);
 
-        FileUtil.uploadSmallFile((OSSClient) ossClient,"jycz-view",newName, file1,session);
+        FileUtil.uploadVideoFile((OSSClient) ossClient,"jycz-view",newName, file1,session);
 
         return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
     }

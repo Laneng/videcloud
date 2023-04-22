@@ -12,7 +12,7 @@ public enum ResponseEnum {
     SELECT_SUCCESS(0,"查询成功!"),
     SELECT_FAIL(1,"查询失败!"),
     LOGIN_SUCCESS(0,"登录成功!"),
-    LOGIN_FAIL(1,"登录失败!"),
+    LOGIN_FAIL(1,"登录失败,账号或密码不正确"),
     UPDATE_SUCCESS(2,"更新成功!"),
     UPDATE_FAIL(3,"更新失败!"),
     INSERT_SUCCESS(4,"新增成功!"),
@@ -33,7 +33,8 @@ public enum ResponseEnum {
     CODE_FAIL(1,"校验失败"),
     EMAIL_SUCCESS(0,"发送邮箱成功"),
     LOGIN_A(17,"已经登录"),
-    LOGIN_B(18,"未登录");
+    LOGIN_B(18,"未登录"),
+    STATUS_STOP(19,"账号封禁");
 
 
 

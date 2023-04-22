@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.entity.VideoCheckEntity;
+import com.videocloud.entity.VideoTypeEntity;
 import com.videocloud.service.VideoCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,10 @@ public class VideoCheckController {
     private VideoCheckService videoCheckService;
 
     // 创建视频类型
-    @PostMapping
-    public Result createVideoCheck(@RequestBody VideoCheckEntity videoCheck) {
+    @PostMapping()
+    public Result createVideoCheck( String reason) {
+        VideoCheckEntity videoCheck = new VideoCheckEntity();
+        videoCheck.setReason(reason);
         boolean result = videoCheckService.save(videoCheck);
         if (result) {
             return new Result(ResponseEnum.INSERT_SUCCESS, 1, videoCheck);
@@ -40,8 +43,9 @@ public class VideoCheckController {
 
     // 更新视频类型
     @PutMapping("/{id}")
-    public Result updateVideoCheck(@PathVariable("id") Integer id, @RequestBody VideoCheckEntity videoCheck) {
-        videoCheck.setId(id);
+    public Result updateVideoCheck(@PathVariable("id") Integer id, String reason) {
+        VideoCheckEntity videoCheck = videoCheckService.getById(id);
+        videoCheck.setReason(reason);
         boolean result = videoCheckService.updateById(videoCheck);
         if (result) {
             return new Result(ResponseEnum.UPDATE_SUCCESS, 1, videoCheck);

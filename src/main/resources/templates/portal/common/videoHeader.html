@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
-<link th:href="@{/css/layui.css}" >
-<script th:src="@{/js/jquery-1.9.1.min.js}"></script>
-<script th:src="@{/js/layui.js}"></script>
+<!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+
 <style>
 a:link {color: #666}
 a:visited {color: #666}
@@ -24,7 +23,7 @@ a:visited {color: #666}
 .yaoqishan-header .top-menu .up-load{position: relative;width: 58px;height: 42px;}
 .yaoqishan-header .fr{float: right;}
 .yaoqishan-header .fl, .yaoqishan-header .fr{display: inline;}
-.yaoqishan-header .top-menu .up-load .u-link{display: block;width: 100%;height: 48px;line-height: 42px;text-align: center;font-size: 14px;color: #fff;background-image: url(/images/upload.png);}
+.yaoqishan-header .top-menu .up-load .u-link{display: block;width: 100%;height: 48px;line-height: 42px;text-align: center;font-size: 14px;color: #fff;background-image: url(images/upload.png);}
 .yaoqishan-header .profile-info{width: 58px;}
 .yaoqishan-header .profile-info .i-face{position: absolute;z-index: 20;width: 36px;height: 36px;left: 11px;top: 0;-webkit-transition: .3s;-o-transition: .3s;transition: .3s;}
 .yaoqishan-header .profile-info .i-face .face{border: 0 solid #fff;width: 100%;height: 100%;border-radius: 50%;}
@@ -70,14 +69,9 @@ a:visited {color: #666}
 .alien .feedback a:hover{background: url(/images/feedback_2.png) no-repeat 0 0;}
 .alien #goTopBtn{display: none;min-width: 29px;height: 65px;cursor: pointer;position: absolute;width: 100%;}
 .alien #goTopBtn img{display: inline-block;}
-.userInfo{height: 100px;position: relative;top: 70px;overflow: hidden}
-.avatarDiv{height: 100px;width: 100px; float: left;line-height: 100px}
-.userAvatar{height: 70px;width: 70px;border-radius: 50%;margin: 15px auto;display:block;border: 2px}
-.userName{float: left;height: 40px;width: 200px;line-height: 60px;font-size: 22px;font-weight: bold;color: #1E9FFF;}
-.userComment{float: left;height: 60px;width:1100px;line-height: 60px;font-size: 18px;font-weight: bold}
-#avatar{display: block;position: relative}
-#mask{opacity: 0;position: absolute;width: 70px;height: 70px;top:0px;left: 15px;background: rgb(167 199 209 / 40%);border-radius: 50%;line-height: 70px;color: #403d3d;text-align: center;font-size: 16px;}
-#avatar:hover #mask{opacity: 1}
+#avatar_login,#avatar_logout{display: block;position: relative}
+.mask{opacity: 0;position: absolute;width: 36px;height: 36px;top: 4px;background: rgb(167 199 209 / 60%);border-radius: 50%;line-height: 36px;color: #fffefe;}
+#avatar_logout:hover .mask{opacity: 1}
 </style>
 
 <!--头部-->
@@ -99,9 +93,15 @@ a:visited {color: #666}
 			<!--右侧菜单-->
 			<div class="menu-con fr">
 				<ul>
+<!--							<li class="menu-item"><a th:href="@{/user/loginPage}" target="_self" class="title">登录</a></li>-->
+<!--							<li class="menu-item"><a th:href="@{/user/registerPage}" target="_self" class="title">注册</a></li>-->
 					<li id="im-list-box" class="menu-item">
-						<a href="javascript:;" class="title"><img th:src="${session.user.avatar}" style="width: 36px;height: 36px;border-radius: 50%" class="i-face face"></a>
-						<div class="im-list-box">
+						<div class="title">
+							<a id="avatar_logout" th:href="@{/user/loginPage}" th:if="${session.user == null}"><img th:src="@{/images/akari.jpg}" class="face" style="width: 36px;height: 36px;border-radius: 50%"><div class="mask">登录</div></a>
+							<a id="avatar_login" th:href="@{/user/accountSet}" th:if="${session.user != null}"><img th:src="${session.user.avatar}" class="face" style="width: 36px;height: 36px;border-radius: 50%"></a>
+						</div>
+<!--							<a href="javascript:;" class="title">系统</a>-->
+						<div class="im-list-box" th:if="${session.user != null}">
 							<a class="im-list" th:href="@{/user/accountSet}" target="_blank">个人设置</a>
 							<a class="im-list" th:href="@{/user/addVideo}" target="_blank">视频上传</a>
 							<a class="im-list" th:href="@{/user/history}" target="_blank">历史记录</a>
@@ -117,46 +117,22 @@ a:visited {color: #666}
 	<!--头部横幅-->
 	<div class="head-banner" style="background-image: url(/images/banner.png);">
 		<div class="head-content yaoqishan-wrapper">
-			<div class="userInfo">
-				<div class="avatarDiv">
-					<a id="avatar" href="javascript:;" onclick="changeAvatar()"><img class="userAvatar" th:src="${session.user.avatar}"><div id="mask">修改头像</div></a>
+			<!--搜索框-->
+			<div class="search">
+				<div class="searchform">
+					<input type="text" id="keyWord" class="search-keyword original" value="" onkeydown="if(event.keyCode==13){search(this.value);}" />
+					<button id="search" class="search-submit"></button>
 				</div>
-				<div class="userName">
-					<span th:text="${session.user.name}"></span>
-				</div>
-				<div class="userComment">
-<!--					<span th:text="${session.user.msg}"></span>-->
-					<input id="msg" type="text" th:value="${session.user.msg}" style="background: none;border: none;font-size: 18px;font-weight: bold;width: 80%" onchange="changeMsg()"/>
-				</div>
+				<a href="#" target="_blank" class="link-ranking"><span>排行榜</span></a>
 			</div>
+			<a href="#" class="head-logo" style="background-image: url(images/logo.png);"></a>
 		</div>
+		<a target="_blank" class="banner-link"></a>
 	</div>
 </div>
 
-<!--导航-->
-<div class="yaoqishan-nav">
-	<div class="nav">
-		<ul>
-			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'accountSet'?'active':''}"><a th:href="@{/user/accountSet}">个人信息</a></li>
-			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'myVideo'?'active':''}"><a th:href="@{/user/myVideo}">我上传的视频</a></li>
-			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'addVideo'?'active':''}"><a th:href="@{/user/addVideo}">视频上传</a></li>
-			<li class="" th:classappend="${#httpServletRequest.getRequestURL().toString().split('/')[4] == 'history'?'active':''}"><a th:href="@{/user/history}">历史记录</a></li>
-		</ul>
-	</div>
-</div>
-
-<script th:inline="javascript">
+<script>
 	var path = "${webInfo.domain}";
-
-    // 修改头像
-    function changeAvatar() {
-        javaex.dialog({
-            type : "login",	// 弹出层类型
-            width : "900",
-            height : "603",
-            url : "/user/avatar"
-        });
-    }
 
 	$("#search").click(function() {
 		// 关键词检索
@@ -170,60 +146,35 @@ a:visited {color: #666}
 		keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
 		if (keyWord!="") {
 			keyWord = keyWord.replace(":", "：");
-			window.location.href = "${pageContext.request.contextPath}/portal/search.action?keyWord="+ keyWord;
+			sessionStorage.setItem("keyword",keyWord)
+			window.location.href = "/search"
 		}
 	}
 
-
-    // 退出登录
-    function logout() {
-        $.ajax({
-            url : "/user/logout",
-            type : "POST",
-            success : function(rtn) {
-                if (rtn.code==11) {
-                    javaex.optTip({
-                        content : rtn.msg,
-                        type : "fail"
-                    });
-                }else if(rtn.code==10){
-                    javaex.optTip({
-                        content : rtn.msg,
-                        type : "success"
-                    });
+	
+	// 退出登录
+	function logout() {
+		$.ajax({
+			url : "/user/logout",
+			type : "POST",
+			success : function(rtn) {
+				if (rtn.code==11) {
+					javaex.optTip({
+						content : rtn.msg,
+						type : "fail"
+					});
+				}else if(rtn.code==10){
+					javaex.optTip({
+						content : rtn.msg,
+						type : "success"
+					});
                     setTimeout(function (){
-                        window.location.href="/";
+                        window.location.reload();
                     },2000)
 
-                }
-            }
-        });
-    }
-
-    function changeMsg(){
-        $.ajax({
-            url: "/user/saveOrUpdate",
-            type: "POST",
-            dataType: "json",
-            data: {
-                id: [[${session.user.id}]],
-                msg: $("#msg").val()
-            },
-            success: function (rtn) {
-                if (rtn.code == "2") {
-                    javaex.optTip({
-                        content: "修改成功",
-                        type: "success"
-                    })
-	                $("#msg").reload();
-                }else {
-                    javaex.optTip({
-                        content: "修改失败",
-                        type: "error"
-                    });
-                }
-            }
-        });
-    }
+				}
+			}
+		});
+	}
 </script>
 </html>

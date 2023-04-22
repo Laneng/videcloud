@@ -26,7 +26,7 @@ public interface IVedioInfoService extends IService<VedioInfo> {
 
 
 //    查询所有视频信息
-    Result selectVedioInfo(Integer page,Integer limit);
+    Result selectVedioInfo(Integer limit,Integer uid);
 
 
 //    根据视频ID查询视频信息
@@ -55,7 +55,7 @@ public interface IVedioInfoService extends IService<VedioInfo> {
     Result updateStar(String star, String videoId, HttpSession session);
 
 
-
+    public Result searchLike(String keyword, Integer page,Integer limit);
 
 
 

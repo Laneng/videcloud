@@ -7,20 +7,20 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.videocloud.entity.*;
-import com.videocloud.mapper.StarTableMapper;
-import com.videocloud.mapper.VedioInfoMapper;
+import com.videocloud.mapper.*;
 import com.videocloud.service.IStarTableService;
 import com.videocloud.service.IVedioInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.videocloud.util.RecommendUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -35,10 +35,16 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
 
     @Autowired
     private VedioInfoMapper vedioInfoMapper;
+    @Autowired
+    private VideoHistoryMapper videoHistoryMapper;
+    @Autowired
+    private VideoTypeMapper videoTypeMapper;
 
     @Autowired
     private StarTableMapper starTableMapper;
 
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public Result saveVedioInfo(VedioInfo vedioInfo) {
         vedioInfo.setUploadTime(new Date());
@@ -51,22 +57,38 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
     @Override
-    public Result selectVedioInfo(Integer page,Integer limit) {
+    public Result selectVedioInfo(Integer limit,Integer uid) {
 
-        if (page == null){
-            page = 1;
-        }
+        List<VedioInfo> rsList = new ArrayList<>();
+
         if(limit == null){
             limit = 8;
         }
-        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(null);
-        IPage<VedioInfo> page1 = new Page<>(page, limit);
-        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page1, null);
-        Long total = vedioInfoIPage.getTotal();
-        if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfoIPage.getRecords());
+
+        if (uid == 0) {
+            rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+        }else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+            Date start = calendar.getTime();
+
+            QueryWrapper<VideoHistory> timeWrapper = new QueryWrapper<VideoHistory>().ge("watch_time",start).eq("user_id",uid);
+            List<VideoHistory> videoHistories = videoHistoryMapper.selectList(timeWrapper);
+            List<Integer> watchIds = new ArrayList<>();
+            for (VideoHistory videoHistory : videoHistories) {
+                watchIds.add(videoHistory.getVideoId());
+            }
+
+            if (watchIds.size() == 0) {
+                rsList = RecommendUtil.randomRecommend(limit,videoHistoryMapper,videoTypeMapper,vedioInfoMapper);
+            }else {
+                rsList = RecommendUtil.activeRecommend(limit,uid,watchIds,start,videoHistoryMapper,videoTypeMapper,vedioInfoMapper,starTableMapper);
+            }
         }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfoIPage.getRecords());
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,0,rsList);
     }
 
     /**
@@ -132,30 +154,13 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     //根据视频的分类进行模糊查询
     @Override
     public Result selectVedioInfoByType(Integer page, Integer limit, String type) {
-
-        if (page == null){
-            page = 1;
-        }
-        if(limit == null){
-            limit = 20;
-        }
-        // 创建查询条件
-        QueryWrapper<VedioInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("type", type); // 设置模糊查询条件
-        List<VedioInfo> vedioInfos = vedioInfoMapper.selectList(queryWrapper);
-
-        IPage<VedioInfo> page2 = new Page<>(page, limit);
-        IPage<VedioInfo> vedioInfoIPage = vedioInfoMapper.selectPage(page2, null) ;
-        Long total = vedioInfoIPage.getTotal();
-        if(vedioInfoIPage != null){
-            return new Result(ResponseEnum.SELECT_SUCCESS,total.intValue(),vedioInfos);
-        }
-        return new Result(ResponseEnum.SELECT_FAIL,0,vedioInfos);
-
+        Result result = new Result();
+        // 查询视频信息
+        List<VedioInfo> vedioInfos = vedioInfoMapper.selectVedioInfoByType(page, limit, type);
+        // 查询用户信息
+        result.setData(vedioInfos);
+        return result;
     }
-
-
-
     /**
      * 获取当前播放量排在第一位的视频信息
      * @return
@@ -198,7 +203,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         if(user == null){
             return new Result(ResponseEnum.LOGIN_B,0,null);
         }
-
 
 //        如果用户已经登录
         int viewStar = Integer.parseInt(star);
@@ -258,7 +262,21 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
         return wrapper;
 
     }
-    
 
 
+    @Override
+    public Result searchLike(String keyword, Integer page,Integer limit) {
+
+        if (limit == null){
+            limit = 12;
+        }
+
+
+        List list = vedioInfoMapper.searchLike(keyword,page,limit);
+        System.out.println(list);
+
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
+    }
 }

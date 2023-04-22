@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<link rel="stylesheet" th:href="@{/js/css/layui.css}"/>
+<script th:src="@{/js/jquery-1.9.1.min.js}"></script>
+<script th:src="@{/js/layui.js}"></script>
+
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>首页</title>
+</head>
+<style>
+    .layui-table-cell .layui-btn {display: inline-block;}
+</style>
+<body>
+<div>
+    <!-- 头部导航 -->
+    <div th:replace="admin/common/nav.html"></div>
+
+    <!--左侧菜单-->
+    <div class="admin-iframe-menu">
+        <ul class="menu">
+            <li class="active"><a href="javascript:page('${pageContext.request.contextPath}/group_info/list.action');">用户组</a></li>
+        </ul>
+
+        <ul class="menus">
+            <li>
+                <a href="javascript:;">用户管理</a>
+                <ul class="menu">
+                    <li><a href="/admin/users">正常用户</a></li>
+                    <li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_normal.action');">正常用户</a></li>
+                    <li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_not_active.action');">未激活用户</a></li>
+                    <li><a href="javascript:page('${pageContext.request.contextPath}/admin/user_info/list_ban.action');">封禁用户</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<!-- 底部js函数 -->
+<div th:replace="admin/common/footer.html"></div>
+
+
+
+</body>
+
+<script th:inline="javascript">
+
+    layui.use(['table', 'layer', 'form', 'laydate', 'upload'],function () {
+
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+        //渲染表格数据
+        table.render({
+            elem: '#table'
+            , height: 700
+            , width: 1600
+            , url: '/user/getAll' //数据接口
+            , toolbar: '#toolbarDemo'
+            , page: true //开启分页
+            , cols: [
+                [ //表头
+                {field: 'id', title: 'ID', width: 80, sort: true}
+                , {field: 'name', title: '姓名', width: 90}
+                , {field: 'age', title: '年龄', width: 90}
+                , {field: 'gender', title: '性别', width: 90}
+                , {field: 'birth', title: '生日', width: 80}
+                , {field: 'email', title: '邮箱', width: 60}
+                , {field: 'phone', title: '电话', width: 90}
+                , {field: 'msg', title: '简介', width: 90}
+                , {field: 'status', title: '状态', width: 90}
+                , {field: 'avatar', title: '头像', width: 90, templet: "#imgtmp"}
+                , {field: 'rtime', title: '注册时间', width: 90}
+                , {field: 'password', title: '密码', width: 90}
+                , {field: "right", title: "操作", width: 180, toolbar: '#barDemo'}
+            ]
+            ]
+        })
+
+    })
+
+
+
+
+
+</script>
+
+
+</html>

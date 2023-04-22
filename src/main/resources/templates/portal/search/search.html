@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script th:src="@{../js/layui.js}"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+        .layui-flow-more {position: absolute;display: block;bottom: 0px;width: 100%;}
+        li.timeVideo {margin: 10px 10px;text-align: left}
+        .poly-ul-img {width: 200px;height: 112px;position: relative;margin-bottom: 15px;}
+        img.poly-img {width: 22px;height: 28px;top: 10px;position: relative;right: 5px;}
+        span.poly-viewCount{position: absolute;top: 1px;left: 30px;}
+        .videoMask{opacity: 0;position: absolute;width: 200px;height: 112px;top: 0px;background: rgb(236 251 250 / 50%);line-height: 112px;color: #fffefe;}
+        .poly-ul-img:hover .videoMask{opacity: 1}
+        .screenshot:hover .videoMask{opacity: 1}
+        .large_RC{width: 50px;height: 50px;position: absolute;left: 75px;top: 31px;}
+    </style>
+
+</head>
+
+<style>
+    .jianjie p {display: initial;}
+
+    .mod-header{height: 18px; margin-bottom: 16px; color: #333;}
+    .mod-header h1{display: inline; font-size: 24px; height: 24px; margin-right: 15px;}
+    .base-type{position: relative; display: inline-block; border: 1px solid #e0e0e0; height: 16px; line-height: 16px; padding: 0 3px; border-radius: 2px; vertical-align: top; margin-right: 8px; font-weight: 200;}
+    .mod-header .base-type{font-weight: 200;}
+    .mod-header span{vertical-align: super; font-weight: 500; font-size: 14px; white-space: nowrap;}
+
+    .video-item{margin: 1px 0 0 1px;margin-top: 20px;}
+    .video-item li a{display: block;margin-left: -1px;margin-top: -1px;height: 31px;line-height: 31px;padding: 10px 0;background: #fbfcff;border: 1px solid #d8e1f2;text-align: center;font-size: 18px;font-family: arial,"Microsoft yahei";overflow: hidden;}
+    .video-item li a:hover{background: #eaf0fa;color: #333;}
+</style>
+
+
+
+
+<body>
+<!-- 头部导航 -->
+<div th:replace="portal/common/common.html"></div>
+<div th:replace="portal/common/header.html"></div>
+
+
+<!--<div id="container" class="container"></div>-->
+
+
+
+<!--搜索结果-->
+<div class="block no-shadow" align="center" >
+    <div class="main">
+        <div class="tab">
+
+            <div class="tab-content "  align="center">
+                <div class="tab-title" style='  margin-bottom:  50px;   margin-left:200px'>
+                    <img class="mod-icon" src="images/ico1.png" />
+                    <em>搜索结果</em>
+                </div>
+
+                <ul id="month_hot" class="equal-6 cover site-demo-flow" align="center" style="margin-left: 10px;">
+                    <span class="clearfix"></span>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+
+
+    layui.use('flow',function (){
+
+        var keyword = sessionStorage.getItem(`keyword`)
+
+        var flow = layui.flow;
+        flow.load({
+            elem: '#month_hot'
+            // ,scrollElem: '#month_hot'   // 滚动条所在元素，一般不用设置
+            ,done: function (page,next){
+                setTimeout(function (){
+                    var lis = [];
+                    $.ajax({
+                        url: "/search/like",
+                        type: "POST",
+                        data: {keyword:keyword,page:page}
+
+
+
+                        ,success:function (res){
+                            var vedioInfo = res.data;
+                            console.log(vedioInfo);
+                            layui.each(vedioInfo,function (index,item){
+                                lis.push("<li class='timeVideo' style='width:250px ;  margin-right:50px'  >" +
+                                    "<a href='/vedioInfo/getOne?id="+item.id+"' target='_blank' class='screenshot'>" +
+                                    "<img src='"+item.img+"' width='100%' height='100%' /><div class='videoMask'><img class='large_RC' src='/images/largeRC.png'></div>" +
+                                    "<div class='poly-title' ><img class='poly-img' src='/images/RC.png'><span class='poly-viewCount'>"+item.viewCount+"</span>" +
+                                    "</div>" +
+                                    "</a>" +
+                                    "<p class='screenshot-title'><a href='/vedioInfo/getOne?id="+item.id+"' target='_blank'>"+item.title+"</a></p>" +
+                                    "<p height='10px' overflow='hidden'>  "+item.intro+"</p>"+
+                                    '<p> up主  ' +item.user.name+'</p>'+
+                                    "<p>播放量:"+item.viewCount+"</p>" +
+                                    "</li>")
+                            })
+                            next(lis.join(''), page < res.count);
+                        }
+                    })
+                },300)
+
+            }
+        })
+    })
+
+
+
+
+
+
+
+    // $(function (){
+    //     var keyword = sessionStorage.getItem(`keyword`)
+    //     var html = '<div class="block no-shadow">';
+    //
+    //     $("#search-list").empty();
+    //     $("#search-list").append(html);
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //     $.ajax({
+    //         url: "/search/like",
+    //         type: "POST",
+    //         data: {keyword:keyword},
+    //         success: function (rtn) {
+    //             if (rtn.code == 0) {
+    //                 javaex.optTip({
+    //                     content: rtn.msg,
+    //                     type: "success"
+    //                 });
+    //
+    //
+    //                 var videoHtml = "";
+    //
+    //                 for(var  i=0;  i<rtn.data.length;  i++){
+    //                     var  video  =  rtn.data[i];
+    //                     console.log(video)
+    //
+    //
+    //
+    //
+    //                     //  创建HTML标签
+    //                     videoHtml  +=  '<div  class="video"   >'+
+    //
+    //
+    //                         "<a href='/vedioInfo/getOne?id="+video.id+"' target='_blank'><img src='"+video.img+"'  style='width:100px ;height: 100px' ></a>" +
+    //
+    //
+    //                         '<h3> 标题   '+video.title+'</h3>'+
+    //                         '<p> 简介  '+video.intro+'</p>'+
+    //                         '<p> up主  ' +video.user.name+'</p>'+
+    //                         '</div>';
+    //
+    //                 }
+    //                 var container = $("#container").html(videoHtml)
+    //
+    //
+    //
+    //
+    //             } else {
+    //                 javaex.optTip({
+    //                     content: rtn.msg,
+    //                     type: "error"
+    //                 });
+    //             }
+    //         }
+    //     });
+    //
+    // })
+
+
+
+</script>
+
+
+<!--<style>-->
+<!--    .container    {-->
+<!--        display:    flex;-->
+<!--        justify-content:    space-between;-->
+<!--        align-items:  center;-->
+<!--        margin:  0  200px;-->
+<!--        flex-wrap:  wrap;-->
+<!--    }-->
+<!--    .container    div    {-->
+<!--        width:    18%;-->
+<!--    }-->
+<!--</style>-->
+
+
+<div th:replace="portal/common/footer.html"  style="position: fixed; bottom: 0;"></div>
+</body>
+</html>

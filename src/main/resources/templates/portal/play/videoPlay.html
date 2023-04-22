@@ -4,135 +4,47 @@
     <meta charset="UTF-8">
     <title>视频播放页面</title>
     <script th:src="@{js/jquery-1.9.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{js/layui.js}"></script>
+<!--    <script type="text/javascript" th:src="@{js/layui.js}"></script>-->
+    <script type="text/javascript" th:src="@{../../js/layui.js}"></script>
     <template th:replace="portal/common/common.html"></template>
+    <style>
+        div#introDiv {position: relative;margin: 20px auto;width: 738px;background:none;height: 140px;border-bottom: 2px blue solid;border-radius: 5px;border-left: 2px blue solid;border-right: 2px blue solid;}
+        div#introHead {height: 30px;line-height: 30px;font-size: 18px;width: 96%;margin: 5px auto 5px;border-bottom: 1px black solid;}
+        span#author {position: relative;bottom: 12px;margin: 0px 5px;font-size: 16px;}
+        img#authorImg {width: 36px;height: 36px;}
+        div#introFoot {width: 96%;margin: 5px auto 5px;height: 40px;position: relative;}
+        Div#imgDiv{display: inline-block;border-radius: 50%;overflow: hidden;}
+        div#intro {height: 60px;width: 96%;margin: 5px auto 5px;color: #5e5e5e;overflow: hidden;}
+        span#type {position: relative;left: 11px;border-radius: 16px;padding: 5px;bottom: 13px;line-height: 20px;background: #b8fbe4;margin: 0px 5px;}
+        div#videoFun{border-bottom: 2px #c2c2e5 solid;border-left: 2px #c2c2e5 solid;border-right: 2px #c2c2e5 solid;border-radius: 5px;line-height: 34px;}
+        div#commentDiv {width: 738px;margin: 10px auto;}
+        div#commentHead {height: 140px;border-bottom: 1px darkgray solid;}
+        li.singleComment {margin-top: 20px;height: 140px;border-bottom: 1px darkgray dashed;border-left: 1px darkgray dashed;border-right: 1px darkgray dashed;border-radius: 10px;}
+        .imgDiv {position: relative;display: inline-block;border-radius: 50%;overflow: hidden;left: 10px;top: 5px;}
+        img.commentImg {width: 36px;height: 36px;border-radius: 50%;border: 1px solid black;}
+        span.userName {position: relative;display: inline-block;bottom: 10px;left: 16px;}
+        .commentInfo {height: 60px;overflow: hidden;padding: 10px;}
+        span.commentDate {position: relative;left: 21px;}
+        a.commentDel{position: relative;left: 40px;}
+        .layui-flow-more {width: 100%;bottom: 0px;text-align: center;margin-top: 10px;}
+        #comment-input{resize: none;width: 620px;height: 50px;border: #8acddf 2px solid;}
+        div#acDiv{line-height: 60px;height: 60px}
+        button#comment-submit {height: 54px;line-height: 54px;position: relative;border: none;background-color: #8acddf;width: 50px;right: 4px;color: white;font-size: 16px;bottom: 2px;}
+        div#comment-form {margin-top: 20px;}
+    </style>
 </head>
 <body>
+
 <!-- 头部 -->
-<div class="yaoqishan-header">
-    <link rel="shortcut icon" th:href="@{/favicon.ico}" type=image/x-icon>
-    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
 
-    <style>
-        a:link {color: #666}
-        a:visited {color: #666}
-        .t{width: 420px;height: 62px;line-height: 24px;overflow: hidden;position: absolute;left: 0;bottom: 0;color: #fff;background: url(/images/gradient.png) repeat-x;}
-        .t1{font-size: 16px;padding: 0;color: #999;display: block;overflow: hidden;height: 80px;line-height: 80px;padding-left: 15px;}
-        .t1 a{font-size: 16px;color: #fff;text-decoration: none;}
-        .yaoqishan-header .top-menu{position: relative;z-index: 200;height: 42px;color: #222;}
-        .yaoqishan-header .top-menu .scrub{position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-position: center -10px;background-repeat: no-repeat;-webkit-filter: blur(4px);filter: blur(4px);}
-        .yaoqishan-header .top-menu .top-mask{position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-color: hsla(0,0%,100%,.4);-webkit-box-shadow: rgba(0,0,0,.1) 0 1px 2px;box-shadow: 0 1px 2px rgba(0,0,0,.1);}
-        .yaoqishan-header .yaoqishan-wrapper{margin: 0 auto;width: 1340px;}
-        .yaoqishan-header .fl{float: left;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home{margin-left: -10px;padding-left: 12px;}
-        .yaoqishan-header .top-menu .menu-con .menu-item{float: left;text-align: center;line-height: 42px;height: 42px;position: relative;background-color: hsla(0,0%,100%,0);-webkit-transition: all .3s;-o-transition: all .3s;transition: all .3s;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home a{padding-left: 20px;}
-        .yaoqishan-header .top-menu .menu-con .menu-item .title{color: #222;height: 100%;display: block;padding: 0 11px;}
-        .yaoqishan-header a{-webkit-transition: color .2s;-o-transition: color .2s;transition: color .2s;}
-        .yaoqishan-header .top-menu .menu-con .menu-item.home i{position: absolute;width: 17px;height: 14px;left: 14px;top: 12px;display: inline-block;background-image: url(/images/home.png);}
-        .yaoqishan-header .top-menu .up-load{position: relative;width: 58px;height: 42px;}
-        .yaoqishan-header .fr{float: right;}
-        .yaoqishan-header .fl, .yaoqishan-header .fr{display: inline;}
-        .yaoqishan-header .top-menu .up-load .u-link{display: block;width: 100%;height: 48px;line-height: 42px;text-align: center;font-size: 14px;color: #fff;background-image: url(/images/upload.png);}
-        .yaoqishan-header .profile-info{width: 58px;}
-        .yaoqishan-header .profile-info .i-face{position: absolute;z-index: 20;width: 36px;height: 36px;left: 11px;top: 0;-webkit-transition: .3s;-o-transition: .3s;transition: .3s;}
-        .yaoqishan-header .profile-info .i-face .face{border: 0 solid #fff;width: 100%;height: 100%;border-radius: 50%;}
-        .yaoqishan-header fieldset, .yaoqishan-header img{border: none;vertical-align: middle;}
-        .yaoqishan-header .head-banner{position: relative;z-index: 199;height: 170px;margin-top: -42px;background: #eee;background-position: center -10px;background-repeat: no-repeat;}
-        .yaoqishan-header .head-banner .head-content{position: relative;height: 170px;}
-        .yaoqishan-header .search{position: absolute;bottom: 20px;right: 0;width: 268px;height: 32px;padding: 2px 2px 2px 72px;background-color: #e5e9ef;background-color: rgba(0,0,0,.12);border-radius: 6px;font-size: 12px;z-index: 10;}
-        .yaoqishan-header .search .searchform{background-color: #fff;background-color: hsla(0,0%,100%,.88);display: block;height: 32px;border-radius: 4px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
-        .yaoqishan-header .search .search-keyword{float: left;width: 200px;color: #222;font-size: 12px;overflow: hidden;height: 32px;line-height: 32px;padding: 0 12px;border: 0;-webkit-box-shadow: none;box-shadow: none;background-color: transparent;}
-        .yaoqishan-header .search button.search-submit{display: block;position: absolute;right: 0;width: 48px;min-width: 0;cursor: pointer;height: 32px;background: url(/images/search-blue.png) center center no-repeat;margin: 0;padding: 0;border: 0;}
-        .yaoqishan-header .search .link-ranking{position: absolute;left: 2px;top: 2px;height: 32px;line-height: 32px;background-color: #fff;background-color: hsla(0,0%,100%,.88);border-radius: 4px;width: 68px;-webkit-transition: background-color .2s;-o-transition: .2s background-color;transition: background-color .2s;}
-        .yaoqishan-header .search .link-ranking span{padding-left: 26px;color: #f25d8e;display: inline-block;background: url(/images/ranking-red.png) 0 center no-repeat;}
-        .yaoqishan-header .head-banner .head-content .head-logo{position: absolute;width: 220px;height: 105px;left: 24px;top: 55px;background: transparent no-repeat 0;z-index: 10;}
-        .im-list-box{display: none;font-size: 12px;color: #222;position: absolute;width: 110px;left: calc(50% - 55px) !important;background: #FFF;-webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 4px;border-radius: 0 0 4px 4px;overflow: hidden;}
-        #im-list-box:hover .im-list-box{display: block;}
-        .im-list{display: block;text-align: center;position: relative;line-height: 42px;height: 42px;}
-        .im-notify.im-number.im-center{top: 14px;left: 80px;}
-        .im-notify.im-number{height: 14px;line-height: 13px;border-radius: 10px;padding: 1px 3px;font-size: 12px;min-width: 20px;text-align: center;color: #fff;}
-        .im-notify{position: absolute;background-color: #fb7299;}
-        .yaoqishan-wrapper ul li:hover a{background: rgba(255,255,255,0.3);}
-        .im-list-box .im-list:hover{background-color:#e5e9ef;color:#2fb3ff;}
-
-        .yaoqishan-nav{width: 100%;margin: 0 auto;border-bottom: 1px solid #e5e5e5;background: #fff;}
-        .yaoqishan-nav .nav{width: 1340px;margin: 0 auto;}
-        .yaoqishan-nav .nav ul{overflow: hidden;height: 46px;white-space: nowrap;}
-        .yaoqishan-nav .nav ul li{float: left;height: 46px;line-height: 46px;margin-right: 35px;}
-        .yaoqishan-nav .nav ul li.active a{color: #2fb3ff;line-height: 46px;height: 43px;border-bottom: 3px solid #2fb3ff;}
-        .yaoqishan-nav .nav ul li a{display: block;float: left;padding: 0 7px;height: 46px;color: #222;font-size: 16px;transition: none;}
-
-        /*底部*/
-        .footer-wrap{font-size: 20px;position: relative;background: #fff;color: #333;padding-bottom: 35px;margin-top:20px;}
-        .footer-inner{padding-top:15px;}
-        .footmenu{text-align: center;}
-        .footmenu .menu-item{color: #333; font-size: 14px; line-height: 2.6; display: inline-block; margin-top: 20px;}
-        .footmenu .dl{display: inline-block; width: 1px; height: 14px; vertical-align: middle; margin: 0 15px; background: #e5e9ef;}
-        .copyright{line-height: 2.6; text-align: center; font-size: 14px;}
-
-        /*回到顶部*/
-        .alien{position: fixed;bottom: 12px;right: 10px;z-index: 99999;color: #fff;padding-bottom: 65px;min-width: 50px;}
-        .alien .feedback{margin-bottom: 15px;}
-        .alien div{text-align: center;}
-        .alien .feedback a{display: block;height: 57px;background: url(/images/feedback_1.png) no-repeat 0 0;margin: 0 auto;}
-        .alien .feedback a:hover{background: url(/images/feedback_2.png) no-repeat 0 0;}
-        .alien #goTopBtn{display: none;min-width: 29px;height: 65px;cursor: pointer;position: absolute;width: 100%;}
-        .alien #goTopBtn img{display: inline-block;}
-    </style>
-
-    <!--头部-->
-    <header th:replace="portal/common/header.html"></header>
-
-    <script>
-        var path = "${webInfo.domain}";
-
-        $("#search").click(function() {
-            // 关键词检索
-            var keyWord = $("#keyWord").val();
-            search(keyWord);
-        });
-
-        // 搜索
-        function search(keyWord) {
-            // 判断关键词是否为空
-            keyWord = keyWord.replace(/(^\s*)|(\s*$)/g, "");
-            if (keyWord!="") {
-                keyWord = keyWord.replace(":", "：");
-                window.location.href = "${pageContext.request.contextPath}/portal/search.action?keyWord="+ keyWord;
-            }
-        }
-
-
-        // 退出登录
-        function logout() {
-            $.ajax({
-                url : "/user/logout",
-                type : "POST",
-                success : function(rtn) {
-                    if (rtn.code==11) {
-                        javaex.optTip({
-                            content : rtn.msg,
-                            type : "success"
-                        });
-                    }else if(rtn.code==10){
-                        javaex.optTip({
-                            content : rtn.msg,
-                            type : "success"
-                        });
-                    }
-                }
-            });
-        }
-    </script>
-</div>
-
+<!--头部-->
+<header th:replace="portal/common/videoHeader.html"></header>
 <!--播放内容-->
 <div >
 
     <!--正文内容-->
 
-    <div class="block no-shadow" style="background-color:white; width: 1340px">
+    <div class="block no-shadow" style="background-color:white; width: 1340px;margin-top: 20px">
         <!--        <h5  style="black: white;margin-left: 30px;margin-top: 30px">-->
         <!--            <span style="color: black">播放数</span>-->
         <!--            <span th:text="${vedioPlay.data.viewCount}" style="color: black;margin-right: 50px"></span>-->
@@ -142,14 +54,14 @@
 
         <!--        </h5>-->
         <div style="width: 740px; margin: 20px auto;">
-            <h1 th:text="${vedioPlay.data.title}" style="black: white;margin-top: 30px"></h1>
+            <h1 th:text="${vedioPlay.data.title}" style="black:white;margin-top: 30px"></h1>
             <video height="450px" width="740px" controls>
                 <source th:src="${vedioPlay.data.url}" type="video/mp4" align="center">
             </video>
 
             <span style="display: none" th:text="${vedioPlay.data.id}" id="vedioId"></span>
 
-            <div style="margin-top: 30px">
+            <div id="videoFun">
                 <span onclick="videoStar()"><img  src="../../images/star2.png" id="starImg1"></span>
                 <span style="margin-right: 50px; font-size: 20px" th:text="${vedioPlay.data.viewStar}" id="viewStar"></span>
                 <span ><img  src="../../images/viewCount.png"></span>
@@ -159,44 +71,202 @@
             </div>
         </div>
 
-
-
-
-        <div style="margin-left: 40px" align="center">
-            <form class="layui-form" onsubmit="return comment();">
-                <textarea id="comment-input" placeholder="请输入评论内容" style="width: 55%"></textarea>
-                <button id="comment-submit" style="margin-top: 8px">提交评论</button>
-            </form>
+        <div id="introDiv">
+            <div id="introHead">视频简介</div>
+            <div id="intro" th:text="${vedioPlay.data.intro}"></div>
+            <div id="introFoot"><div id="imgDiv"><img id="authorImg" th:src="${vedioPlay.data.user.avatar}"></div><span id="author" th:text="${vedioPlay.data.user.name}"></span><span id="type" th:text="${'#'+vedioPlay.data.type}"></span></div>
         </div>
 
+
+        <div id="commentDiv">
+            <div id="commentHead"><span style="font-size: 22px">评论</span>
+                <div id="comment-form">
+                    <div id="acDiv">
+                        <img th:if="${session.user == null}" th:src="@{/images/akari.jpg}" style="width: 50px;height: 50px;border-radius: 50%;border:1px solid #87accd;">
+                        <img th:if="${session.user != null}" th:src="${session.user.avatar}" style="width: 50px;height: 50px;border-radius: 50%;border:1px solid #87accd;">
+                        <textarea id="comment-input" placeholder="请输入评论内容" style="resize: none"></textarea>
+                        <button id="comment-submit">发布</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="block no-shadow">
+                <ul class="flow-default" id="comments_ul">
+                </ul>
+            </div>
+        </div>
+</div>
+
+    <!--底部-->
+    <div class="footer-wrap" >
+        <div th:replace="portal/common/footer.html"></div>
     </div>
 
 </div>
 
-
-<div>
-    <div class="block no-shadow">
-
-        <div class="main">
-            <!-- 评论列表 -->
-            <div id="comment" class="comment">
-
-            </div>
-
-            <!-- 分页 -->
-            <div class="page">
-                <ul id="page" class="pagination"></ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--底部-->
-<div class="footer-wrap" >
-    <div th:replace="portal/common/footer.html"></div>
-</div>
 </body>
 
+<script>
+    $(function (){
+        commentsList();
+    })
+
+    var vedioId = $("#vedioId").text();
+    function commentsList(){
+        layui.use('flow',function (){
+            var flow =  layui.flow;
+            flow.load({
+                elem: '#comments_ul'
+                // ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
+                ,done: function(page, next) { //执行下一页的回调
+                    //模拟数据插入
+                    setTimeout(function(){
+                        var lis = [];
+                        $.ajax({
+                            url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                            type:"get",
+                            success: function (res){
+                                var comments = res.data;
+                                layui.each(comments,function (index,item){
+                                    console.log(item.user.avatar)
+                                    console.log(item)
+
+                                    var li = " <li class='singleComment'><div class='imgDiv'><img class='commentImg' src='"+item.user.avatar +"'></div></span>" +
+                                            "<span class='userName'>"+item.user.name+"</span>" +
+                                            "<div class='commentInfo'>"+item.commentsInfo+"</div>" +
+                                            "<span class='commentDate'>"+item.commentsDate+"</span>" +
+                                            "<a class='commentDel' href='javascript:;' onclick='deleteComments("+item.id+")'>删除</a>"+
+                                            "</li>"
+
+                                    lis.push(li);
+                                })
+                                next(lis.join(''), page < res.count); //假设总页数为 10
+                            }
+                        })
+
+                    }, 50);
+
+                }
+
+            })
+
+            // 监听滚动，到达底部时重新渲染
+            $(window).scroll(function(){
+                if($(document).scrollTop() >= $(document).height()-$(window).height()){
+                    flow.load({
+                        elem: '#comments_ul',
+                        done: function(page, next){
+                            // 模拟异步请求
+                            setTimeout(function(){
+                                var lis = [];
+                                $.ajax({
+                                    url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                                    type:"get",
+                                    success: function (res){
+                                        var comments = res.data;
+                                        layui.each(comments,function (index,item){
+                                            console.log(item.user.avatar)
+                                            console.log(item)
+
+                                            var li = " <li class='singleComment'><div class='imgDiv'><img class='commentImg' src='"+item.user.avatar +"'></div></span>" +
+                                                    "<span class='userName'>"+item.user.name+"</span>" +
+                                                    "<div class='commentInfo'>"+item.commentsInfo+"</div>" +
+                                                    "<span class='commentDate'>"+item.commentsDate+"</span>" +
+                                                    "<a class='commentDel' href='javascript:;' onclick='deleteComments("+item.id+")'>删除</a>"+
+                                                    "</li>"
+
+                                            lis.push(li);
+                                        })
+                                        next(lis.join(''), page < res.count); //假设总页数为 10
+                                    }
+                                })
+                            }, 50);
+                        }
+                    });
+                }
+            });
+
+
+            // 刷新数据
+            function refreshData(){
+                flow.load({
+                    elem: '#comments_ul',
+                    done: function(page, next){
+                        // 模拟异步请求
+                        setTimeout(function(){
+                            var lis = [];
+                            $.ajax({
+                                url: "/user/getCommentsByVid?vid="+vedioId+"&page="+page,
+                                type:"get",
+                                success: function (res){
+                                    var comments = res.data;
+                                    layui.each(comments,function (index,item){
+                                        console.log(item.user.avatar)
+                                        console.log(item)
+
+                                        var li = " <li class='singleComment'><div class='imgDiv'><img class='commentImg' src='"+item.user.avatar +"'></div></span>" +
+                                                "<span class='userName'>"+item.user.name+"</span>" +
+                                                "<div class='commentInfo'>"+item.commentsInfo+"</div>" +
+                                                "<span class='commentDate'>"+item.commentsDate+"</span>" +
+                                                "<a class='commentDel' href='javascript:;' onclick='deleteComments("+item.id+")'>删除</a>"+
+                                                "</li>"
+
+                                        lis.push(li);
+                                    })
+                                    next(lis.join(''), page < res.count); //假设总页数为 10
+                                }
+                            })
+                        }, 500);
+                    }
+                });
+            }
+
+
+        });
+
+    }
+
+
+    function deleteComments(id){
+       $.ajax({
+           url:"/user/deleteById/"+id,
+           type:"delete",
+           success:function (res){
+               console.log(res);
+               commentsList();
+           }
+       })
+    }
+</script>
+
+<script>
+
+    // 发送评论并更新评论区域的显示
+    function postComment() {
+        var commentText = $("#comment-input").val();
+        var vedioId = $("#vedioId").text();
+
+        console.log(commentText)
+        console.log(vedioId)
+        $.ajax({
+            type: "post",
+            url: "/user/saveComments",
+            data: { "commentsInfo": commentText,"viewId":vedioId},
+            success: function(res) {
+                if(res.code == 18){
+                    alert("请登录之后在发表评论")
+                }
+                $("#comment-input").val("");
+                commentsList();
+            }
+        });
+    }
+
+    // 为提交按钮添加点击事件监听器
+    $("#comment-submit").click(function() {
+        postComment();
+    });
+</script>
 
 
 <script>
@@ -212,6 +282,7 @@
 
 
 
+    // 点赞功能实现
     function videoStar(){
         var star = $("#viewStar").text();
         var vedioId = $("#vedioId").text();
@@ -381,4 +452,6 @@
         });
     }
 </script>
+
+
 </html>

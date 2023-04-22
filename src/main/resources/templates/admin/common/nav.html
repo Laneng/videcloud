@@ -19,16 +19,14 @@
 <script th:src="@{/javaex/pc/js/javaex-formVerify.js}"></script>
 <!--顶部导航-->
 <div id="nav" class="admin-iframe-header">
-	<h1 class="logo"><a href="javascript:;">妖气山后台管理</a></h1>
+	<h1 class="logo"><a href="javascript:;">基因重组后台管理</a></h1>
 	<div class="admin-iframe-nav">
 		<ul class="navs">
 			<li class="nav active"><a th:href="@{/admin/index}">首页</a></li>
 			<li class="nav"><a th:href="@{/admin/user}">用户</a></li>
 			<li class="nav"><a th:href="@{/admin/video}">视频</a></li>
-			<!--			<li class="nav"><a th:href="@{/admin/type}">分类</a></li>-->
 		</ul>
 	</div>
-
 
 	<!--右侧功能-->
 	<div class="admin-iframe-header-right">
@@ -42,10 +40,6 @@
 		</ul>
 	</div>
 </div>
-
-
-
-
 
 <script>
 
@@ -67,7 +61,7 @@
 			}
 		});
 	});
-
+	
 	javaex.nav({
 		id : "nav",	// 导航的id
 		isAutoSelected : true

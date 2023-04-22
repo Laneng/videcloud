@@ -94,15 +94,32 @@
                         type: "success"
                     });
                     // 跳转到首页
+
+
                     setTimeout(function () {
                         window.location.href = "/";
                     }, 3000)
-                } else {
+
+
+                }else  if (rtn.code == 19){
+
+                    console.log(rtn.msg)
+                    javaex.optTip({
+                        content: rtn.msg,
+                        type: "error"
+                    });
+                    // 跳转到首页
+
+                    setTimeout(function () {
+                        window.location.href = "/";
+                    }, 3000)
+                }  else if (rtn.code == 1){
                     javaex.optTip({
                         content: rtn.msg,
                         type: "error"
                     });
                 }
+
             }
         });
     }

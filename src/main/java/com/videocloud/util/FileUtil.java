@@ -72,8 +72,9 @@ public class FileUtil {
     }
 
 
+
     //OSS上传并每秒向Session中告知当前上传进度
-    public static boolean uploadSmallFile(final OSSClient client, final String bucketName,
+    public static boolean uploadVideoFile(final OSSClient client, final String bucketName,
                                        final String key, final File uploadFile, HttpSession session)
             throws OSSException, ClientException, FileNotFoundException {
 
@@ -138,5 +139,29 @@ public class FileUtil {
         System.out.println("上传的object返回的E_tag："+result.getETag());
         return md5.equalsIgnoreCase(result.getETag());
     }
+
+
+
+
+    public static boolean uploadImgFile(final OSSClient client, final String bucketName,
+                                          final String key, final File uploadFile)
+            throws OSSException, ClientException, FileNotFoundException {
+
+        final InputStream input = new FileInputStream(uploadFile);
+
+        PutObjectResult result =client.putObject(bucketName, key, input);
+
+        String md5 = null;
+        try {
+            md5 = DigestUtils.md5Hex(new FileInputStream(uploadFile));
+            System.out.println("MD5:"+ md5);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("上传的object返回的E_tag："+result.getETag());
+        return md5.equalsIgnoreCase(result.getETag());
+    }
+
 
 }
