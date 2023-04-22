@@ -257,24 +257,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
 
-
-
-    @Override
-    public Result searchLike(String keyword, Integer page,Integer limit) {
-
-        if (limit == null){
-            limit = 12;
-        }
-
-
-        List list = vedioInfoMapper.searchLike(keyword,page,limit);
-        System.out.println(list);
-
-
-
-        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
-    }
-
     @Override
     public Result changeVideoState(Integer id, String state) {
         int state1 = Integer.parseInt(state);
