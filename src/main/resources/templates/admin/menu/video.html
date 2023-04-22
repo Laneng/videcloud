@@ -24,8 +24,10 @@
 	</div>
 
 	<!-- 底部js函数 -->
-	<c:import url="../common/footer.jsp"></c:import>
+<!--	<c:import url="../common/footer.jsp"></c:import>-->
+	<div th:replace="/admin/common/footer.jsp">
 
+	</div>
 	<script>
 		// 获取菜单项
 		var menuType = document.getElementById('menu-type');

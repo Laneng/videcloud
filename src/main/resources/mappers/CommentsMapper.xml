@@ -48,7 +48,7 @@
         FROM comments c JOIN `user` u
         ON c.user_id = u.id
         WHERE c.video_id = #{vid}
-        and c.comments_state = '通过'
+          and c.comments_state = '通过'
         order by c.comments_date desc
     </select>
 

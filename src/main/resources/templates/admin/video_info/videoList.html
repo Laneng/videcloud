@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>视频信息</title>
+    <link rel="stylesheet" th:href="@{/js/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+</head>
+<body>
+<table class="layui-hide" id="vedioManger" lay-filter="vedio_filter"></table>
+
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+
+    layui.use(['table','form'],function (){
+        var table = layui.table;
+        var form = layui.form;
+
+        table.render({
+            elem: "#vedioManger"
+            ,url: "/vedioInfo/getByType"
+            ,cellMinWidth: 80
+            ,page: true
+            ,cols: [
+                [
+                    {type: 'checkbox',fixed: 'left'}
+                    ,{field: 'id',title: 'id',width: '80',sort: 'true'}
+                    ,{field: 'title',title: '标题',width: 300}
+                    ,{field: 'intro', title: '简介',width: 150}
+                    ,{field: 'user.name', title: '作者',width: 150, templet: function (d){
+                        return d.user ? d.user.name : '';
+                    }}
+                    ,{field: 'type', title: '分类',width: 150}
+                    ,{field: 'img', title: '缩略图',width: 50, templet: '#img'}
+                    ,{field: 'state',title: '状态',width: 100, templet: function (d){
+                        var checked = d.state == '1' ? 'checked' : '';
+                        var html = '<input type="checkbox" name="state" lay-skin="switch" lay-text="通过|不通过" ' + checked + '>';
+                        return html;
+                    }}
+                    ,{field: 'reason', title: '审核建议',width: 150,edit: 'text'}
+                ]
+            ]
+            ,done: function(res, curr, count) {
+                // 表格渲染完成后，给每个表格行添加 data-id 属性
+                var rows = $('.layui-table-body table tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows.eq(i);
+                    row.attr('data-id', res.data[i].id);
+                }
+            }
+
+        })
+
+        // // 监听开关组件的状态变化
+        form.on('switch', function(data) {
+
+            var id = $(data.elem).closest('tr').data('id');
+            var state = data.elem.checked ? '0' : '1';
+
+            console.log(id)
+            console.log(state)
+
+            // 发送修改请求到后台
+            $.ajax({
+                url: '/vedioInfo/changeVideoState',
+                method: 'post',
+                // contentType: 'application/json',
+                data: {id:id,state:state},
+                success: function(res) {
+                    if (res.code === 2) {
+                        layer.msg('修改成功');
+                    } else {
+                        layer.msg('修改失败');
+                    }
+                },
+                error: function() {
+                    layer.msg('网络错误');
+                }
+            })
+        })
+
+        table.on('edit(vedio_filter)', function(obj){
+            console.log("1111");
+            var value = obj.value; // 获取修改后的值
+            var field = obj.field; // 获取修改的列名
+            var data = obj.data; // 获取当前行的数据
+            var id = data.id;
+            var reason = data.reason;
+            $.ajax({
+                type:"post",
+                url:"/vedioInfo/changeVideoReason",
+                data:{"id":id,"reason":reason}
+                ,success:function (res){
+                    console.log(res);
+                }
+            })
+
+        });
+
+    });
+
+</script>
+
+
+<script type="text/html" id="img">
+
+    <div>
+        <img src="{{d.img}}" style="width: 28px;height: 28px" onclick="previewImg(this)">
+    </div>
+
+</script>
+
+<script>
+    function previewImg(obj) {
+        console.log(obj)
+        var img = new Image();
+        img.src = obj.src;
+        var height=img.height,width=img.width;
+        if(img.height > 400) {
+            height = '400px';
+            width=(400/(img.height))*(img.width);
+        }
+
+        var imgHtml = "<img src='" + obj.src + "' height='"+height+"' width='"+width+"' />";
+        //弹出层
+        layer.open({
+            type: 1,
+            offset: 'auto',
+            area: [width,'auto'],
+            shadeClose:true,//点击外围关闭弹窗
+            scrollbar: false,//不现实滚动条
+            title: "图片预览", //不显示标题
+            content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+            cancel: function () {
+
+            }
+        });
+    }
+</script>
+</html>

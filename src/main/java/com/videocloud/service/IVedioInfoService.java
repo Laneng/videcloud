@@ -58,7 +58,7 @@ public interface IVedioInfoService extends IService<VedioInfo> {
     public Result searchLike(String keyword, Integer page,Integer limit);
 
 
+    Result changeVideoState(Integer id, String state);
 
-
-
+    Result changeVideoReason(String id, String reason);
 }

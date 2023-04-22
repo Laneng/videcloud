@@ -72,8 +72,8 @@ public class EmailController {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email1));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            message.setSubject("验证码");
-            message.setText(code);
+            message.setSubject("基因重组视频平台验证码");
+            message.setText("你个憨批，又把密码忘求了，再给你一次机会，记住你的验证码哈："+code);
 
             Transport transport = session.getTransport("smtp");
             transport.connect(smtpHost, email1, password);

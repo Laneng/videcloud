@@ -171,7 +171,7 @@
 							"<td>"+dataArray[i].id    +"</td>" +
 							"<td>"+dataArray[i].title +"</td>" +
 							"<td>"+dataArray[i].intro +"</td>" +
-							"<td>"+dataArray[i].author+"</td>" +
+							"<td>"+dataArray[i].user.name+"</td>" +
 							"<td>"+dataArray[i].type  +"</td>" +
 							"<td><img height='80px' width='45px' src='"+dataArray[i].img+"' ></img></td>" +
 							"<td>"+dataArray[i].state +"</td>" +
@@ -227,12 +227,12 @@
 							"<td>"+dataArray[i].id    +"</td>" +
 							"<td>"+dataArray[i].title +"</td>" +
 							"<td>"+dataArray[i].intro +"</td>" +
-							"<td>"+dataArray[i].author+"</td>" +
+							"<td>"+dataArray[i].user.name+"</td>" +
 							"<td>"+dataArray[i].type  +"</td>" +
 							"<td><img height='80px' width='45px' src='"+dataArray[i].img+"' ></img></td>" +
 							"<td>"+dataArray[i].state +"</td>" +
 							"<td>"+dataArray[i].reason+"</td>" +
-							"<td><button>修改</button></td>" +
+							"<td><button id=\"update\" class=\"button blue\" onclick=\"\"><span class=\"icon-airplay\" aria-hidden=\"true\"></span> 播放</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id=\"delete\" class=\"button red\"><span class=\"icon-gear\"></span> 审核</button></td>" +
 							"</tr>"
 
 				}
