@@ -35,7 +35,6 @@ public class VedioInfoController {
 
     /**
      * 返回信息到页面
-     * @param page 当前页
      * @param limit 每页显示多少条数据
      * @param map
      * @return
@@ -121,7 +120,6 @@ public class VedioInfoController {
 
     /**
      * 修改视频状态（审核）
-     * @param Integer id, Integer state,String reason
      * @author Leon Downey
      * @return
      */
@@ -155,7 +153,6 @@ public class VedioInfoController {
 
     /**
      * 批量封禁
-     * @param List<Integer> ids
      * @author Leon Downey
      * @return
      */
@@ -183,7 +180,6 @@ public class VedioInfoController {
 
     /**
      * 批量解封
-     * @param List<Integer> ids
      * @author Leon Downey
      * @return
      */
@@ -315,6 +311,22 @@ public class VedioInfoController {
     public Result viewStar(String viewStar,String vedioId,HttpSession session){
         Result resultStar = iVedioInfoService.updateStar(viewStar,vedioId,session);
         return resultStar;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/vedioInfo/changeVideoState")
+    public Result changeVideoState(Integer id,  String state){
+        Result result = iVedioInfoService.changeVideoState(id,state);
+        return result;
+
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/vedioInfo/changeVideoReason")
+    public Result changeVideoReason(String id,String reason){
+      return iVedioInfoService.changeVideoReason(id,reason);
     }
 
 }

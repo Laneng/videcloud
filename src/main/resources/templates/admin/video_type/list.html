@@ -11,89 +11,91 @@
 
 <body>
 
-<div th:replace="admin/common/nav.html"></div>
+<!--<div th:replace="admin/common/nav.html"></div>-->
 
-<div class="admin-iframe-content">
-	<div class="admin-iframe-menu">
-		<ul class="menu">
-			<li id="menu-type"><a th:href="@{/admin/video/type}">分类管理</a></li>
-			<li id="menu-check"><a th:href="@{/admin/video/check}">审核管理</a></li>
-			<li id="menu-info" ><a th:href="@{/admin/video/info}">视频信息</a></li>
-		</ul>
-	</div>
+<!--<div class="admin-iframe-content">-->
+<!--&lt;!&ndash;	<div class="admin-iframe-menu">&ndash;&gt;-->
+<!--&lt;!&ndash;		<ul class="menu">&ndash;&gt;-->
+<!--&lt;!&ndash;			<li id="menu-type"><a th:href="@{/admin/video/type}">分类管理</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;			<li id="menu-check"><a th:href="@{/admin/video/check}">审核管理</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;			<li id="menu-info" ><a th:href="@{/admin/video/info}">视频信息</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;		</ul>&ndash;&gt;-->
+<!--&lt;!&ndash;	</div>&ndash;&gt;-->
 
-	<!-- 面包屑导航和主体内容 -->
-	<div class="content">
-		<!--面包屑导航-->
-		<div class="content-header">
-			<div class="breadcrumb">
-				<span>视频</span>
-				<span class="divider">/</span>
-				<span class="active">分类管理</span>
-			</div>
-		</div>
+<!--&lt;!&ndash;	&lt;!&ndash; 面包屑导航和主体内容 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;	<div class="content">&ndash;&gt;-->
+<!--&lt;!&ndash;		&lt;!&ndash;面包屑导航&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;		<div class="content-header">&ndash;&gt;-->
+<!--&lt;!&ndash;			<div class="breadcrumb">&ndash;&gt;-->
+<!--&lt;!&ndash;				<span>视频</span>&ndash;&gt;-->
+<!--&lt;!&ndash;				<span class="divider">/</span>&ndash;&gt;-->
+<!--&lt;!&ndash;				<span class="active">分类管理</span>&ndash;&gt;-->
+<!--&lt;!&ndash;			</div>&ndash;&gt;-->
+<!--&lt;!&ndash;		</div>&ndash;&gt;-->
 
-		<!--全部主体内容-->
-		<div class="list-content">
-			<!--块元素-->
-			<div class="block">
-				<!--页面有多个表格时，可以用于标识表格-->
-				<h2>分类列表</h2>
-				<a href="javascript:history.back();">
-					<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
-				</a>
-				<!--正文内容-->
-				<div class="main">
-					<!--表格上方的操作元素，添加、删除、搜索等-->
-					<div class="operation-wrap">
-						<div class="buttons-wrap">
-							<button  class="button blue" data-toggle="modal" data-target="#myModal"><span class="icon-plus"></span> 添加</button>
-							<button id="deletes" class="button red"><span class="icon-minus"></span> 删除</button>
-							<button id="search" class="button yellow" onclick="sendSearchRequest()"><span class="icon-search2"></span> 搜索</button>
-							<input id="text" class="button text" type="text">
-						</div>
-					</div>
-					<!-- 弹出框的内容 -->
-					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="myModalLabel">新增视频分类</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<div class="modal-body">
-									<!-- 弹出框的内容 -->
-									<input type="text" class="form-control" id="inputName" placeholder="请输入分类名称">
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-									<button id="add" type="button" class="btn btn-primary" onclick="sendAddRequest()">保存</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--class加上color可以实现隔行变色-->
-					<!--color1表示奇数行着色、color2表示偶数行着色-->
-					<table id="table" class="table">
-						<thead>
-						<tr>
-							<th class="checkbox">
-								<input type="checkbox" class="fill listen-1" />
-							</th>
-							<th>索引</th>
-							<th>分类名称</th>
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody id="type_result">
-						</tbody>
-					</table>
+<!--		&lt;!&ndash;全部主体内容&ndash;&gt;-->
+<!--	-->
+<!--	</div>-->
+
+<div class="list-content">
+	<!--块元素-->
+	<div class="block">
+		<!--页面有多个表格时，可以用于标识表格-->
+		<h2>分类列表</h2>
+<!--		<a href="javascript:history.back();">-->
+<!--			<button class="button wathet" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>-->
+<!--		</a>-->
+		<!--正文内容-->
+		<div class="main">
+			<!--表格上方的操作元素，添加、删除、搜索等-->
+			<div class="operation-wrap">
+				<div class="buttons-wrap">
+					<button  class="button blue" data-toggle="modal" data-target="#myModal"><span class="icon-plus"></span> 添加</button>
+					<button id="deletes" class="button red"><span class="icon-minus"></span> 删除</button>
+					<button id="search" class="button yellow" onclick="sendSearchRequest()"><span class="icon-search2"></span> 搜索</button>
+					<input id="text" class="button text" type="text">
 				</div>
 			</div>
+			<!-- 弹出框的内容 -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="myModalLabel">新增视频分类</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<!-- 弹出框的内容 -->
+							<input type="text" class="form-control" id="inputName" placeholder="请输入分类名称">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+							<button id="add" type="button" class="btn btn-primary" onclick="sendAddRequest()">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--class加上color可以实现隔行变色-->
+			<!--color1表示奇数行着色、color2表示偶数行着色-->
+			<table id="table" class="table">
+				<thead>
+				<tr>
+					<th class="checkbox">
+						<input type="checkbox" class="fill listen-1" />
+					</th>
+					<th>索引</th>
+					<th>分类名称</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody id="type_result">
+				</tbody>
+			</table>
 		</div>
 	</div>
+</div>
 </div>
 
 <script>
