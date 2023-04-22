@@ -2,6 +2,8 @@ package com.videocloud.util;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyuncs.http.HttpRequest;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -24,9 +26,4 @@ public class OSSUtil {
 //    OSS客户端对象
         return  new OSSClientBuilder().build(endpoint,accessKeyId,accessKeySercet);
     }
-
-
-
-
-
 }

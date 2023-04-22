@@ -23,7 +23,6 @@ public class SearchController {
     @ResponseBody
     @RequestMapping("like")
     public Result searchLike(String keyword, Integer page,Integer limit){
-        Result list = vedioInfoService.searchLike(keyword,page,limit);
-        return  list;
+        return vedioInfoService.searchLike(keyword,page,limit);
     }
 }

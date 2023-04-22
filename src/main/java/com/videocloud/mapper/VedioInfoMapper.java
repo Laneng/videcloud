@@ -18,7 +18,7 @@ public interface VedioInfoMapper extends BaseMapper<VedioInfo> {
 
     List<VedioInfo> selectVedioInfoByType(@Param("page") Integer page, @Param("limit") Integer limit, @Param("type") String type);
 
-    List searchLike(@Param("keyword") String keyword, @Param("page")  Integer page, @Param("limit")  Integer limit);
+    List<VedioInfo> searchLike(@Param("keyword") String keyword);
 
 
 

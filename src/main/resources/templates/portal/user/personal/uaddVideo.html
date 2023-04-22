@@ -25,6 +25,8 @@
         .page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
         .layui-form-item .layui-input-inline {text-align: center}
         .layui-form-label{margin-left: 110px}
+        .layui-upload-list{width: 200px;height: 120px;border-radius: 6px;overflow: hidden;border: 1px solid darkgray}
+        img[src='']{opacity:0}
     </style>
 </head>
 
@@ -63,9 +65,8 @@
                         <div class="layui-input-inline">
                             <input type="text" name="img" id="img" required lay-verify="required"
                                    autocomplete="off" class="layui-input" readonly style="display: none">
-                            <div class="layui-upload-list" style="width: 200px;height: 120px;">
-                                <img style="height: 100%; width: 100%;" class="layui-upload-img" id="demo1">
-                                <p id="demoText"></p>
+                            <div class="layui-upload-list">
+                                <img src="" style="height: 100%; width: 100%;" id="demo1">
                             </div>
                             <div style="width:200px;">
                                 <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="face">
@@ -80,11 +81,16 @@
                         <div class="layui-input-inline">
                             <input type="text" name="url" id="url" required lay-verify="required"
                                    autocomplete="off" class="layui-input" readonly style="display: none">
+                            <input type="text" name="duration" id="duration" required lay-verify="required"
+                                   autocomplete="off" class="layui-input" readonly style="display: none">
+                            <div id="uploadVideo" class="layui-upload-list">
+                            </div>
                             <div style="width:200px;">
                                 <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="video" style="margin-top: 10px">
                                     <div class="layui-progress-bar" lay-percent=""></div>
                                 </div>
                             </div>
+                            <div id="videoMsg" style="width:200px;display: none"></div>
                             <button type="button" class="layui-btn" id="videoUpload" style="margin-top: 10px;">上传视频</button>
                         </div>
                     </div>
@@ -195,17 +201,30 @@
             }
             , done: function (res) {
                 $("#url").val(res.data);
+                $("#duration").val(res.count);
+                var vd = "<video style='position: relative;bottom: 11px;width: 200px;height: 132px;' width='100%' height='100%' controls>" +
+                        "<source src='"+res.data+"' type='video/mp4' align='center'>" +
+                        "</video>"
+                $("#uploadVideo").empty();
+                $("#uploadVideo").append(vd);
             }
             //视频进度条
             , progress: function (n, index, e) {
+                $("#videoMsg").text("上传服务器中···")
+                $("#videoMsg").css("display","block")
+                $("#videoMsg").css("color","red")
+                element.progress('video', n + "%"); //进度条复位
                 var timer = setInterval(function () {
                     $.ajax({
                         url: "/upload/exportStatus",
                         success: function (res) {
                             var res = res.data;
+                            $("#videoMsg").text("上传云存储服务器中···")
                             element.progress('video', (res * 100).toFixed(2) + '%')
                             if (res == 1) {
                                 //进度到100%，注意关闭定时器
+                                $("#videoMsg").text("上传成功！")
+                                $("#videoMsg").css("color","green")
                                 clearInterval(timer);
                             }
                         },

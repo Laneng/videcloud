@@ -5,15 +5,16 @@
 <title th:text="${session.user.name+'的个人空间'}"></title>
 <template th:replace="portal/common/common.html"></template>
 <style>
-    .edit-btn {height: 33px;padding: 0 15px;border-radius: 33px;margin-left: 110px;margin-top: 10px;line-height: 33px;font-size: 14px;display: inline-block;background: #5dc49a;color: #fff;vertical-align: top;cursor: pointer;}
+	.name-edit{left: 0px;background: white}
+    .edit-btn {height: 33px;padding: 0 15px;border-radius: 33px;line-height: 33px;font-size: 14px;display: inline-block;background: #5dc49a;color: #fff;vertical-align: top;cursor: pointer;}
 	.set-tit{display: inline-block; vertical-align: top; width: 44px; line-height: 19px; font-size: 14px; color: #999;}
 	.user-avatar{display: inline-block; cursor: pointer;}
 	.user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
     .edit-input {display: block;height: 33px;padding: 5px 10px;background: #eee1e0;border: 1px solid #515151;border-radius: 33px;box-sizing: border-box;font-size: 14px;line-height: 19px;color: #1d1616;}
 	.page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
-	input[type="text"],input[type="password"]{border: none;width: 50%}
+    input[type="text"], input[type="password"] {border: none;width: 225px;position: relative;display: inline-block;margin: 0px 3px;}
 	input[type="date"]{border: none;width: 20%}
-    #change_password{display: none; height: 150px;background: white;width: 40%;position: absolute;top: 5px;left: 5px;border: aliceblue 1px solid;border-radius: 10px;}
+    #change_password {display: none;width: 620px;position: absolute;top: 5px;left: 5px;border-radius: 10px;}
 </style>
 </head>
 <body>
@@ -39,7 +40,7 @@
 							<td style="position: relative;">
 								<span th:text="${session.user.name}"></span>
 								<div id="change_name" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
-									<input type="text" id="name" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<input type="text" id="name" class="edit-input original" style="width: 60%;display: inline-block"/>
 									<a class="edit-btn" onclick="changeName()" style="display: inline-block;margin:0">保存</a>
 								</div>
 							</td>
@@ -50,7 +51,7 @@
 							<td style="position: relative;">
 								<span th:text="${session.user.email}"></span>
 								<div id="change_email" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
-									<input type="text" id="email" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<input type="text" id="email" class="edit-input original" style="width: 60%;display: inline-block"/>
 									<a class="edit-btn" onclick="changeEmail()" style="display: inline-block;margin:0">保存</a>
 								</div>
 							</td>
@@ -61,8 +62,8 @@
 							<td style="position: relative;">
 								<span class="set-con">***********</span>
 								<div id="change_password" class="name-edit">
-									<span>原密码:</span><input type="password" id="password" class="edit-input original" style="width: 100%;" />
-									<span>新密码:</span><input type="password" id="newPassword" class="edit-input original" style="width: 100%;" />
+									<div style="display: inline-block">原密码:</div><input type="password" id="password" class="edit-input original" />
+									<div style="display: inline-block">新密码:</div><input type="password" id="newPassword" class="edit-input original" />
 									<a class="edit-btn" onclick="changePassword()">保存</a>
 								</div>
 							</td>
@@ -73,7 +74,7 @@
 							<td style="position: relative;">
 								<span th:text="${session.user.phone}"></span>
 								<div id="change_phone" class="name-edit" style="background: none;display: none;width: 60%;position: absolute;top: 5px;">
-									<input type="text" id="phone" class="edit-input original" style="width: 60%;background-color: #a0eecb;display: inline-block"/>
+									<input type="text" id="phone" class="edit-input original" style="width: 60%;display: inline-block"/>
 									<a class="edit-btn" onclick="changePhone()" style="display: inline-block;margin:0">保存</a>
 								</div>
 							</td>
@@ -363,20 +364,30 @@
             });
         }
     }
+
     let arr = [];
     document.addEventListener("mouseup",ev => {
         arr.length = 0;
-        let t = document.getElementById("change_name");
+        let a = document.getElementById("change_name");
+        let b = document.getElementById("change_email");
+        let c = document.getElementById("change_password");
+        let d = document.getElementById("change_phone");
 
         arr.push(ev.target);
         getParent(ev.target);
         arr.push(window);
 
-        if (!arr.includes(t)){
-            console.log(1);
+        if (!arr.includes(a)){
             $("#change_name").css("display","none");
-        }else{
-            console.log(0);
+        }
+        if (!arr.includes(b)){
+            $("#change_email").css("display","none");
+        }
+        if (!arr.includes(c)){
+            $("#change_password").css("display","none");
+        }
+        if (!arr.includes(d)){
+            $("#change_phone").css("display","none");
         }
     })
 
