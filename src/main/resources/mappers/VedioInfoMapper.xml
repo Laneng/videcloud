@@ -14,7 +14,6 @@
                 type like  concat('%',  #{type},  '%')
             </if>
         </where>
-        ORDER BY vi.id DESC
     </select>
 
 
@@ -23,11 +22,12 @@
     <select id="searchLike" resultMap="videoAndUser">
         SELECT v.*, u.name
         FROM video_info v
-        INNER JOIN user u ON v.user_id = u.id
-        where u.name like  concat('%',#{keyword},'%')
-           or title like concat('%',#{keyword},'%')
-           or intro like  concat('%',#{keyword},'%')
-           or type like   concat('%',#{keyword},'%')
+                 INNER JOIN user u ON v.user_id = u.id
+        WHERE (u.name LIKE CONCAT('%',#{keyword},'%')
+            OR title LIKE CONCAT('%',#{keyword},'%')
+            OR intro LIKE CONCAT('%',#{keyword},'%')
+            OR type LIKE CONCAT('%',#{keyword},'%'))
+          AND state = 1
     </select>
 
     <resultMap id="videoAndUser" type="VedioInfo">
@@ -54,12 +54,6 @@
 
         </association>
     </resultMap>
-
-
-
-
-
-
 
 
 </mapper>
