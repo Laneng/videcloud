@@ -253,24 +253,6 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
     }
 
 
-
-
-    @Override
-    public Result searchLike(String keyword, Integer page,Integer limit) {
-
-        if (limit == null){
-            limit = 12;
-        }
-
-
-        List list = vedioInfoMapper.searchLike(keyword,page,limit);
-        System.out.println(list);
-
-
-
-        return new Result(ResponseEnum.SELECT_SUCCESS,list.size(),list);
-    }
-
     @Override
     public Result changeVideoState(Integer id, String state) {
         int state1 = Integer.parseInt(state);
@@ -316,5 +298,42 @@ public class VedioInfoServiceImpl extends ServiceImpl<VedioInfoMapper, VedioInfo
                 .eq(VedioInfo::getId,vedioInfo.getId());
         return wrapper;
 
+    }
+
+
+    @Override
+    public Result searchLike(String keyword, Integer page,Integer limit) {
+
+        int scrollLimit = 12;
+
+        if (page == 1) {
+            limit = 24;
+        }
+        if (limit == null){
+            limit = scrollLimit;
+        }
+
+        List<VedioInfo> list = vedioInfoMapper.searchLike(keyword);
+
+        int start = (page - 1)*limit;
+        int end = start + limit - 1;
+        if (end >= list.size() - 1){
+            end = list.size() - 1;
+        }
+        int pages = 0;
+        if (list.size() <= 24) {
+            pages = 1;
+        }else{
+            pages = (list.size()-24)/12 + 2;
+        }
+
+        List<VedioInfo> rsList = new ArrayList<>();
+
+        for (int i = start;i <= end;i++) {
+            rsList.add(list.get(i));
+        }
+
+
+        return new Result(ResponseEnum.SELECT_SUCCESS,pages,rsList);
     }
 }

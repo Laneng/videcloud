@@ -73,6 +73,9 @@ public class VedioInfo implements Serializable {
     @ApiModelProperty("视频点赞数量")
     private Integer viewStar;
 
+    @ApiModelProperty("视频时长")
+    private Integer duration;
+
 
     @ApiModelProperty("上传时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

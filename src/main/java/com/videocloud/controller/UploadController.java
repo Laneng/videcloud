@@ -7,6 +7,7 @@ import com.videocloud.entity.ResponseEnum;
 import com.videocloud.entity.Result;
 import com.videocloud.util.FileUtil;
 import com.videocloud.util.OSSUtil;
+import com.videocloud.util.VideoUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,12 +30,13 @@ public class UploadController {
 
     @ResponseBody
     @RequestMapping("/img")
-    public Result uploadImg(MultipartFile file) throws FileNotFoundException, ClientException {
+    public Result uploadImg(MultipartFile file) throws IOException, ClientException {
         File file1 = FileUtil.transferToFile(file);
         OSS ossClient = OSSUtil.getOSS(file);
         String newName = FileUtil.UUID(file);
 
         FileUtil.uploadImgFile((OSSClient) ossClient,"jycz-view",newName, file1);
+
         return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
     }
 
@@ -43,12 +45,16 @@ public class UploadController {
     public Result upload(MultipartFile file, HttpSession session) throws IOException, ClientException {
 
         File file1 = FileUtil.transferToFile(file);
+        String path = file1.getCanonicalPath();
+        long duration_new = VideoUtil.getDuration(path);
+
         OSS ossClient = OSSUtil.getOSS(file);
         String newName = FileUtil.UUID(file);
 
         FileUtil.uploadVideoFile((OSSClient) ossClient,"jycz-view",newName, file1,session);
 
-        return new Result(ResponseEnum.UPLOAD_SUCCESS,0,OSSUtil.ALI_DOMAIN+newName);
+        file1.delete();
+        return new Result(ResponseEnum.UPLOAD_SUCCESS,(int)duration_new,OSSUtil.ALI_DOMAIN+newName);
     }
 
     //上传进度百分比监控
