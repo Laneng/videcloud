@@ -87,6 +87,8 @@ public class FileUtil {
         //objectMeta.setContentType("application/pdf");
         //对object进行服务器端加密。眼下服务器端仅仅支持x-oss-server-side-encryption加密
         objectMeta.setHeader("x-oss-server-side-encryption", "AES256");
+
+
         final InputStream input = new FileInputStream(uploadFile);
         Thread t = new Thread(new Runnable() {
 

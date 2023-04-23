@@ -19,7 +19,8 @@ public class OSSUtil {
     public static OSS getOSS(MultipartFile file)  {
 
 //         地域节点
-        String endpoint = "https://oss-cn-beijing.aliyuncs.com";
+//        String endpoint = "https://oss-cn-beijing.aliyuncs.com";
+        String endpoint = "oss-accelerate.aliyuncs.com";
         String accessKeyId = "LTAI5tRj772MVTefTNa8Z8yF";
         String accessKeySercet = "AuDBCdhDGBukHeHLTED6lCGtgTQUTI";
 
