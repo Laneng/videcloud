@@ -51,6 +51,7 @@ public class VideoHistoryController {
             rsList.add(videoHistories.get(i));
         }
 
+        System.out.println(rsList);
         return new Result(ResponseEnum.SELECT_SUCCESS,pages,rsList);
     }
 }

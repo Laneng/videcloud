@@ -213,27 +213,30 @@
                 $("#videoMsg").text("上传服务器中···")
                 $("#videoMsg").css("display","block")
                 $("#videoMsg").css("color","red")
-                element.progress('video', n + "%"); //进度条复位
-                var timer = setInterval(function () {
-                    $.ajax({
-                        url: "/upload/exportStatus",
-                        success: function (res) {
-                            var res = res.data;
-                            $("#videoMsg").text("上传云存储服务器中···")
-                            element.progress('video', (res * 100).toFixed(2) + '%')
-                            if (res == 1) {
-                                //进度到100%，注意关闭定时器
-                                $("#videoMsg").text("上传成功！")
-                                $("#videoMsg").css("color","green")
+                element.progress('video', n.toFixed(2) + "%"); //进度条复位
+                if (n == 100){
+                    var timer = setInterval(function () {
+                        $.ajax({
+                            url: "/upload/exportStatus",
+                            success: function (res) {
+                                var res = res.data;
+                                $("#videoMsg").text("上传云存储服务器中···")
+                                element.progress('video', (res * 100).toFixed(2) + '%')
+                                if (res == 1) {
+                                    //进度到100%，注意关闭定时器
+                                    $("#videoMsg").text("上传成功！")
+                                    $("#videoMsg").css("color","green")
+                                    clearInterval(timer);
+                                }
+                            },
+                            error: function (e) {
+                                //关闭定时器
                                 clearInterval(timer);
                             }
-                        },
-                        error: function (e) {
-                            //关闭定时器
-                            clearInterval(timer);
-                        }
-                    });
-                }, 1000);
+                        });
+                    }, 1000);
+                }
+
             }
         })
     })

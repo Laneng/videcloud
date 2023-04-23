@@ -81,7 +81,7 @@
 			<table id="table" class="table">
 				<thead>
 				<tr>
-					<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>
+<!--					<th class="checkbox"><input type="checkbox" class="fill listen-1" /> </th>-->
 					<th>索引</th>
 					<th>违规原因</th>
 					<th>操作</th>
@@ -194,7 +194,7 @@
 				// 遍历数据数组，将每个对象添加为一行到表格中
 				for (var i = 0; i < dataArray.length; i++) {
 					html += "<tr>" +
-							"<td class=\"checkbox\"><input type=\"checkbox\" class=\"fill listen-1\" /></td>" +
+							// "<td class=\"checkbox\"><input type=\"checkbox\" class=\"fill listen-1\" /></td>" +
 							"<td>"+dataArray[i].id+"</td>" +
 							"<td>"+dataArray[i].reason+"</td>" +
 							"<td><button id=\"update\" class=\"button green\" onclick=\"\"><span class=\"icon-gear\"></span> 编辑</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id=\"delete\" class=\"button red\"><span class=\"icon-minus\"></span> 删除</button></td>" +

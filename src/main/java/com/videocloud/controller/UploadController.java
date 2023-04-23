@@ -51,6 +51,7 @@ public class UploadController {
         OSS ossClient = OSSUtil.getOSS(file);
         String newName = FileUtil.UUID(file);
 
+        session.setAttribute("exportStatus",0);
         FileUtil.uploadVideoFile((OSSClient) ossClient,"jycz-view",newName, file1,session);
 
         file1.delete();

@@ -6,7 +6,7 @@
 
     <!--用户视频两表联查-->
     <select id="selectVedioInfoByType" resultMap="videoAndUser">
-        SELECT vi.id, vi.title, vi.intro, u.name, vi.type, vi.img, vi.state, vi.reason
+        SELECT vi.id, vi.title, vi.intro,vi.url, u.name, vi.type, vi.img, vi.state, vi.reason
         FROM video_info vi
         INNER JOIN user u ON vi.user_id = u.id
         <where>

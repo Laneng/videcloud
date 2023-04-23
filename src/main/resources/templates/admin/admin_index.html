@@ -5,7 +5,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>首页</title>
+    <title>基因重组视频管理系统</title>
 </head>
 <style>
     .layui-table-cell .layui-btn {display: inline-block;}
@@ -22,8 +22,8 @@
             <ul class="menu">
                 <li class="" th:classappend="${#httpServletRequest.getQueryString() !='ll' ?'active':''}">
                     <a href="?mm">管理中心首页</a></li>
-                <li class="" th:classappend="${#httpServletRequest.getQueryString() =='ll' ?'active':''}">
-                    <a href="?ll"> 管理员信息 </a></li>
+<!--                <li class="" th:classappend="${#httpServletRequest.getQueryString() =='ll' ?'active':''}">-->
+<!--                    <a href="?ll"> 管理员信息 </a></li>-->
             </ul>
         </div>
 
@@ -51,11 +51,6 @@
                 <div class='unit'>
                     <div class='left'><p class='subtitle'>账号：</p></div>
                     <div class='right' id="zh" th:text="${session.login.username}">QQ：291026192</div>
-                    <span class='clearfix'></span>
-                </div>
-                <div class='unit'>
-                    <div class='left'><p class='subtitle'>密码：</p></div>
-                    <div class='right' id="mm" th:text="${session.login.password}">陈霓清</div>
                     <span class='clearfix'></span>
                 </div>
                 <div class='unit'>

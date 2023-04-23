@@ -32,7 +32,7 @@
 	<div class="admin-iframe-header-right">
 		<ul class="navs">
 			<li class="nav">
-				<p class="pull-left margin-left-10" >您好,<span id="admin_name"></span></p>
+				<p class="pull-left margin-left-10" >您好,<span id="admin_name" th:text="${session.login.name}"></span></p>
 				<label class="margin-left-10">|</label>
 				<a class="im-list" href="javascript:;" onclick="logout()">退出账号</a>
 			</li>
@@ -84,7 +84,7 @@
 						content : rtn.msg,
 						type : "success"
 					});
-					setTimeout(function (){window.location.href = "/";},1500)
+					setTimeout(function (){window.location.href = "/admin/login";},1500)
 
 				}
 			}

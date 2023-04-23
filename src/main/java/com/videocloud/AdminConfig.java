@@ -14,7 +14,7 @@ public class AdminConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/admin/login").setViewName("admin/login_admin");
         registry.addViewController("/admin").setViewName("admin/index_admin");
-        registry.addViewController("/admin/index").setViewName("admin/index_admin");
+        registry.addViewController("/admin/index").setViewName("admin/admin_index");
         registry.addViewController("/admin/user").setViewName("admin/menu/user");
         registry.addViewController("/admin/users").setViewName("admin/menu/userList");//全部用户
         registry.addViewController("/admin/normal").setViewName("admin/menu/normal");//正常用户

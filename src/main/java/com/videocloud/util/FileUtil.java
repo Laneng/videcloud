@@ -12,6 +12,7 @@ import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -50,6 +51,9 @@ public class FileUtil {
         try {
             String originalFilename = multipartFile.getOriginalFilename();
             String[] filename = originalFilename.split("\\.");
+            if (filename[0].length() < 3){
+                filename[0] = "temp"+filename[0];
+            }
             file=File.createTempFile(filename[0], "."+filename[1]);
             multipartFile.transferTo(file);
             file.deleteOnExit();
@@ -77,8 +81,6 @@ public class FileUtil {
     public static boolean uploadVideoFile(final OSSClient client, final String bucketName,
                                        final String key, final File uploadFile, HttpSession session)
             throws OSSException, ClientException, FileNotFoundException {
-
-        session.setAttribute("exportStatus",0);
         ObjectMetadata objectMeta = new ObjectMetadata();
         objectMeta.setContentLength(uploadFile.length());
         // 可以在metadata中标记文件类型

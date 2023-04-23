@@ -6,6 +6,11 @@
     <link rel="stylesheet" th:href="@{/js/css/layui.css}">
     <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+    <style>
+        .layui-form-select {margin-top: -5px;margin-left: -15px;margin-right: -15px;}
+        .layui-table-box{overflow: visible}
+        .layui-table-body{overflow: visible}
+    </style>
 </head>
 <body>
 <table class="layui-hide" id="vedioManger" lay-filter="vedio_filter"></table>
@@ -14,11 +19,30 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    layui.use(['table','form'],function (){
+    layui.use(['table','form','layer'],function (){
         var table = layui.table;
         var form = layui.form;
+        var layer = layui.layer;
 
-        table.render({
+        var checks = [];
+        $.ajax({
+            url:"/videochecks/search",
+            type:"get",
+            data:{
+                reason:'',
+                pageNum:1,
+                pageSize:999
+            },
+            dataType:"JSON",
+            success:function (res){
+                var ss = res.data.list;
+                $(ss).each(function (index,item){
+                    checks.push(item.reason);
+                })
+            }
+        })
+
+        var videoTable = table.render({
             elem: "#vedioManger"
             ,url: "/vedioInfo/getByType"
             ,cellMinWidth: 80
@@ -39,7 +63,19 @@
                         var html = '<input type="checkbox" name="state" lay-skin="switch" lay-text="通过|不通过" ' + checked + '>';
                         return html;
                     }}
-                    ,{field: 'reason', title: '审核建议',width: 150,edit: 'text'}
+                    ,{field: 'reason', title: '审核建议',width: 150,templet:function (d) {
+                        var select = '<select class="layui-form-select" name="reason" lay-filter="video_reason" data-id="'+d.id+'">';
+                        for(var i = 0;i<checks.length;i++){
+                            if (checks[i] == d.reason){
+                                select += "<option value='"+checks[i]+"' selected>"+checks[i]+"</option>";
+                            }else {
+                                select += "<option value='"+checks[i]+"'>"+checks[i]+"</option>";
+                            }
+                        }
+                        select += "</select>";
+                        return select;
+                    }}
+                    ,{field: "right", title: "操作", width: 80, toolbar: '#barDemo'}
                 ]
             ]
             ,done: function(res, curr, count) {
@@ -48,7 +84,11 @@
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows.eq(i);
                     row.attr('data-id', res.data[i].id);
+                    var select = $(row).find('select[name="reason"]');
+                    console.log(select);
+                    select.parents('div.layui-table-cell').css('overflow','visible');
                 }
+                form.render();
             }
 
         })
@@ -81,21 +121,25 @@
             })
         })
 
-        table.on('edit(vedio_filter)', function(obj){
-            console.log("1111");
-            var value = obj.value; // 获取修改后的值
-            var field = obj.field; // 获取修改的列名
-            var data = obj.data; // 获取当前行的数据
-            var id = data.id;
-            var reason = data.reason;
+        form.on('select(video_reason)', function(data){
             $.ajax({
                 type:"post",
                 url:"/vedioInfo/changeVideoReason",
-                data:{"id":id,"reason":reason}
+                data:{"id":data.elem.dataset.id,"reason":data.value}
                 ,success:function (res){
                     console.log(res);
                 }
             })
+        });
+
+        table.on('tool(vedio_filter)', function(obj){
+            layer.open({
+                type: 1,
+                title:'预览',
+                content: '<video height="540px" width="960px" type="video/mp4" align="center" controls autoplay>' +
+                        '<source src="'+obj.data.url+'">' +
+                        '</video>' //这里content是一个普通的String
+            });
 
         });
 
@@ -139,4 +183,8 @@
         });
     }
 </script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="view">播放</a>
+</script>
+
 </html>

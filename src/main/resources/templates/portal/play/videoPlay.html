@@ -62,11 +62,11 @@
             <span style="display: none" th:text="${vedioPlay.data.id}" id="vedioId"></span>
 
             <div id="videoFun">
-                <span onclick="videoStar()"><img  src="../../images/star2.png" id="starImg1"></span>
+                <span onclick="videoStar()"><img  src="/images/star2.png" id="starImg1"></span>
                 <span style="margin-right: 50px; font-size: 20px" th:text="${vedioPlay.data.viewStar}" id="viewStar"></span>
-                <span ><img  src="../../images/viewCount.png"></span>
+                <span ><img  src="/images/viewCount.png"></span>
                 <span th:text="${vedioPlay.data.viewCount}" style="color: black;margin-right: 50px;font-size: 20px"></span>
-                <span ><img  src="../../images/date.png"></span>
+                <span ><img  src="/images/date.png"></span>
                 <span th:text="${#dates.format(vedioPlay.data.uploadTime,'yyyy-MM-dd HH:mm:ss')}" style="color: black;margin-right: 50px;font-size: 20px"></span>
             </div>
         </div>
@@ -273,11 +273,11 @@
 
     var img1 = document.getElementById("starImg1");
     img1.addEventListener('mousemove',() =>{
-        img1.src = '../../images/star3.png'
+        img1.src = '/images/star3.png'
     });
     //
     img1.addEventListener('mouseout',()=>{
-        img1.src = '../../images/star1.png'
+        img1.src = '/images/star1.png'
     });
 
 
