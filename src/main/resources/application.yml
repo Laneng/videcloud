@@ -1,5 +1,7 @@
 server:
   port: 8080
+#  servlet:
+#    context-path: /videoCloud
 
 path:
   include:
@@ -35,7 +37,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
+#    static-path-pattern: /videoCloud/**
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -45,8 +47,6 @@ mybatis-plus:
 logging:
   level:
     com.videocloud.mapper: debug
-
-
 
 
 

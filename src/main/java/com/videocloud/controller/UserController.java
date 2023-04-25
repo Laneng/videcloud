@@ -182,7 +182,7 @@ public class UserController {
         String base64 = user.getAvatar();
         MultipartFile multipartFile = FileUtil.base64Convert(base64);
         File file = FileUtil.transferToFile(multipartFile);
-        OSS ossClient = OSSUtil.getOSS(multipartFile);
+        OSS ossClient = OSSUtil.getOSS();
         String newName = FileUtil.UUID(multipartFile);
 
         boolean b = FileUtil.uploadImgFile((OSSClient) ossClient, "jycz-view", newName, file);

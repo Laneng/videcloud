@@ -32,7 +32,7 @@ public class UploadController {
     @RequestMapping("/img")
     public Result uploadImg(MultipartFile file) throws IOException, ClientException {
         File file1 = FileUtil.transferToFile(file);
-        OSS ossClient = OSSUtil.getOSS(file);
+        OSS ossClient = OSSUtil.getOSS();
         String newName = FileUtil.UUID(file);
 
         FileUtil.uploadImgFile((OSSClient) ossClient,"jycz-view",newName, file1);
@@ -48,7 +48,7 @@ public class UploadController {
         String path = file1.getCanonicalPath();
         long duration_new = VideoUtil.getDuration(path);
 
-        OSS ossClient = OSSUtil.getOSS(file);
+        OSS ossClient = OSSUtil.getOSS();
         String newName = FileUtil.UUID(file);
 
         session.setAttribute("exportStatus",0);
@@ -74,6 +74,5 @@ public class UploadController {
             }
             return new Result(ResponseEnum.SELECT_SUCCESS,1,exportStatus);
         }
-
     }
 }

@@ -16,7 +16,7 @@ public class OSSUtil {
 //    阿里域名
     public static final String ALI_DOMAIN = "https://jycz-view.oss-cn-beijing.aliyuncs.com/";
 
-    public static OSS getOSS(MultipartFile file)  {
+    public static OSS getOSS()  {
 
 //         地域节点
 //        String endpoint = "https://oss-cn-beijing.aliyuncs.com";

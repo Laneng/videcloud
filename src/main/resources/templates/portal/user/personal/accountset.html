@@ -11,7 +11,7 @@
 	.user-avatar{display: inline-block; cursor: pointer;}
 	.user-avatar img{display: block; width: 50px; height: 50px; border: 3px solid #484848; border-radius: 50%;}
     .edit-input {display: block;height: 33px;padding: 5px 10px;background: #eee1e0;border: 1px solid #515151;border-radius: 33px;box-sizing: border-box;font-size: 14px;line-height: 19px;color: #1d1616;}
-	.page-wrap.footer-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
+	.page-wrapfooter-wrap{position: absolute; width: 100%; bottom: 0; left: 0; right: 0;}
     input[type="text"], input[type="password"] {border: none;width: 225px;position: relative;display: inline-block;margin: 0px 3px;}
 	input[type="date"]{border: none;width: 20%}
     #change_password {display: none;width: 620px;position: absolute;top: 5px;left: 5px;border-radius: 10px;}
@@ -144,7 +144,13 @@
                         type: "error"
                     });
                 }
-            }
+            },
+	        error:function (res){
+                javaex.optTip({
+                    content: "该昵称已存在",
+                    type: "error"
+                });
+	        }
         });
     }
 
@@ -203,7 +209,13 @@
 						type : "error"
 					});
 				}
-			}
+			},
+            error:function (res){
+                javaex.optTip({
+                    content: "该邮箱已被使用",
+                    type: "error"
+                });
+            }
 		});
 	}
 	// 修改邮箱
@@ -273,7 +285,13 @@
 						type : "error"
 					});
 				}
-			}
+			},
+            error:function (res){
+                javaex.optTip({
+                    content: "未知原因修改失败",
+                    type: "error"
+                });
+            }
 		});
 	}
 
@@ -321,6 +339,12 @@
                         type: "error"
                     });
                 }
+            },
+            error:function (res){
+                javaex.optTip({
+                    content: "手机号已存在",
+                    type: "error"
+                });
             }
         });
     }
