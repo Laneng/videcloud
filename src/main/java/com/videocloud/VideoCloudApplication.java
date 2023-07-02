@@ -10,12 +10,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.Set;
 
+
+// 视频播放器启动类
 @SpringBootApplication
 @ServletComponentScan
 @MapperScan("com.videocloud.mapper")
 public class VideoCloudApplication implements ServletContainerInitializer {
 
     public static void main(String[] args) {
+        System.out.println(args);
         SpringApplication.run(VideoCloudApplication.class, args);
     }
 
